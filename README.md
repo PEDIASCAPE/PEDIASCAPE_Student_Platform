@@ -69,7 +69,7 @@
 
 This project is developed by the students of Bharat Institute of Engineering and Technology under the guidance of the Computer Science Department as part of their academic curriculum.
 
-## Team Credits
+## 🙌 Team Credits
 
 - Built by Batch-1 as a part of academic curriculum 2025
     -Soumya Sudhir Nayak (Team Lead)
