@@ -155,12 +155,4 @@ For questions, suggestions, or collaborations, please use the GitHub Issues page
   - Shaik Abid
   - Sri Ram Puneeth
 
-
-
-
-
-## Contact
-
-For questions or collaboration requests, please use the Issues section or contact the maintainers.
-
-PEDIASCAPE – Empowering students through unified academic and career support
+## PEDIASCAPE – Empowering students through unified academic and career support
