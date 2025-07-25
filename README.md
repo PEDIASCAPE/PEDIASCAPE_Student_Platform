@@ -1,82 +1,165 @@
-# PEDIASCAPE
+Certainly! Here's the updated README file with the **Team Credits** section added at the end:
 
-*PEDIASCAPE* is a comprehensive, modular e-learning and career guidance platform built for undergraduate students. It combines academic content, mentorship, project collaboration, and AI-powered career tools to create a holistic digital education ecosystem.
+```markdown
+# PEDIASCAPE: Comprehensive E-Learning Platform
+
+## Overview
+
+PEDIASCAPE is an innovative web-based e-learning platform designed to address the diverse academic and career planning needs of undergraduate students. By combining personalized career guidance, curated study materials, hands-on projects, an intelligent AI chatbot, and an interactive user dashboard, PEDIASCAPE aims to empower students for both academic and professional success.
 
 ## Features
 
-- *Centralized Academic Materials:* Access curated textbooks, notes, PDFs, and video content tailored for various Indian curricula.
-- *Career Roadmaps:* Dynamic, role-specific pathways mapping out required skills and milestones for modern tech and industry careers.
-- *Mentorship & Guidance:* Connect with mentors, join forums, and access career counseling through quizzes and AI-driven matching.
-- *Project Hub:* Browse, filter, and submit projects by domain and difficulty, with collaborative features and peer reviews.
-- *Mock Tests & Analytics:* Attempt subject-wise and competitive exam tests with performance tracking and analytics.
-- *Discussion Forums:* Peer learning through interactive forums for academic and project support.
-- *Personal Dashboard:* Track progress, manage a to-do list, and receive customized notifications.
-- *PSAI Chatbot:* AI assistant providing instant answers to academic queries and helping users navigate the platform.
+- **User Authentication**
+  - Secure registration, login, and session management for students and mentors.
+- **Study Materials Repository**
+  - Centralized hub for textbooks, notes, PDFs, and video content, searchable by subject and category.
+- **Career Roadmaps**
+  - Visual, step-by-step guidance for multiple technology and professional domains aligning skills with industry roles.
+- **Projects Hub**
+  - Access to curated project ideas across different skill levels and domains to foster practical coding and teamwork.
+- **Career Guidance Module**
+  - Personalized assessments and AI-driven recommendations to guide students toward suitable job roles and learning paths.
+- **PSAI Chatbot**
+  - Integrated virtual assistant for instant academic support, roadmap generation, and learning tips.
+- **User Dashboard**
+  - Personalized interface featuring calendar, to-do lists, quick links to major platform modules, and notifications.
 
-## Technologies Used
+## Technology Stack
 
-- *Frontend:* HTML5, CSS3, JavaScript (ES6+), responsive layout for cross-device compatibility.
-- *Backend:* Node.js, RESTful APIs.
-- *Database:* PostgreSQL and Firebase (for real-time interactions, authentication, and storage).
-- *Other Tools:* Postman (API testing), modern browsers (Chrome, Firefox, Edge, Safari).
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
+- **Backend:** Node.js
+- **Database:** Firebase (for authentication, real-time data, storage)
+- **Other Tools:** REST API, Postman (testing), Responsive design for multi-device access
 
-## How to Use
+## Getting Started
 
-1. *Sign Up / Login:* Register your account and select your role (student, mentor, admin).
-2. *Browse Study Materials:* Search by subject, year, or keyword; view or download resources.
-3. *Explore Career Roadmaps:* Find personalized learning pathways and track progress for your career goals.
-4. *Participate in Projects:* Join, create, or review projects based on your interests and skill level.
-5. *Seek Career Guidance:* Take the career assessment, ask the PSAI bot, or book a mentorship session.
-6. *Interact & Collaborate:* Join discussions, ask questions, and contribute to study groups.
-7. *Manage Your Dashboard:* Stay on top of your schedule, assignments, and progress with customizable widgets.
+### Prerequisites
 
-## Requirements
+- Node.js v18+
+- Firebase v9.0+
+- Modern browser (Chrome, Firefox, Edge, Safari)
+- Visual Studio Code (recommended)
 
-### Software
+### Installation
 
-| Developers                | End Users                              |
-|---------------------------|----------------------------------------|
-| Windows 7/10/11           | Windows/macOS/Android/iOS              |
-| Visual Studio Code        | Latest Chrome, Firefox, Safari, Edge   |
-| Node.js v18+, Java SE 11+ | Web browser (no installation needed)   |
-| PostgreSQL, Firebase v9+  |                                        |
+1. **Clone the Repository**
+   ```
+   git clone https://github.com//PEDIASCAPE_Student_Platform.git
+   cd PEDIASCAPE_Student_Platform
+   ```
 
-### Hardware
+2. **Install Dependencies**
+   ```
+   npm install
+   ```
 
-| Developers                | End Users                  |
-|---------------------------|----------------------------|
-| Intel Core i3+, 4GB RAM   | Any modern device, 2GB RAM |
-| 10GB storage              | 500MB free (for cache)     |
-| Stable internet           | Internet required          |
+### Configure Firebase and Gemini API
 
-## Planned Enhancements
+#### 1. Create and Configure Your Firebase Project
 
-- *AI-powered learning recommendations*
-- *Real-time mentor chat and webinars*
-- *Gamification* with badges and achievement systems
-- *Regional language content*
-- *Expanded accessibility and financial aid information*
+- Go to the [Firebase console](https://console.firebase.google.com/) and create a **new Firebase project** with a unique name.
+- Add a new web app if you haven’t already.
+- Locate your project’s configuration keys (apiKey, authDomain, projectId, etc.).
+
+**Important:**  
+Use your own Firebase configuration by replacing placeholders in the project with your Firebase details. Update all relevant scripts/files where Firebase is initialized (commonly in a file like `firebaseConfig.js`).
+
+Example:
+```
+// firebaseConfig.js
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  // other config values...
+};
+export default firebaseConfig;
+```
+
+#### 2. Set Up Gemini AI API Integration
+
+- Register for Google Gemini AI API access.
+- Obtain your **Gemini API Key**.
+- At the root of your project folder, create a `.env` file if it does not exist.
+- Add your Gemini API key in `.env`:
+  ```
+  GEMINI_API_KEY=your_gemini_api_key_here
+  ```
+
+Make sure your server script (`server.js`) is configured to load environment variables using a package like `dotenv`:
+
+```
+require('dotenv').config();
+const geminiApiKey = process.env.GEMINI_API_KEY;
+```
+
+#### 3. Update Scripts
+
+- Review your project scripts (frontend and backend) to ensure you replace all Firebase config placeholders with your actual project details.
+- Ensure your `.env` file is loaded properly and the Gemini API key is accessible where required.
+
+### 4. Run the AI Chatbot Server
+
+After completing all configurations, start the AI chatbot server by running:
+
+```
+node server.js
+```
+
+This command will launch the server and make the AI chatbot available on your configured routes/ports.
+
+## Usage
+
+### Main Modules
+
+- **Study Materials:** Browse, upload, and download academic resources.
+- **Career Roadmaps:** Explore visual learning and career paths for various domains (Web Dev, AI, Data Science, Mobile, DevOps, Cybersecurity).
+- **Projects:** Filter and select beginner to advanced project ideas, view details and solutions.
+- **Career Guidance:** Take assessments, get personalized recommendations, and view suitable career roles with required skills.
+- **PSAI Chatbot:** Chat with the integrated AI for instant help, study tips, and roadmap suggestions.
+- **Dashboard:** Track your progress, manage your calendar and tasks, and quickly access important features.
+
+## Sample Screens
+
+- Landing page with navigation to all key modules
+- Secure login and registration interface
+- Dashboard with calendar and to-do widgets
+- Visual interactive roadmaps with recommended resources
+- Project listing with categories and skills highlighted
+- Personalized career assessment and results interface
+- Integrated AI assistant chat panel
 
 ## Contributing
 
-1. Fork the repository and create your feature branch.
-2. Commit your changes with clear messages.
-3. Push to your branch and open a pull request.
-4. Ensure you follow code style and documentation guidelines.
-5. For major changes, open an issue to discuss proposals.
+1. Fork the repository.
+2. Create your feature branch (`git checkout -b feature/YourFeature`).
+3. Commit your changes (`git commit -m 'Add your feature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a pull request for review.
 
 ## License
 
-This project is developed by the students of Bharat Institute of Engineering and Technology under the guidance of the Computer Science Department as part of their academic curriculum.
+This project is licensed for educational purposes. For specific use or distribution rights, please consult the supervisors or project leads.
+
+## Acknowledgments
+
+- Developed by the Batch-1 (PEDIASCAPE team) at Bharat Institute of Engineering and Technology.
+- Special thanks to all faculty, mentors, and contributors for their ongoing support.
+
+## Contact
+
+For questions, suggestions, or collaborations, please use the GitHub Issues page or contact the listed project members in the main report.
 
 ## 🙌 Team Credits
 
 - Built by Batch-1 as a part of academic curriculum 2025
-    -Soumya Sudhir Nayak (Team Lead)
-    -Indrakanti Kevin 
-    -Rishith Goud Kanrapally
-    -Shaik Abid
-    -Sri Ram Puneeth
+  - Soumya Sudhir Nayak (Team Lead)
+  - Indrakanti Kevin 
+  - Rishith Goud Kanrapally
+  - Shaik Abid
+  - Sri Ram Puneeth
+```
+
+
 
 
 ## Contact
