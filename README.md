@@ -69,6 +69,16 @@
 
 This project is developed by the students of Bharat Institute of Engineering and Technology under the guidance of the Computer Science Department as part of their academic curriculum.
 
+## Team Credits
+
+👥 Built by Bath-1 as a part of academic curriculum 2025
+Soumya Sudhir Nayak (Team Lead)
+Indrakanti Kevin 
+Rishith Goud Kanrapally
+Shaik Abid
+Sri Ram Puneeth
+
+
 ## Contact
 
 For questions or collaboration requests, please use the Issues section or contact the maintainers.
