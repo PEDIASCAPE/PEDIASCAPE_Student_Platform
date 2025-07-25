@@ -1,6 +1,3 @@
-Certainly! Here's the updated README file with the **Team Credits** section added at the end:
-
-```markdown
 # PEDIASCAPE: Comprehensive E-Learning Platform
 
 ## Overview
@@ -157,7 +154,7 @@ For questions, suggestions, or collaborations, please use the GitHub Issues page
   - Rishith Goud Kanrapally
   - Shaik Abid
   - Sri Ram Puneeth
-```
+
 
 
 
