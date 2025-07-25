@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEDIASCAPE - Dashboard</title>
+    <link rel="stylesheet" href="./styles/newps1_copy.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            /* min-height: 100vh; */
+            height: 700px;
+
+            background-image: url("./imgg/cont2/cont2image.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        }
+
+        .navbar {
+    display: flex
+;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: black;
+    position: inherit;
+}
+        
+        /* Auth UI styles */
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #4285F4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            width: 150px;
+            display: none;
+            z-index: 100;
+        }
+
+        .user-menu.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #333;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Toast notification styles */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+        }
+
+        .toast.success {
+            background-color: #4CAF50;
+        }
+
+        .toast.error {
+            background-color: #F44336;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Dashboard styles */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-text h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text p {
+            font-family: 'Montserrat', sans-serif;
+            opacity: 0.8;
+        }
+
+        .user-email {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .user-email i {
+            margin-right: 8px;
+            color: #4285F4;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .card-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header h2 i {
+            margin-right: 10px;
+            font-size: 1.4rem;
+            color: #4285F4;
+        }
+
+        /* Calendar styles */
+        #calendar .fc-toolbar-title {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        #calendar .fc-button {
+            background-color: #4285F4;
+            border-color: #4285F4;
+        }
+
+        #calendar .fc-col-header,
+        #calendar .fc-daygrid-body {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        #calendar .fc-col-header-cell {
+            background-color: rgba(66, 133, 244, 0.2);
+        }
+
+        #calendar .fc-day-today {
+            background-color: rgba(66, 133, 244, 0.1) !important;
+        }
+
+        #calendar .fc-daygrid-day-number {
+            color: white;
+        }
+
+        #calendar .fc-event {
+            background-color: #4285F4;
+            border-color: #4285F4;
+        }
+
+        /* Todo task event styles */
+        #calendar .fc-event.todo-task {
+            background-color: #E91E63;
+            border-color: #E91E63;
+        }
+
+        #calendar .fc-event.todo-task-completed {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        /* Date picker for todo tasks */
+        .todo-date {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin-right: 5px;
+            width: 130px;
+        }
+
+        .todo-date:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Todo list styles */
+        .todo-list {
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .todo-input-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .todo-input {
+            flex-grow: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px 0 0 4px;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .todo-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .add-todo-btn {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .todo-item.completed {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .todo-checkbox {
+            margin-right: 15px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .todo-text {
+            flex-grow: 1;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .todo-date-display {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-right: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .delete-todo {
+            color: #F44336;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .delete-todo:hover {
+            opacity: 1;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .user-email {
+                margin-top: 15px;
+            }
+
+            .todo-input-group {
+                flex-direction: column;
+            }
+
+            .todo-date {
+                width: 100%;
+                margin-bottom: 5px;
+                border-radius: 4px;
+            }
+
+            .todo-input {
+                border-radius: 4px;
+                margin-bottom: 5px;
+            }
+
+            .add-todo-btn {
+                border-radius: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                <div class="title" onclick="navigateTo('index.html')">PEDIASCAPE</div>
+                <div class="contents">
+                    <ul class="lists">
+                        <li class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</li>
+                        <li class="listnav" onclick="navigateTo('material.html')">MATERIALS</li>
+                        <li class="listnav" onclick="navigateTo('project/index.html')">PROJECTS</li>
+                        <li class="listnav" onclick="navigateTo('carrier_guidance/index.html')">CAREER GUIDANCE</li>
+                        <li class="listnav" onclick="navigateTo('psai1.html')">PS AI</li>
+                    </ul>
+
+                    <!-- User profile section -->
+                    <div class="user-profile" id="userProfileSection">
+                        <div id="userInitials" class="user-avatar" onclick="toggleUserMenu()"></div>
+                        <div id="userMenu" class="user-menu">
+                            <div class="menu-item" onclick="navigateTo('dashboard.html')">Dashboard</div>
+                            <div class="menu-item" id="logoutButton">Logout</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+                <div class="dropdown">
+                    <div class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</div>
+                    <div class="listnav" onclick="navigateTo('material.html')">MATERIALS</div>
+                    <div class="listnav" onclick="navigateTo('project/index.html')">PROJECTS</div>
+                    <div class="listnav" onclick="navigateTo('carrier_guidance/index.html')">CAREER GUIDANCE</div>
+                    <div class="listnav" onclick="navigateTo('psai1.html')">PS AI</div>
+                    <div class="listnav" id="mobileAuthOption" onclick="navigateTo('dashboard.html')">DASHBOARD</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h1>Welcome to your Dashboard</h1>
+                <p>Track your progress and manage your tasks</p>
+            </div>
+            <div class="user-email">
+                <i class="fas fa-user-circle"></i>
+                <span id="userEmailDisplay">Loading...</span>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2><i class="far fa-calendar"></i> Calendar</h2>
+                </div>
+                <div id="calendar"></div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-tasks"></i> To-Do List</h2>
+                </div>
+                <div class="todo-input-group">
+                    <input type="date" class="todo-date" id="todoDate">
+                    <input type="text" class="todo-input" id="todoInput" placeholder="Add a new task...">
+                    <button class="add-todo-btn" id="addTodoBtn">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="todo-list" id="todoList">
+                    <!-- Todo items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>company</h4>
+                    <ul>
+                        <li><a href="#">about us</a></li>
+                        <li><a href="#">our services</a></li>
+                        <li><a href="#">privacy policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>get help</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="login.html">Login/Signup</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>follow us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add a toast container -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Firebase scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgz8plPo9kiZw0e5HrlBpGq0NrfT_6kkY",
+            authDomain: "pediascape-6b99b.firebaseapp.com",
+            projectId: "pediascape-6b99b",
+            storageBucket: "pediascape-6b99b.appspot.com",
+            messagingSenderId: "128341831687",
+            appId: "1:128341831687:web:e44b694935e7ab37013aa2",
+            measurementId: "G-J354SK3B93"
+        };
+
+        let currentUser = null;
+        let db = null;
+        let calendar = null;
+
+        // Initialize Firebase
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialize Firebase if it hasn't been initialized already
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                db = firebase.firestore();
+                
+                // Initialize FullCalendar
+                initializeCalendar();
+                
+                // Set default date for todo input to today
+                const todoDateInput = document.getElementById('todoDate');
+                const today = new Date();
+                const formattedDate = today.toISOString().split('T')[0];
+                todoDateInput.value = formattedDate;
+                
+                // Check authentication state
+                firebase.auth().onAuthStateChanged(user => {
+                    if (user) {
+                        currentUser = user;
+                        updateAuthUI(user);
+                        loadUserData();
+                    } else {
+                        // Redirect to login if not authenticated
+                        window.location.href = 'login.html';
+                    }
+                });
+                
+                // Set up logout functionality
+                const logoutButton = document.getElementById('logoutButton');
+                if (logoutButton) {
+                    logoutButton.addEventListener('click', () => {
+                        firebase.auth().signOut()
+                            .then(() => {
+                                showToast('Logged out successfully', 'success');
+                                // Redirect to home page after logout
+                                setTimeout(() => {
+                                    window.location.href = 'index.html';
+                                }, 1000);
+                            })
+                            .catch(error => {
+                                showToast('Error logging out: ' + error.message, 'error');
+                            });
+                    });
+                }
+                
+                // Initialize To-Do list functionality
+                initializeTodoList();
+                
+                // Close user menu when clicking outside
+                document.addEventListener('click', (event) => {
+                    const userAvatar = document.getElementById('userInitials');
+                    const userMenu = document.getElementById('userMenu');
+                    
+                    if (userMenu && userAvatar && event.target !== userAvatar && !userMenu.contains(event.target)) {
+                        userMenu.classList.remove('active');
+                    }
+                });
+                
+            } catch (error) {
+                console.error("Firebase initialization error:", error);
+                showToast("Error loading dashboard. Please try again later.", "error");
+            }
+        });
+
+        // Initialize FullCalendar
+        function initializeCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 'auto',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek'
+                },
+                events: [],
+                dateClick: function(info) {
+                    // Update todo date input and focus on todo input
+                    document.getElementById('todoDate').value = info.dateStr;
+                    document.getElementById('todoInput').focus();
+                },
+                eventClick: function(info) {
+                    // Handle different actions based on the event source
+                    const eventId = info.event.id;
+                    
+                    // Check if it's a todo task (they start with 'todo-')
+                    if (eventId.startsWith('todo-')) {
+                        const todoId = eventId.replace('todo-', '');
+                        
+                        // If it's a todo task, offer to mark as complete or delete
+                        const todoStatus = info.event.extendedProps.completed ? 'complete' : 'incomplete';
+                        const actionText = todoStatus === 'complete' ? 'mark as incomplete' : 'mark as complete';
+                        
+                        const action = confirm(`Do you want to ${actionText} or delete the task "${info.event.title}"?\nClick OK to ${actionText} or Cancel to delete.`);
+                        
+                        if (action) {
+                            // Toggle completion status
+                            toggleTodoCompletion(todoId, info.event.extendedProps.completed);
+                        } else {
+                            // Delete the todo
+                            if (confirm(`Are you sure you want to delete "${info.event.title}"?`)) {
+                                deleteTodo(todoId);
+                            }
+                        }
+                    } else {
+                        // Regular calendar event
+                        if (confirm(`Are you sure you want to delete '${info.event.title}'?`)) {
+                            // Remove from calendar display
+                            info.event.remove();
+                            
+                            // Remove from Firestore if user is logged in
+                            if (currentUser) {
+                                deleteEventFromFirestore(info.event.id);
+                            }
+                        }
+                    }
+                }
+            });
+            
+            calendar.render();
+        }
+
+        // Save event to Firestore
+        function saveEventToFirestore(id, title, date) {
+            db.collection("users").doc(currentUser.uid).collection("events").doc(id).set({
+                title: title,
+                date: date,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                console.log("Event saved to Firestore");
+            })
+            .catch((error) => {
+                console.error("Error saving event: ", error);
+                showToast("Error saving event", "error");
+            });
+        }
+
+        // Delete event from Firestore
+        function deleteEventFromFirestore(id) {
+            db.collection("users").doc(currentUser.uid).collection("events").doc(id).delete()
+            .then(() => {
+                console.log("Event deleted from Firestore");
+            })
+            .catch((error) => {
+                console.error("Error deleting event: ", error);
+                showToast("Error deleting event", "error");
+            });
+        }
+
+        // Initialize Todo List functionality
+        function initializeTodoList() {
+            const todoInput = document.getElementById('todoInput');
+            const addTodoBtn = document.getElementById('addTodoBtn');
+            
+            // Add todo when button is clicked
+            addTodoBtn.addEventListener('click', () => {
+                addTodo();
+            });
+            
+            // Add todo when Enter key is pressed
+            todoInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addTodo();
+                }
+            });
+        }
+
+        // Add a new todo item
+        function addTodo() {
+            const todoInput = document.getElementById('todoInput');
+            const todoDate = document.getElementById('todoDate');
+            const text = todoInput.value.trim();
+            const dateValue = todoDate.value;
+            
+            if (text && dateValue && currentUser) {
+                // Create a unique ID for the todo
+                const todoId = Date.now().toString();
+                
+                // Add to Firestore
+                db.collection("users").doc(currentUser.uid).collection("todos").doc(todoId).set({
+                    text: text,
+                    date: dateValue,
+                    completed: false,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    console.log("Todo added to Firestore");
+                    // Clear input field
+                    todoInput.value = '';
+                    // No need to manually add to UI as real-time listener will update
+                    
+                    // Show success message
+                    showToast("Task added successfully", "success");
+                })
+                .catch((error) => {
+                    console.error("Error adding todo: ", error);
+                    showToast("Error adding todo", "error");
+                });
+            } else {
+                showToast("Please enter a task and select a date", "error");
+            }
+        }
+
+        // Update todo completion status
+        function toggleTodoCompletion(id, completed) {
+            const newStatus = !completed;
+            
+            db.collection("users").doc(currentUser.uid).collection("todos").doc(id).update({
+                completed: newStatus
+            })
+            .then(() => {
+                // Update the corresponding calendar event's color
+                const calendarEvent = calendar.getEventById(`todo-${id}`);
+                if (calendarEvent) {
+                    // Remove existing class and add new class based on completion status
+                    calendarEvent.setProp('classNames', newStatus ? ['todo-task-completed'] : ['todo-task']);
+                    
+                    // Update extended props
+                    calendarEvent.setExtendedProp('completed', newStatus);
+                }
+                
+                showToast(`Task marked as ${newStatus ? 'completed' : 'active'}`, "success");
+            })
+            .catch((error) => {
+                console.error("Error updating todo: ", error);
+                showToast("Error updating todo", "error");
+            });
+        }
+
+        // Delete a todo item
+        function deleteTodo(id) {
+            db.collection("users").doc(currentUser.uid).collection("todos").doc(id).delete()
+            .then(() => {
+                // Also remove from calendar if it exists
+                const calendarEvent = calendar.getEventById(`todo-${id}`);
+                if (calendarEvent) {
+                    calendarEvent.remove();
+                }
+                
+                showToast("Task deleted successfully", "success");
+            })
+            .catch((error) => {
+                console.error("Error deleting todo: ", error);
+                showToast("Error deleting todo", "error");
+            });
+        }
+
+        // Load user data (email, calendar events, todos)
+        function loadUserData() {
+            // Display user email
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            userEmailDisplay.textContent = currentUser.email;
+            
+            // Load calendar events
+            loadCalendarEvents();
+            
+            // Set up real-time listener for todos
+            setupTodoListener();
+        }
+
+        // Load calendar events from Firestore
+        function loadCalendarEvents() {
+            // Clear existing events
+            calendar.getEvents().forEach(event => event.remove());
+            
+            // Load regular calendar events
+            db.collection("users").doc(currentUser.uid).collection("events").get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const eventData = doc.data();
+                    calendar.addEvent({
+                        id: doc.id,
+                        title: eventData.title,
+                        start: eventData.date,
+                        allDay: true
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error("Error loading events: ", error);
+                showToast("Error loading calendar events", "error");
+            });
+            
+            // Load todo tasks as calendar events
+            db.collection("users").doc(currentUser.uid).collection("todos").get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const todoData = doc.data();
+                    if (todoData.date) {
+                        addTodoToCalendar(doc.id, todoData.text, todoData.date, todoData.completed);
+                    }
+                });
+            })
+            .catch((error) => {
+                console.error("Error loading todo events: ", error);
+                showToast("Error loading todo events", "error");
+            });
+        }
+
+        // Add todo task to calendar
+        function addTodoToCalendar(todoId, todoText, todoDate, completed) {
+            calendar.addEvent({
+                id: `todo-${todoId}`,
+                title: todoText,
+                start: todoDate,
+                allDay: true,
+                classNames: completed ? ['todo-task-completed'] : ['todo-task'],
+                extendedProps: {
+                    completed: completed
+                }
+            });
+        }
+
+        // Set up real-time listener for todos
+        function setupTodoListener() {
+            const todoList = document.getElementById('todoList');
+            
+            db.collection("users").doc(currentUser.uid).collection("todos")
+            .orderBy("timestamp", "desc")
+            .onSnapshot((snapshot) => {
+                // Clear current todos
+                todoList.innerHTML = '';
+                
+                // Check if there are todos
+                if (snapshot.empty) {
+                    todoList.innerHTML = `
+                        <div style="text-align: center; padding: 20px; opacity: 0.7;">
+                            <i class="fas fa-tasks" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <p>No tasks yet. Add your first task above!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Process todo changes
+                snapshot.docChanges().forEach((change) => {
+                    const todoData = change.doc.data();
+                    const todoId = change.doc.id;
+                    
+                    // Handle added or modified todos in the calendar
+                    if (change.type === "added" || change.type === "modified") {
+                        // Update or add calendar event for this todo
+                        const existingEvent = calendar.getEventById(`todo-${todoId}`);
+                        
+                        if (existingEvent) {
+                            // Update existing event
+                            existingEvent.setProp('title', todoData.text);
+                            existingEvent.setStart(todoData.date);
+                            existingEvent.setProp('classNames', todoData.completed ? ['todo-task-completed'] : ['todo-task']);
+                            existingEvent.setExtendedProp('completed', todoData.completed);
+                        } else if (todoData.date) {
+                            // Add new event to calendar
+                            addTodoToCalendar(todoId, todoData.text, todoData.date, todoData.completed);
+                        }
+                    }
+                    
+                    // Handle removed todos
+                    if (change.type === "removed") {
+                            const existingEvent = calendar.getEventById(`todo-${todoId}`);
+                            if (existingEvent) {
+                                existingEvent.remove();
+                            }
+                        }
+                    });
+                
+                    // Rebuild the todo list UI
+                    snapshot.forEach((doc) => {
+                        const todoData = doc.data();
+                        const todoItem = createTodoItem(doc.id, todoData.text, todoData.date, todoData.completed);
+                        todoList.appendChild(todoItem);
+                    });
+                },
+                (error) => {
+                    console.error("Error loading todos: ", error);
+                    showToast("Error loading to-do items", "error");
+                });
+        }
+
+        // Create a todo item element
+        function createTodoItem(id, text, date, completed) {
+            const todoItem = document.createElement('div');
+            todoItem.className = `todo-item ${completed ? 'completed' : ''}`;
+            
+            // Format the date for display
+            const displayDate = formatDate(date);
+            
+            todoItem.innerHTML = `
+                <input type="checkbox" class="todo-checkbox" ${completed ? 'checked' : ''}>
+                <span class="todo-text">${text}</span>
+                <span class="todo-date-display">${displayDate}</span>
+                <i class="fas fa-trash delete-todo"></i>
+            `;
+            
+            // Add event listener for checkbox
+            const checkbox = todoItem.querySelector('.todo-checkbox');
+            checkbox.addEventListener('change', () => {
+                toggleTodoCompletion(id, completed);
+            });
+            
+            // Add event listener for delete button
+            const deleteButton = todoItem.querySelector('.delete-todo');
+            deleteButton.addEventListener('click', () => {
+                if (confirm(`Are you sure you want to delete "${text}"?`)) {
+                    deleteTodo(id);
+                }
+            });
+            
+            return todoItem;
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString(undefined, { 
+                month: 'short', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        // Toggle user menu
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            userMenu.classList.toggle('active');
+        }
+
+        // Update authentication UI
+        function updateAuthUI(user) {
+            const userInitials = document.getElementById('userInitials');
+            const mobileAuthOption = document.getElementById('mobileAuthOption');
+            
+            if (user) {
+                // Display user initials in avatar
+                const email = user.email || '';
+                const initials = email.split('@')[0].charAt(0).toUpperCase();
+                userInitials.innerText = initials;
+                
+                // Update mobile menu
+                if (mobileAuthOption) {
+                    mobileAuthOption.innerText = 'DASHBOARD';
+                    mobileAuthOption.onclick = () => navigateTo('dashboard.html');
+                }
+            } else {
+                // Reset to login state
+                if (mobileAuthOption) {
+                    mobileAuthOption.innerText = 'LOGIN';
+                    mobileAuthOption.onclick = () => navigateTo('login.html');
+                }
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Navigation function
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // Toggle mobile dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.querySelector('.dropdown');
+            dropdown.classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

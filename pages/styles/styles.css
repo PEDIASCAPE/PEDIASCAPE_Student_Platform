@@ -1,0 +1,311 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #0a0a0a;
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* Header Styles */
+header {
+    position: fixed;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    gap: 20px;  /* Add gap between flex items */
+}
+
+/* Access Button Styles */
+.access-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #f92a5a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.access-button:hover {
+    background: #ff4070;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(249, 42, 90, 0.3);
+}
+
+.access-button i {
+    font-size: 14px;
+}
+
+/* Section Styles */
+#pdfs:hover .access-button {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(249, 42, 90, 0.3);
+}
+
+/* Access Button Styles */
+#pdfs a {
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* User Menu Styles */
+.user-menu {
+    display: flex;
+    align-items: center;
+}
+
+.logout-btn {
+    padding: 8px 16px;
+    background: #f92a5a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background: #ff4070;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+    }
+    
+    .user-menu {
+        margin-left: auto;  /* Push to the right on mobile */
+    }
+    
+    .logout-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+.login {
+    background-color: #000000;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .login .div {
+    background-color: #000000;
+    width: 960px;
+    height: 1200px;
+    position: relative;
+  }
+  
+  .login .text-wrapper {
+    position: absolute;
+    height: 44px;
+    top: 24px;
+    left: 420px;
+    background: linear-gradient(
+      118deg,
+      rgba(243, 55, 66, 1) 0%,
+      rgba(252, 177, 17, 1) 25%,
+      rgba(67, 130, 238, 1) 50%,
+      rgba(184, 64, 180, 1) 75%,
+      rgba(251, 159, 24, 1) 100%
+    );
+    -webkit-background-clip: text !important;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-fill-color: transparent;
+    font-family: "Montserrat-ExtraBold", Helvetica;
+    font-weight: 800;
+    color: transparent;
+    font-size: 36px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .login .don-t-have-an {
+    position: absolute;
+    height: 29px;
+    top: 535px;
+    left: 310px;
+    font-family: "Montserrat-ExtraBold", Helvetica;
+    font-weight: 800;
+    color: transparent;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .login .span {
+    color: #b1aaa8;
+  }
+  
+  .login .text-wrapper-2 {
+    color: #fb5e3a;
+    font-size: 24px;
+  }
+  
+  .login .EMAIL {
+    position: absolute;
+    width: 793px;
+    height: 122px;
+    top: 114px;
+    left: 89px;
+  }
+  
+  .login .text-wrapper-3 {
+    position: absolute;
+    height: 39px;
+    top: 0;
+    left: 0;
+    font-family: "Montserrat-ExtraBold", Helvetica;
+    font-weight: 800;
+    color: #fb5e3a;
+    font-size: 32px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .login .overlap-group {
+    left: 1px;
+    position: absolute;
+    width: 788px;
+    height: 55px;
+    top: 67px;
+  }
+  
+  .login .text-wrapper-4 {
+    position: absolute;
+    height: 24px;
+    top: 16px;
+    left: 7px;
+    font-family: "Montserrat-ExtraBold", Helvetica;
+    font-weight: 800;
+    color: #b0aaa8;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  .login .rectangle {
+    background-color: #000000;
+            font-family: "Montserrat", Helvetica;
+            font-weight: 800;
+            font-size:20px;
+            position: absolute;
+            width: 788px;
+            height: 55px;
+            top: 0;
+            left: 0;
+            border: 1px solid;
+            border-color:#fb5e3a;
+            padding-left: 10px;
+            color: #ffffff;
+  }
+  
+  .login .PASSWORD {
+    position: absolute;
+    width: 798px;
+    height: 122px;
+    top: 264px;
+    left: 84px;
+  }
+  
+  .login .overlap {
+    left: 6px;
+    position: absolute;
+    width: 788px;
+    height: 55px;
+    top: 67px;
+  }
+  
+  .login .text-wrapper-5 {
+    position: absolute;
+    height: 24px;
+    top: 15px;
+    left: 7px;
+    font-family: "Montserrat-ExtraBold", Helvetica;
+    font-weight: 800;
+    color: #b1aaa8;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  .login .rectangle-2 {
+    border-image: linear-gradient(
+        90deg,
+        rgba(243, 55, 66, 1) 0%,
+        rgba(63, 136, 240, 1) 25%,
+        rgba(251, 171, 67, 1) 50%,
+        rgba(244, 65, 188, 1) 75%,
+        rgba(156, 222, 43, 1) 100%
+      )
+      1;
+    position: absolute;
+    width: 788px;
+    height: 55px;
+    top: 0;
+    left: 0;
+    border: 1px solid;
+    border-color: rgb(235, 53, 53);
+    color: #ffffff;
+  }
+  
+  .login .LOGIN-BUTTON {
+    position: absolute;
+    width: 141px;
+    height: 68px;
+    top: 431px;
+    left: 379px;
+    background-color: #000000;
+    border: none;
+  }
+  
+  .login .exclude {
+    left: 50px;
+    position: absolute;
+    width: 400px;
+    height: 82px;
+    top: 604px;
+  }
+  
+  .login .img {
+    left: 508px;
+    position: absolute;
+    width: 400px;
+    height: 82px;
+    top: 604px;
+  }
+  
+
+
+
+
+
+  

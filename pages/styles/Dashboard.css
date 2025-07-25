@@ -1,0 +1,410 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #000;
+    height: 700px;
+}
+
+.navbar {
+    width: 100%;
+    height: 100px;
+    flex-shrink: 0;
+    background: #000;
+    box-shadow: 0px 4px 4px 0px #F88764;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    z-index: 100;
+}
+
+.title {
+    cursor: pointer;
+    color: #FFF;
+    font-family: "Tilt Warp";
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    align-self: center;
+    margin-left: 20px;
+}
+
+.contents {
+    width: 50rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.lists {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    gap: 22px;
+    margin-right: 30px;
+}
+
+.listnav {
+    color: #FFF;
+    font-family: "Tilt Warp";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    list-style: none;
+}
+
+.profilelogo {
+    width: 60px;
+    height: 60px;
+}
+
+.dashcon {
+    width: 20vw;
+    height: 100vh;
+    position: absolute;
+    top: 100px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    background-image: url("../imgg/dashboard/used3.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.dashcon img {
+    width: 98px;
+    height: 98px;
+    overflow: hidden;
+    padding-top: 50px;
+}
+
+.dashcon h3 {
+    color: #FFF;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.dashcon h4 {
+    color: #FFF;
+    text-align: center;
+    text-shadow: 0px 4px 4px #000;
+    font-family: Montserrat;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.mainconout {
+    width: 80vw;
+    height: 100vh;
+    position: absolute;
+    left: 20vw;
+    top: 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+        "maincon1 calender"
+        "maincon2 todolist";
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+}
+
+.maincon1 {
+    grid-area: maincon1;
+    width: 30rem;
+    height: 20rem;
+    flex-shrink: 0;
+    background-image: url(../imgg/dashboard/mainconimg.png);
+    border-radius: 5px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.maincon2 {
+    grid-area: maincon2;
+    width: 30rem;
+    height: 20rem;
+    flex-shrink: 0;
+    background-image: url(../imgg/dashboard/mainconimg.png);
+    border-radius: 5px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.3s ease;
+}
+
+.maincon1 h4,
+.maincon2 h4 {
+    color: #000;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    padding-top: 25%;
+}
+
+.maincon1:hover,
+.maincon2:hover {
+    transform: scale(1.05);
+}
+
+/* Calendar Styling */
+.Calender {
+    grid-area: calender;
+    background-image: url(../imgg/dashboard/mainconimg.png);
+    width: 30rem;
+    height: 20rem;
+    border-radius: 5px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.Calender:hover {
+    transform: scale(1.05);
+}
+
+.calendar-header {
+    background-color: rgba(248, 135, 100, 0.9);
+    padding: 15px;
+    text-align: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.calendar-header h4 {
+    color: #000;
+    font-family: Montserrat;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.calendar-nav button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+    flex-grow: 1;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-weight: bold;
+    font-family: Montserrat;
+    color: #000;
+}
+
+.calendar-day {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-family: Montserrat;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background-color: rgba(248, 135, 100, 0.5);
+}
+
+.current-day {
+    background-color: #F88764;
+    color: white;
+    font-weight: bold;
+}
+
+.selected-day {
+    border: 2px solid #F88764;
+    color: #000;
+    font-weight: bold;
+}
+
+.event-day::after {
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    width: 5px;
+    height: 5px;
+    background-color: #F88764;
+    border-radius: 50%;
+}
+
+/* Todo List Styling */
+.todolist {
+    grid-area: todolist;
+    background-image: url(../imgg/dashboard/mainconimg.png);
+    width: 30rem;
+    height: 20rem;
+    border-radius: 5px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.todolist:hover {
+    transform: scale(1.05);
+}
+
+.todo-header {
+    background-color: rgba(248, 135, 100, 0.9);
+    padding: 15px;
+    text-align: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-header h4 {
+    color: #000;
+    font-family: Montserrat;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.selected-date {
+    color: #000;
+    font-family: Montserrat;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+}
+
+.todo-content {
+    background-color: rgba(255, 255, 255, 0.8);
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.todo-form {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.todo-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 2px solid #F88764;
+    border-radius: 4px 0 0 4px;
+    font-family: Montserrat;
+    outline: none;
+}
+
+.todo-add-btn {
+    background-color: #F88764;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    font-family: Montserrat;
+    font-weight: bold;
+}
+
+.todo-list {
+    list-style-type: none;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.todo-checkbox {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: #F88764;
+}
+
+.todo-text {
+    flex-grow: 1;
+    font-family: Montserrat;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.todo-delete {
+    background: none;
+    border: none;
+    color: #ff5757;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 5px;
+}
+
+.task-date {
+    font-size: 12px;
+    color: #666;
+    margin-left: 10px;
+}
+
+.no-tasks {
+    text-align: center;
+    font-family: Montserrat;
+    color: #666;
+    padding: 20px 0;
+}

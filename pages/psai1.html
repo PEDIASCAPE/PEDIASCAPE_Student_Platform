@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS AI - PEDIASCAPE</title>
+    <link rel="stylesheet" href="./styles/aif.css">
+    <link rel="stylesheet" href="./styles/ai.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for social icons in footer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Auth UI styles */
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #4285F4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .user-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            width: 150px;
+            display: none;
+            z-index: 100;
+        }
+        .user-menu.active {
+            display: block;
+        }
+        .menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #333;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+        /* Toast notification styles */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+        }
+        .toast.success {
+            background-color: #4CAF50;
+        }
+        .toast.error {
+            background-color: #F44336;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                <div class="title" onclick="navigateTo('index.html')" >PEDIASCAPE</div>
+                <div class="contents">
+                    <ul class="lists">
+                        <li class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</li>
+                        <li class="listnav" onclick="navigateTo('material.html')">MATERIALS</li>
+                        <li class="listnav" onclick="navigateTo('./project/index.html')">PROJECTS</li>
+                        <li class="listnav" onclick="navigateTo('./carrier_guidance/index.html')">CAREER GUIDANCE</li>
+                        <li class="listnav active" onclick="navigateTo('psai1.html')">PS AI</li>
+                    </ul>
+
+                    <!-- User profile section -->
+                    <div class="user-profile" id="userProfileSection" style="display: none;">
+                        <div id="userInitials" class="user-avatar" onclick="toggleUserMenu()"></div>
+                        <div id="userMenu" class="user-menu">
+                            <div class="menu-item" onclick="navigateTo('dashboard.html')">Dashboard</div>
+                            <div class="menu-item" id="logoutButton">Logout</div>
+                        </div>
+                    </div>
+                    <!-- Guest profile section -->
+                    <div id="guestProfileSection">
+                        <img class="profilelogo" src="./imgg/nav/profile.svg" alt="Profile" onclick="redirectToLogin()">
+                    </div>
+                </div>
+                <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+                <div class="dropdown">
+                    <div class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</div>
+                    <div class="listnav" onclick="navigateTo('material.html')">MATERIALS</div>
+                    <div class="listnav" onclick="navigateTo('project/index.html')">PROJECTS</div>
+                    <div class="listnav" onclick="navigateTo('carrier_guidance/index.html')">CAREER GUIDANCE</div>
+                    <div class="listnav active" onclick="navigateTo('psai1.html')">PS AI</div>
+                    <div class="listnav" id="mobileAuthOption" onclick="redirectToLogin()">PROFILE</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="ai-main">
+        <div class="ai-container">
+            <div class="ai-header">
+                <h1>PS AI Assistant</h1>
+                <div class="ai-tabs">
+                    <button class="tab-btn active" data-tab="chat">Chat</button>
+                    <button class="tab-btn" data-tab="roadmap">Learning Roadmap</button>
+                </div>
+            </div>
+
+            <!-- Chat Tab -->
+            <div id="chat-tab" class="tab-content active">
+                <div id="chat-container">
+                    <div id="chat-messages">
+                        <div class="message bot">
+                            <div class="message-content">
+                                <p>Hello! I'm your PEDIASCAPE AI assistant. How can I help with your learning journey today?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="question-form">
+                        <div class="input-container">
+                            <input type="text" id="question-input" placeholder="Ask me anything about your learning path...">
+                            <button type="submit">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Roadmap Tab -->
+            <div id="roadmap-tab" class="tab-content">
+                <div id="roadmap-container">
+                    <form id="roadmap-form">
+                        <div class="form-group">
+                            <label for="topic">Learning Topic</label>
+                            <input type="text" id="topic" placeholder="e.g., JavaScript, Machine Learning, Photography">
+                        </div>
+                        <div class="form-group">
+                            <label for="level">Your Level</label>
+                            <select id="level">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="timeframe">Timeframe</label>
+                            <select id="timeframe">
+                                <option value="1 month">1 Month</option>
+                                <option value="3 months" selected>3 Months</option>
+                                <option value="6 months">6 Months</option>
+                                <option value="1 year">1 Year</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="primary-btn">Generate Roadmap</button>
+                    </form>
+                    
+                    <div id="roadmap-loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Generating your personalized learning roadmap...</p>
+                    </div>
+                    
+                    <div id="roadmap-content"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>company</h4>
+                    <ul>
+                        <li><a href="aboutus.html">about us</a></li>
+                        <li><a href="ourservices.html">our services</a></li>
+                        <li><a href="#">privacy policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>get help</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="login.html">Login/Signup</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>follow us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add Firebase scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgz8plPo9kiZw0e5HrlBpGq0NrfT_6kkY",
+            authDomain: "pediascape-6b99b.firebaseapp.com",
+            projectId: "pediascape-6b99b",
+            storageBucket: "pediascape-6b99b.appspot.com",
+            messagingSenderId: "128341831687",
+            appId: "1:128341831687:web:e44b694935e7ab37013aa2",
+            measurementId: "G-J354SK3B93"
+        };
+
+        // Initialize Firebase
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialize Firebase if it hasn't been initialized already
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                // Check authentication state
+                firebase.auth().onAuthStateChanged(user => {
+                    updateAuthUI(user);
+                });
+                
+                // Set up logout functionality
+                const logoutButton = document.getElementById('logoutButton');
+                if (logoutButton) {
+                    logoutButton.addEventListener('click', () => {
+                        firebase.auth().signOut()
+                            .then(() => {
+                                showToast('Logged out successfully', 'success');
+                                // Redirect to home page after logout
+                                setTimeout(() => {
+                                    window.location.href = 'index.html';
+                                }, 1000);
+                            })
+                            .catch(error => {
+                                showToast('Error logging out: ' + error.message, 'error');
+                            });
+                    });
+                }
+                
+                // Close user menu when clicking outside
+                document.addEventListener('click', (event) => {
+                    const userAvatar = document.getElementById('userInitials');
+                    const userMenu = document.getElementById('userMenu');
+                    
+                    if (userMenu && userAvatar && event.target !== userAvatar && !userMenu.contains(event.target)) {
+                        userMenu.classList.remove('active');
+                    }
+                });
+                
+            } catch (error) {
+                console.error("Firebase initialization error:", error);
+            }
+        });
+
+        // Update UI based on authentication state
+        function updateAuthUI(user) {
+            const userProfileSection = document.getElementById('userProfileSection');
+            const guestProfileSection = document.getElementById('guestProfileSection');
+            const mobileAuthOption = document.getElementById('mobileAuthOption');
+            
+            if (user) {
+                // User is signed in
+                userProfileSection.style.display = 'flex';
+                guestProfileSection.style.display = 'none';
+                
+                // Update mobile menu option
+                if (mobileAuthOption) {
+                    mobileAuthOption.textContent = 'DASHBOARD';
+                    mobileAuthOption.onclick = () => navigateTo('dashboard.html');
+                }
+                
+                // Set user initials in avatar
+                const userInitials = document.getElementById('userInitials');
+                if (userInitials) {
+                    // Try to get user's display name first
+                    if (user.displayName) {
+                        const nameParts = user.displayName.split(' ');
+                        if (nameParts.length > 1) {
+                            // First letter of first and last name
+                            userInitials.textContent = nameParts[0][0] + nameParts[nameParts.length - 1][0];
+                        } else {
+                            // First letter of display name
+                            userInitials.textContent = user.displayName[0];
+                        }
+                    } 
+                    // Fallback to email
+                    else if (user.email) {
+                        userInitials.textContent = user.email[0].toUpperCase();
+                    } 
+                    // Last resort
+                    else {
+                        userInitials.textContent = 'U';
+                    }
+                }
+                
+                console.log("User is signed in:", user.email);
+            } else {
+                // User is signed out
+                userProfileSection.style.display = 'none';
+                guestProfileSection.style.display = 'flex';
+                
+                // Update mobile menu option
+                if (mobileAuthOption) {
+                    mobileAuthOption.textContent = 'PROFILE';
+                    mobileAuthOption.onclick = redirectToLogin;
+                }
+                
+                console.log("User is signed out");
+            }
+        }
+
+        // Toggle user menu dropdown
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            if (userMenu) {
+                userMenu.classList.toggle('active');
+            }
+        }
+
+        // Function to toggle mobile dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.querySelector('.dropdown');
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Function to handle redirection to the login page
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Function to handle navigation to specific pages
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // Function to show toast notification
+        function showToast(message, type = 'success') {
+            // Remove existing toast if any
+            const existingToast = document.getElementById('toast');
+            if (existingToast) {
+                document.body.removeChild(existingToast);
+            }
+            
+            // Create new toast
+            const toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Show toast with animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+    <script src="./script/psai.js"></script>
+</body>
+
+</html>

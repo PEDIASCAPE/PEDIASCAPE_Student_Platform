@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materials</title>
+    <link rel="stylesheet" href="./styles/material.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navigation Bar -->
+        <nav>
+            <div class="navbar">
+                <div class="title" onclick="navigateTo('index.html')">PEDIASCAPE</div>
+                <div class="contents">
+                    <ul class="lists">
+                        <li class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</li>
+                        <li class="listnav" onclick="navigateTo('material.html')">MATERIALS</li>
+                        <li class="listnav" onclick="navigateTo('./project/index.html')">PROJECTS</li>
+                        <li class="listnav" onclick="navigateTo('./carrier_guidance/index.html')">CAREER GUIDANCE</li>
+                        <li class="listnav" onclick="navigateTo('psai1.html')">PS AI</li>
+                    </ul>
+                    <div class="auth-section">
+                        <div class="user-profile">
+                            <div class="user-avatar" id="userInitials" onclick="toggleUserMenu()"></div>
+                            <!-- User menu dropdown -->
+                            <div class="user-menu" id="userMenu">
+                                <div class="user-menu-item" onclick="navigateTo('dashboard.html')">Dashboard</div>
+                                <div class="user-menu-item" id="logoutButton">Logout</div>
+                            </div>
+                        </div>
+                        <img class="profilelogo" src="./imgg/nav/profile.svg" alt="Profile" onclick="redirectToLogin()">
+                    </div>
+                </div>
+                <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+                <div class="dropdown">
+                    <div class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</div>
+                    <div class="listnav" onclick="navigateTo('materials.html')">MATERIALS</div>
+                    <div class="listnav" onclick="navigateTo('./project/index.html')">PROJECTS</div>
+                    <div class="listnav" onclick="navigateTo('./carrier_guidance/index.html')">CAREER GUIDANCE</div>
+                    <div class="listnav" onclick="navigateTo('psai1.html')">PS AI</div>
+                    <div class="listnav" onclick="redirectToLogin()">PROFILE</div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Sidebar with Heading -->
+            <div class="headroad">
+                <h1 class="headroadtext">MATERIALS</h1>
+            </div>
+
+            <!-- Materials Container -->
+            <div class="content-area">
+                <div class="container">
+                    <header>
+                        <!-- <h1>Educational Materials</h1> -->
+                        <div class="filters">
+                            <input type="text" id="searchInput" placeholder="Search materials...">
+                            <div class="filter-group">
+                                <select id="courseFilter">
+                                    <option value="">All Courses</option>
+                                    <option value="Computer Science">Computer Science</option>
+                                    <option value="Artificial Intelligence">Artificial Intelligence</option>
+                                    <option value="Data Science">Data Science</option>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="UI/UX Design">UI/UX Designing</option>
+                                </select>
+                                <select id="yearFilter">
+                                    <option value="">All Years</option>
+                                    <option value="1st year">1st Year</option>
+                                    <option value="2nd year">2nd Year</option>
+                                    <option value="3rd year">3rd Year</option>
+                                    <option value="4th year">4th Year</option>
+                                </select>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <!-- Login Message -->
+                    <div id="loginMessage" style="display: none;" class="login-message">
+                        <p>Please login to upload and download materials.</p>
+                        <button onclick="redirectToLogin()" class="action-btn">Login</button>
+                    </div>
+                    
+                    <!-- Materials Grid -->
+                    <div class="materials-grid" id="materialsGrid">
+                        <!-- PDF cards will be dynamically inserted here -->
+                        <div class="empty-state">
+                            <div class="empty-icon">📚</div>
+                            <p>Loading materials...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Section -->
+                    <div class="upload-section">
+                        <input type="file" id="fileInput" accept=".pdf" hidden>
+                        <button id="uploadBtn" class="upload-btn">Login to Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom Scripts -->
+    <script src="./script/materials.js"></script>
+</body>
+</html>

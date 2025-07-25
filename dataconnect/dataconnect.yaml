@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "PEDIASCAPE"
+location: "asia-east1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "pediascape-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]
