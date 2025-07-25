@@ -71,12 +71,12 @@ This project is developed by the students of Bharat Institute of Engineering and
 
 ## Team Credits
 
-👥 Built by Bath-1 as a part of academic curriculum 2025
-Soumya Sudhir Nayak (Team Lead)
-Indrakanti Kevin 
-Rishith Goud Kanrapally
-Shaik Abid
-Sri Ram Puneeth
+- Built by Batch-1 as a part of academic curriculum 2025
+    -Soumya Sudhir Nayak (Team Lead)
+    -Indrakanti Kevin 
+    -Rishith Goud Kanrapally
+    -Shaik Abid
+    -Sri Ram Puneeth
 
 
 ## Contact
