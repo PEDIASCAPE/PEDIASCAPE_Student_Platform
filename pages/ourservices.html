@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services - PEDIASCAPE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <!-- Add Firebase SDK scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background: black;
+            color: white;
+            height: 100px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .title {
+            color: #FFF;
+            font-family: "Tilt Warp", sans-serif;
+            font-size: 64px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            align-self: center;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .navbar .contents {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .lists {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .navbar .listnav {
+            color: #FFF;
+            font-family: "Tilt Warp", sans-serif;
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            list-style: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .listnav:hover {
+            color: #fcb111;
+            text-decoration: underline;
+        }
+
+        .menu-icon {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            background: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            z-index: 100;
+        }
+
+        .dropdown .listnav {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .dropdown .listnav:hover {
+            background-color: #444;
+            color: #fcb111;
+        }
+
+        .profilelogo {
+            width: 60px;
+            height: 60px;
+            margin-left: 20px;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        
+        /* User profile styling */
+        .user-profile {
+            position: relative;
+            margin-left: 20px;
+        }
+        
+        .user-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: #4285F4;
+    color: white;
+    border-radius: 50%;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    gap: 10px;
+}
+        
+        .user-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: #333;
+            width: 150px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        
+        .user-menu.active {
+            display: block;
+        }
+        
+        .menu-item {
+            padding: 12px 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background-color: #444;
+            color: #fcb111;
+        }
+        
+        /* Toast notification styling */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast.success {
+            background-color: #4CAF50;
+        }
+        
+        .toast.error {
+            background-color: #F44336;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero {
+            top: 100px;
+            position: relative;
+            background-color: #000000;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #fcb111;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .services-section {
+            padding: 3rem 0;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .service-card {
+            background-color: #393939;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #fcb111;
+        }
+        
+        .service-card:hover {
+            
+            transform: translateY(-5px);
+            box-shadow: 0 0 5px #ff9500, 0 0 10px #ff9500, 0 0 15px #ff9500; /* Thinner glow effect */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+        }
+        
+        
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #fcb111;
+        }
+        
+        .service-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #fcb111;
+        }
+        
+        .service-card p {
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+        }
+        
+        .service-btn {
+            display: inline-block;
+            background-color: #fcb111;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .service-btn:hover {
+            background-color: #fcb111;
+            transform: scale(1.05);
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #fcb111, #fbac00);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin: 3rem 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            background-color: white;
+            color: #fcb111;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-btn:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }
+        
+        .faq-section {
+            padding: 3rem 0;
+            background-color: #000000;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .faq-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #fcb111;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1.5rem;
+        }
+        
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #b5b5b5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .faq-answer {
+            color: #ffffff;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #fcb111;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+            
+            .lists {
+                display: none !important;
+            }
+            
+            .menu-icon {
+                display: block;
+            }
+            
+            .navbar .title {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                <div class="title" onclick="navigateTo('index.html')">PEDIASCAPE</div>
+                <div class="contents">
+                    <ul class="lists">
+                        <li class="listnav" onclick="navigateTo('aboutus.html')">ABOUT US</li>
+                        <li class="listnav" onclick="navigateTo('ourservices.html')">OUR SERVICES</li>
+                        <li class="listnav" onclick="navigateTo('privacy-policy.html')">PRIVACY POLICY</li>
+                        <li class="listnav" onclick="navigateTo('contact.html')">CONTACT</li>
+                    </ul>
+
+                    <!-- User profile section -->
+                    <div class="user-profile" id="userProfileSection" style="display: none;">
+                        <div id="userInitials" class="user-avatar" onclick="toggleUserMenu()"></div>
+                        <div id="userMenu" class="user-menu">
+                            <div class="menu-item" onclick="navigateTo('dashboard.html')">Dashboard</div>
+                            <div class="menu-item" id="logoutButton">Logout</div>
+                        </div>
+                    </div>
+                    <!-- Guest profile section -->
+                    <div id="guestProfileSection">
+                        <img class="profilelogo" src="./imgg/nav/profile.svg" alt="Profile"
+                            onclick="redirectToLogin()">
+                    </div>
+                </div>
+                <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+                <div class="dropdown">
+                    <div class="listnav" onclick="navigateTo('aboutus.html')">ABOUT US</div>
+                    <div class="listnav" onclick="navigateTo('ourservices.html')">OUR SERVICES</div>
+                    <div class="listnav" onclick="navigateTo('privacy-policy.html')">PRIVACY POLICY</div>
+                    <div class="listnav" onclick="navigateTo('contact.html')">CONTACT</div>
+                    <div class="listnav" id="mobileAuthOption" onclick="redirectToLogin()">PROFILE</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Our Services</h1>
+                <p>Comprehensive resources and guidance designed to empower your undergraduate journey.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <div class="container">
+            <h2>What We Offer</h2>
+            <p>At EduPath, we've developed a comprehensive suite of services to support undergraduate students throughout their academic journey. Each service is thoughtfully designed to address specific challenges faced by students.</p>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h3>Learning Roadmaps</h3>
+                    <p>Customized learning paths tailored to your field of study, helping you navigate the complex curriculum with ease and structure. Our roadmaps break down complex subjects into manageable milestones.</p>
+                    <a href="#" class="service-btn">Learn More</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">📚</div>
+                    <h3>Study Materials</h3>
+                    <p>Access meticulously curated study resources, including notes, video lectures, reference books, and practice problems that align with your university curriculum.</p>
+                    <a href="#" class="service-btn">Explore Materials</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">💻</div>
+                    <h3>Essential Projects</h3>
+                    <p>Hands-on project ideas and guides that enhance your technical skills and portfolio. Our projects range from beginner to advanced levels and are designed to complement your theoretical knowledge.</p>
+                    <a href="#" class="service-btn">View Projects</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🤖</div>
+                    <h3>AI Assistance</h3>
+                    <p>Our custom AI assistant helps you clarify concepts, solve problems, and answer questions 24/7. Get immediate help whenever you're stuck on a difficult topic.</p>
+                    <a href="#" class="service-btn">Try AI Assistant</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🚀</div>
+                    <h3>Career Guidance</h3>
+                    <p>Expert advice on career options, internship opportunities, resume building, and interview preparation. We help you make informed decisions about your future.</p>
+                    <a href="#" class="service-btn">Get Guidance</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">👥</div>
+                    <h3>Peer Community</h3>
+                    <p>Connect with fellow students, share knowledge, collaborate on projects, and build a supportive network that extends beyond your classrooms.</p>
+                    <a href="#" class="service-btn">Join Community</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Transform Your Learning Experience?</h2>
+                <p>Join thousands of students who are leveraging our platform to excel in their undergraduate studies and prepare for successful careers.</p>
+                <a href="#" class="cta-btn">Get Started Today</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">How are the learning roadmaps customized?</div>
+                <div class="faq-answer">Our roadmaps are developed based on curriculum analysis, industry requirements, and feedback from successful students and professionals. We consider your academic level, learning pace, and career goals to recommend the most efficient path.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Are the study materials aligned with my university syllabus?</div>
+                <div class="faq-answer">Yes, we cover major engineering and technical curricula across India. We regularly update our materials to align with the latest syllabus changes and examination patterns.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How does the AI assistance work?</div>
+                <div class="faq-answer">Our AI has been trained on a vast database of academic content and can provide instant answers to your questions, explain complex concepts, solve problems step-by-step, and even help with coding challenges.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What kind of projects are available on the platform?</div>
+                <div class="faq-answer">We offer a wide range of projects across different domains including software development, machine learning, IoT, electronics, mechanical design, and more. Each project comes with detailed guidelines, resources, and mentorship.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Is the platform free to use?</div>
+                <div class="faq-answer">We offer both free and premium tiers. Basic services are available for free, while advanced features such as personalized mentorship, exclusive projects, and advanced AI tools are part of our premium plans.</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="aboutus.html">About Us</a></li>
+                        <li><a href="ourservices.html">Our Services</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Our Services</h3>
+                    <ul>
+                        <li><a href="#">Roadmaps</a></li>
+                        <li><a href="#">Materials</a></li>
+                        <li><a href="#">Project Ideas</a></li>
+                        <li><a href="#">AI Assistant</a></li>
+                        <li><a href="#">Career Guidance</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li>Bharat Institute of Engineering and Technology</li>
+                        <li>Email: edupath@example.com</li>
+                        <li>Phone: +91 1234567890</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 EduPath | A student initiative from Bharat Institute of Engineering and Technology</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCX0hI8o32hBFUchmEwtyeQLbIezmLyauI",
+            authDomain: "pediascape-6b99b.firebaseapp.com",
+            projectId: "pediascape-6b99b",
+            storageBucket: "pediascape-6b99b.appspot.com",
+            messagingSenderId: "128341831687",
+            appId: "1:128341831687:web:e44b694935e7ab37013aa2",
+            measurementId: "G-J354SK3B93"
+        };
+
+        // Initialize Firebase
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialize Firebase if it hasn't been initialized already
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                // Check authentication state
+                firebase.auth().onAuthStateChanged(user => {
+                    updateAuthUI(user);
+                });
+                
+                // Set up logout functionality
+                const logoutButton = document.getElementById('logoutButton');
+                if (logoutButton) {
+                    logoutButton.addEventListener('click', () => {
+                        firebase.auth().signOut()
+                            .then(() => {
+                                showToast('Logged out successfully', 'success');
+                                // Redirect to home page after logout
+                                setTimeout(() => {
+                                    window.location.href = 'index.html';
+                                }, 1000);
+                            })
+                            .catch(error => {
+                                showToast('Error logging out: ' + error.message, 'error');
+                            });
+                    });
+                }
+                
+                // Close user menu when clicking outside
+                document.addEventListener('click', (event) => {
+                    const userAvatar = document.getElementById('userInitials');
+                    const userMenu = document.getElementById('userMenu');
+                    
+                    if (userMenu && userAvatar && event.target !== userAvatar && !userMenu.contains(event.target)) {
+                        userMenu.classList.remove('active');
+                    }
+                });
+                
+            } catch (error) {
+                console.error("Firebase initialization error:", error);
+            }
+        });
+
+        // Update UI based on authentication state
+        function updateAuthUI(user) {
+            const userProfileSection = document.getElementById('userProfileSection');
+            const guestProfileSection = document.getElementById('guestProfileSection');
+            const mobileAuthOption = document.getElementById('mobileAuthOption');
+            
+            if (user) {
+                // User is signed in
+                userProfileSection.style.display = 'flex';
+                guestProfileSection.style.display = 'none';
+                
+                // Update mobile menu option
+                if (mobileAuthOption) {
+                    mobileAuthOption.textContent = 'DASHBOARD';
+                    mobileAuthOption.onclick = () => navigateTo('dashboard.html');
+                }
+                
+                // Set user initials in avatar
+                const userInitials = document.getElementById('userInitials');
+                if (userInitials) {
+                    // Try to get user's display name first
+                    if (user.displayName) {
+                        const nameParts = user.displayName.split(' ');
+                        if (nameParts.length > 1) {
+                            // First letter of first and last name
+                            userInitials.textContent = nameParts[0][0] + nameParts[nameParts.length - 1][0];
+                        } else {
+                            // First letter of display name
+                            userInitials.textContent = user.displayName[0];
+                        }
+                    } 
+                    // Fallback to email
+                    else if (user.email) {
+                        userInitials.textContent = user.email[0].toUpperCase();
+                    } 
+                    // Last resort
+                    else {
+                        userInitials.textContent = 'U';
+                    }
+                }
+                
+                console.log("User is signed in:", user.email);
+            } else {
+                // User is signed out
+                userProfileSection.style.display = 'none';
+                guestProfileSection.style.display = 'flex';
+                
+                // Update mobile menu option
+                if (mobileAuthOption) {
+                    mobileAuthOption.textContent = 'PROFILE';
+                    mobileAuthOption.onclick = redirectToLogin;
+                }
+                
+                console.log("User is signed out");
+            }
+        }
+
+        // Toggle user menu dropdown
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            if (userMenu) {
+                userMenu.classList.toggle('active');
+            }
+        }
+
+        // Function to toggle mobile dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.querySelector('.dropdown');
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Function to handle redirection to the login page
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Function to handle navigation to specific pages
+        function navigateTo(page) {
+            // Hide dropdown if it's open
+            const dropdown = document.querySelector('.dropdown');
+            if (dropdown.style.display === 'flex') {
+                dropdown.style.display = 'none';
+            }
+            window.location.href = page;
+        }
+        
+        // Function to show toast notification
+        function showToast(message, type = 'success') {
+            // Remove existing toast if any
+            const existingToast = document.getElementById('toast');
+            if (existingToast) {
+                document.body.removeChild(existingToast);
+            }
+            
+            // Create new toast
+            const toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Show toast with animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>

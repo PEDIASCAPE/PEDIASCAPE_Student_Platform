@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmaps</title>
+    <link rel="stylesheet" href="./styles/Roadmaps.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Additional styles for roadmap cards */
+        .roaditem {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .roaditem:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Ensure consistent image size */
+        .roaditem img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        
+        .menu-icon {
+            cursor: pointer;
+            font-size: 24px;
+            display: none;
+        }
+        
+        .dropdown {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .dropdown .listnav {
+            padding: 10px;
+            cursor: pointer;
+        }
+        
+        .dropdown .listnav:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* User menu styling */
+        .user-profile {
+            display: none;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #5b5fc7;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            width: 150px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .user-menu.active {
+            display: flex;
+        }
+
+        .user-menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .user-menu-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Toast notification styling */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 2000;
+            max-width: 300px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background-color: #4CAF50;
+        }
+
+        .toast.error {
+            background-color: #F44336;
+        }
+
+        /* Loader styling */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Roadmap Modal */
+        .roadmap-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+        .roadmap-modal-content {
+            position: relative;
+            width: 92%;
+            max-width: 1200px;
+            background: #0f0f0f;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 12px;
+        }
+        .roadmap-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        #roadmapFrame {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            border-radius: 8px;
+            background: #000;
+        }
+
+        /* Show the menu icon only on smaller screens */
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .title {
+                font-size: 64px;
+            }
+
+            .listnav {
+                font-size: 18px;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .headroadtext {
+                font-size: 40px;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contents {
+                display: none;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+
+            .title {
+                font-size: 64px;
+            }
+
+            .headroadtext {
+                font-size: 36px;
+            }
+
+            .roadcon {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                padding: 30px 20px;
+                gap: 20px;
+            }
+
+            .footer-col {
+                width: 50%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 10px 15px;
+            }
+
+            .title {
+                font-size: 60px;
+            }
+
+            .headroadtext {
+                font-size: 28px;
+            }
+
+            .roadcon {
+                grid-template-columns: 1fr;
+                padding: 20px 15px;
+            }
+
+            .roaditem {
+                padding: 20px;
+            }
+
+            .Roadmapname {
+                font-size: 20px;
+            }
+
+            .RMDESC {
+                font-size: 14px;
+            }
+
+            .footer-col {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                <div class="title" onclick="navigateTo('index.html')">PEDIASCAPE</div>
+                <div class="contents">
+                    <ul class="lists">
+                        <li class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</li>
+                        <li class="listnav" onclick="navigateTo('material.html')">MATERIALS</li>
+                        <li class="listnav" onclick="navigateTo('./project/index.html')">PROJECTS</li>
+                        <li class="listnav" onclick="navigateTo('./carrier_guidance/index.html')">CAREER GUIDANCE</li>
+                        <li class="listnav" onclick="navigateTo('psai1.html')">PS AI</li>
+                    </ul>
+                    <div class="auth-section">
+                        <div class="user-profile">
+                            <div class="user-avatar" id="userInitials" onclick="toggleUserMenu()"></div>
+                            <!-- User menu dropdown -->
+                            <div class="user-menu" id="userMenu">
+                                <div class="user-menu-item" onclick="navigateTo('dashboard.html')">Dashboard</div>
+                                <div class="user-menu-item" id="logoutButton">Logout</div>
+                            </div>
+                        </div>
+                        <img class="profilelogo" src="./imgg/nav/profile.svg" alt="Profile" onclick="redirectToLogin()">
+                    </div>
+                </div>
+                <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+                <div class="dropdown">
+                    <div class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</div>
+                    <div class="listnav" onclick="navigateTo('material.html')">MATERIALS</div>
+                    <div class="listnav" onclick="navigateTo('./project/index.html')">PROJECTS</div>
+                    <div class="listnav" onclick="navigateTo('./carrier_guidance/index.html')">CAREER GUIDANCE</div>
+                    <div class="listnav" onclick="navigateTo('psai1.html')">PS AI</div>
+                    <div class="listnav" onclick="redirectToLogin()">PROFILE</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <article>
+        <div class="headroad">
+            <h1 class="headroadtext">ROADMAPS</h1>
+        </div>
+    </article>
+    <main>
+        <div class="roadcon">
+            <!-- Web Development Roadmap -->
+            <div class="roaditem" data-roadmap="webdev.json">
+                <img src="./imgg/roadmaps/web-dev.png" alt="Web Development">
+                <h4 class="Roadmapname">WEB DEVELOPMENT</h4>
+                <p class="RMDESC">Learn HTML, CSS, JavaScript and modern frameworks to become a web developer.</p>
+            </div>
+            
+            <!-- Artificial Intelligence Roadmap -->
+            <div class="roaditem" data-roadmap="ai.json">
+                <img src="./imgg/roadmaps/ai.png" alt="Artificial Intelligence">
+                <h4 class="Roadmapname">A.I</h4>
+                <p class="RMDESC">Master Python, Machine Learning, and Deep Learning frameworks.</p>
+            </div>
+            
+            <!-- Data Science Roadmap -->
+            <div class="roaditem" data-roadmap="datascience.json">
+                <img src="./imgg/roadmaps/data-science.png" alt="Data Science">
+                <h4 class="Roadmapname">DATA SCIENCE</h4>
+                <p class="RMDESC">Learn statistics, data analysis, visualization, and machine learning.</p>
+            </div>
+            
+            <!-- Mobile Development Roadmap -->
+            <div class="roaditem" data-roadmap="mobile.json">
+                <img src="./imgg/roadmaps/mobile-dev.png" alt="Mobile Development">
+                <h4 class="Roadmapname">MOBILE DEVELOPMENT</h4>
+                <p class="RMDESC">Build iOS and Android apps with React Native, Flutter, or native development.</p>
+            </div>
+            
+            <!-- DevOps Roadmap -->
+            <div class="roaditem" data-roadmap="devops.json">
+                <img src="./imgg/roadmaps/devops.png" alt="DevOps">
+                <h4 class="Roadmapname">DEVOPS</h4>
+                <p class="RMDESC">Learn containerization, CI/CD pipelines, cloud services, and infrastructure as code.</p>
+            </div>
+            
+            <!-- Cybersecurity Roadmap -->
+            <div class="roaditem" data-roadmap="cybersecurity.json">
+                <img src="./imgg/roadmaps/security.png" alt="Cybersecurity">
+                <h4 class="Roadmapname">CYBERSECURITY</h4>
+                <p class="RMDESC">Master network security, ethical hacking, and security best practices.</p>
+            </div>
+            
+            <!-- Game Development Roadmap -->
+            <div class="roaditem" data-roadmap="gamedev.json">
+                <img src="./imgg/roadmaps/game-dev.png" alt="Game Development">
+                <h4 class="Roadmapname">GAME DEVELOPMENT</h4>
+                <p class="RMDESC">Build games with Unity, Unreal Engine, or other game development frameworks.</p>
+            </div>
+            
+            <!-- Blockchain Roadmap -->
+            <div class="roaditem" data-roadmap="blockchain.json">
+                <img src="./imgg/roadmaps/blockchain.png" alt="Blockchain">
+                <h4 class="Roadmapname">BLOCKCHAIN</h4>
+                <p class="RMDESC">Learn blockchain fundamentals, smart contracts, and decentralized applications.</p>
+            </div>
+            
+            <!-- UI/UX Design Roadmap -->
+            <div class="roaditem" data-roadmap="uiux.json">
+                <img src="./imgg/roadmaps/ui-ux.png" alt="UI/UX Design">
+                <h4 class="Roadmapname">UI/UX DESIGN</h4>
+                <p class="RMDESC">Master user interface design, user experience principles, and design tools.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal container for roadmap visualization -->
+    <div id="roadmapModal" class="roadmap-modal">
+        <div class="roadmap-modal-content">
+            <button id="closeModal" class="roadmap-close">×</button>
+            <iframe id="roadmapFrame" title="Roadmap Visualizer"></iframe>
+        </div>
+    </div>
+
+    <script type="module" src="./script/auth-ui.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('click', (event) => {
+                const userAvatar = document.getElementById('userInitials');
+                const menu = document.getElementById('userMenu');
+                if (menu && userAvatar && event.target !== userAvatar && !menu.contains(event.target)) {
+                    menu.classList.remove('active');
+                }
+            });
+        });
+
+        // Store roadmap data (example roadmaps to demonstrate functionality)
+        const roadmapData = {
+    // All roadmaps are now implemented based on the data in exampleData
+    "webdev.json": {
+        title: "Web Development Roadmap",
+        description: "Complete path to becoming a web developer"
+    },
+    "ai.json": {
+        title: "Artificial Intelligence Roadmap",
+        description: "Path to mastering AI and machine learning"
+    },
+    "datascience.json": {
+        title: "Data Science Roadmap",
+        description: "Journey through statistics, Python, and advanced analytics"
+    },
+    "mobile.json": {
+        title: "Mobile Development Roadmap",
+        description: "Comprehensive guide to Android, iOS, and cross-platform development"
+    },
+    "devops.json": {
+        title: "DevOps Roadmap",
+        description: "From Linux fundamentals to Infrastructure as Code"
+    },
+    "cybersecurity.json": {
+        title: "Cybersecurity Roadmap",
+        description: "Complete path to mastering network security and defensive techniques"
+    },
+    "gamedev.json": {
+        title: "Game Development Roadmap",
+        description: "Learn game programming, design, art, and audio creation"
+    },
+    "blockchain.json": {
+        title: "Blockchain Roadmap",
+        description: "From blockchain fundamentals to Web3 development"
+    },
+    "uiux.json": {
+        title: "UI/UX Design Roadmap",
+        description: "Master design principles, research, and create effective interfaces"
+    }
+};
+
+        // Get the modal elements
+        const modal = document.getElementById('roadmapModal');
+        const closeBtn = document.getElementById('closeModal');
+        const roadmapFrame = document.getElementById('roadmapFrame');
+
+        // Add click event to all roadmap items
+        document.querySelectorAll('.roaditem').forEach(item => {
+            item.addEventListener('click', function() {
+                const roadmapId = this.getAttribute('data-roadmap');
+                const roadmap = roadmapData[roadmapId];
+                
+                if (roadmap) {
+                    if (roadmap.notImplemented) {
+                        // Alert for roadmaps that aren't implemented yet
+                        alert(`The ${roadmap.title} is coming soon! Currently only Web Development and AI roadmaps are available.`);
+                    } else {
+                        // For implemented roadmaps, show the visualization
+                        showRoadmapModal(roadmapId);
+                    }
+                } else {
+                    alert("Roadmap not found!");
+                }
+            });
+        });
+
+        // Function to show the roadmap modal
+        function showRoadmapModal(roadmapId) {
+            // Create the URL for the roadmap visualizer with the selected roadmap
+            const visualizerPath = 'roadmap-visualizer.html';
+            const url = `${visualizerPath}?roadmap=${roadmapId}`;
+            
+            // Set the iframe source
+            roadmapFrame.src = url;
+            
+            // Show the modal
+            modal.style.display = 'flex';
+            
+            // Disable scrolling on the body
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close the modal when the close button is clicked
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+            roadmapFrame.src = '';
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close the modal when clicking outside the iframe
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                roadmapFrame.src = '';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Toggle dropdown menu for mobile view
+        function toggleDropdown() {
+            const dropdown = document.querySelector('.dropdown');
+            if (dropdown.style.display === 'flex') {
+                dropdown.style.display = 'none';
+            } else {
+                dropdown.style.display = 'flex';
+            }
+        }
+
+        // Toggle user menu dropdown
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            if (userMenu) {
+                userMenu.classList.toggle('active');
+            }
+        }
+
+        // Update UI based on authentication state
+        function updateAuthUI(user) {}
+
+        // Function to navigate to different pages
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // Function to redirect to login page
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Function to show toast notification
+        function showToast(message, type = 'success') {
+            // Remove existing toast if any
+            const existingToast = document.getElementById('toast');
+            if (existingToast) {
+                document.body.removeChild(existingToast);
+            }
+            
+            // Create new toast
+            const toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Show toast with animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Function to show loader
+        function showLoader() {
+            // Check if loader exists
+            if (!document.getElementById('loader')) {
+                const loader = document.createElement('div');
+                loader.id = 'loader';
+                loader.className = 'loader';
+                loader.innerHTML = '<div class="spinner"></div>';
+                document.body.appendChild(loader);
+            } else {
+                document.getElementById('loader').style.display = 'flex';
+            }
+        }
+
+        // Function to hide loader
+        function hideLoader() {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>

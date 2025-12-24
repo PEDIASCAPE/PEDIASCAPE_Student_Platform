@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - PEDIASCAPE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for social icons in footer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: black;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background: black;
+            color: white;
+            height: 100px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(219, 144, 15, 0.1);
+            font: "montesserat";
+        }
+
+        .navbar .title {
+            color: #FFF;
+            font-family: "Tilt Warp", sans-serif;
+            /* Match the font from newps1_copy */
+            font-size: 64px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            align-self: center;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .navbar .contents {
+            display: flex;
+            align-items: center;
+            font-family:"Tilt Warp";
+        }
+
+        .navbar .lists {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            padding-right: 20px;
+            
+        }
+
+        .navbar .listnav {
+            color: #FFF;
+            font-family: "Tilt Warp";
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            list-style: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .listnav:hover {
+            color: #fcb111;
+            /* Highlight color on hover */
+            text-decoration: underline;
+        }
+
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #4285F4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            gap: 10px;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            width: 150px;
+            display: none;
+            z-index: 100;
+        }
+
+        .user-menu.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #333;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .menu-icon {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            z-index: 100;
+        }
+
+        .dropdown .listnav {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .dropdown .listnav:hover {
+            background-color: #f5f5f5;
+        }
+
+        .hero {
+            background-color: black;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-top: 100px; /* Added to account for fixed navbar */
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ff9500;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: white;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-section {
+            padding: 3rem 0;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .about-card {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 5px #ff9500, 0 0 10px #ff9500, 0 0 15px #ff9500; /* Thinner glow effect */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+        }
+
+        .about-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #ff9500;
+        }
+
+        .team-section {
+            margin-left: 5%;
+            width: 90%;
+            padding: 3rem 0;
+            background-color: #333;
+            margin-top: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .team-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ff9500;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid #ff9500;
+        }
+
+        .team-member h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-member p {
+            color: #ffffff;
+        }
+
+        footer {
+            background-color: rgb(34, 34, 34);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #ff9500;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .navbar .contents {
+                display: none;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+        }
+
+        /* General Section Content Styling */
+        section {
+            color: white;
+            /* Set text color to white for better contrast on black background */
+        }
+
+        /* Navbar List Items */
+        .navbar .listnav {
+    color: #FFF;
+    font-family: "Tilt Warp", sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    list-style: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+        .navbar .listnav:hover {
+            color: #fcb111;
+            /* Highlight color on hover */
+            text-decoration: underline;
+        }
+
+        /* Footer Links */
+        .footer-section a {
+            color: #ccc;
+            /* Light gray for footer links */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+            /* White on hover */
+            text-decoration: underline;
+        }
+
+        .profilelogo {
+            width: 50%;
+            /* Adjust the size as needed */
+            margin-left: 20px;
+            /* Add gap to the left */
+            margin-right: 20px;
+            /* Add gap to the right */
+            cursor: pointer;
+            /* Ensure it looks clickable */
+        }
+        
+        /* Toast notification styles */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+        }
+        .toast.success {
+            background-color: #4CAF50;
+        }
+        .toast.error {
+            background-color: #F44336;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                <div class="title" onclick="navigateTo('index.html')">PEDIASCAPE</div>
+                <div class="contents">
+                    <ul class="lists">
+                        <li class="listnav" onclick="navigateTo('aboutus.html')">ABOUT US</li>
+                        <li class="listnav" onclick="navigateTo('ourservices.html')">OUR SERVICES</li>
+                        <li class="listnav" onclick="navigateTo('privacy-policy.html')">PRIVACY POLICY</li>
+                        <li class="listnav" onclick="navigateTo('contact.html')">CONTACT</li>
+                    </ul>
+
+                    <!-- User profile section -->
+                    <div class="user-profile" id="userProfileSection" style="display: none;">
+                        <div id="userInitials" class="user-avatar" onclick="toggleUserMenu()"></div>
+                        <div id="userMenu" class="user-menu">
+                            <div class="menu-item" onclick="navigateTo('dashboard.html')">Dashboard</div>
+                            <div class="menu-item" id="logoutButton">Logout</div>
+                        </div>
+                    </div>
+                    <!-- Guest profile section -->
+                    <div id="guestProfileSection">
+                        <img class="profilelogo" src="./imgg/nav/profile.svg" alt="Profile"
+                            onclick="redirectToLogin()">
+                    </div>
+                </div>
+                <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+                <div class="dropdown">
+                    <div class="listnav" onclick="navigateTo('aboutus.html')">ABOUT US</div>
+                    <div class="listnav" onclick="navigateTo('ourservices.html')">OUR SERVICES</div>
+                    <div class="listnav" onclick="navigateTo('privacy-policy.html')">PRIVACY POLICY</div>
+                    <div class="listnav" onclick="navigateTo('contact.html')">CONTACT</div>
+                    <div class="listnav" id="mobileAuthOption" onclick="redirectToLogin()">PROFILE</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>About PEDIASCAPE</h1>
+                <p>Empowering students with tailored guidance, resources, and AI-powered assistance for academic
+                    excellence.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container">
+            <h2>Our Mission</h2>
+            <p>EduPath was created by five passionate students from Bharat Institute of Engineering and Technology with
+                one goal in mind: to provide undergraduate students with the guidance and resources they need to excel
+                in their academic journey.</p>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>Vision</h3>
+                    <p>To create a comprehensive platform where every undergraduate student can access quality learning
+                        resources, personalized roadmaps, and expert guidance to achieve their academic goals.</p>
+                </div>
+
+                <div class="about-card">
+                    <h3>Our Approach</h3>
+                    <p>We believe in structured learning paths, quality resources, and personalized guidance. Our
+                        platform combines these elements with cutting-edge AI technology to provide a holistic learning
+                        experience.</p>
+                </div>
+
+                <div class="about-card">
+                    <h3>What Sets Us Apart</h3>
+                    <p>Created by students for students, our platform understands the challenges undergraduate students
+                        face. We offer tailored solutions including AI-assisted doubt clearing, curated study materials,
+                        and strategic roadmaps.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <div class="container">
+            <h2>Meet Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="/api/placeholder/150/150" alt="Team Member 1">
+                    <h3>Student 1</h3>
+                    <p>Project Lead</p>
+                </div>
+
+                <div class="team-member">
+                    <img src="/api/placeholder/150/150" alt="Team Member 2">
+                    <h3>Student 2</h3>
+                    <p>Technical Developer</p>
+                </div>
+
+                <div class="team-member">
+                    <img src="/api/placeholder/150/150" alt="Team Member 3">
+                    <h3>Student 3</h3>
+                    <p>Content Specialist</p>
+                </div>
+
+                <div class="team-member">
+                    <img src="/api/placeholder/150/150" alt="Team Member 4">
+                    <h3>Student 4</h3>
+                    <p>AI Developer</p>
+                </div>
+
+                <div class="team-member">
+                    <img src="/api/placeholder/150/150" alt="Team Member 5">
+                    <h3>Student 5</h3>
+                    <p>UX Designer</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container">
+            <h2>Our Story</h2>
+            <p>Born from our own experiences as undergraduate students at Bharat Institute of Engineering and
+                Technology, we identified critical gaps in the support system for exam preparation and career planning.
+                What started as a small project to help our peers has evolved into a comprehensive platform designed to
+                support students throughout their academic journey.</p>
+            <br>
+            <p>We combined our diverse skills in technology, content development, and educational psychology to create
+                an integrated solution that addresses the multifaceted needs of undergraduate students. Our platform has
+                been built with love, dedication, and a deep understanding of the challenges students face.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="services.html">Our Services</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Our Services</h3>
+                    <ul>
+                        <li><a href="#">Learning Roadmaps</a></li>
+                        <li><a href="#">Study Materials</a></li>
+                        <li><a href="#">Project Ideas</a></li>
+                        <li><a href="#">AI Assistant</a></li>
+                        <li><a href="#">Career Guidance</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li>Bharat Institute of Engineering and Technology</li>
+                        <li>Email: pediascape@gmail.com</li>
+                        <li>Phone: +91 1234567890</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2025 PEDIASCAPE | A student initiative from Bharat Institute of Engineering and Technology</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add Firebase scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCX0hI8o32hBFUchmEwtyeQLbIezmLyauI",
+            authDomain: "pediascape-6b99b.firebaseapp.com",
+            projectId: "pediascape-6b99b",
+            storageBucket: "pediascape-6b99b.appspot.com",
+            messagingSenderId: "128341831687",
+            appId: "1:128341831687:web:e44b694935e7ab37013aa2",
+            measurementId: "G-J354SK3B93"
+        };
+
+        // Initialize Firebase
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialize Firebase if it hasn't been initialized already
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                // Check authentication state
+                firebase.auth().onAuthStateChanged(user => {
+                    updateAuthUI(user);
+                });
+                
+                // Set up logout functionality
+                const logoutButton = document.getElementById('logoutButton');
+                if (logoutButton) {
+                    logoutButton.addEventListener('click', () => {
+                        firebase.auth().signOut()
+                            .then(() => {
+                                showToast('Logged out successfully', 'success');
+                                // Redirect to home page after logout
+                                setTimeout(() => {
+                                    window.location.href = 'index.html';
+                                }, 1000);
+                            })
+                            .catch(error => {
+                                showToast('Error logging out: ' + error.message, 'error');
+                            });
+                    });
+                }
+                
+                // Close user menu when clicking outside
+                document.addEventListener('click', (event) => {
+                    const userAvatar = document.getElementById('userInitials');
+                    const userMenu = document.getElementById('userMenu');
+                    
+                    if (userMenu && userAvatar && event.target !== userAvatar && !userMenu.contains(event.target)) {
+                        userMenu.classList.remove('active');
+                    }
+                });
+                
+            } catch (error) {
+                console.error("Firebase initialization error:", error);
+            }
+        });
+
+        // Update UI based on authentication state
+        function updateAuthUI(user) {
+            const userProfileSection = document.getElementById('userProfileSection');
+            const guestProfileSection = document.getElementById('guestProfileSection');
+            const mobileAuthOption = document.getElementById('mobileAuthOption');
+            
+            if (user) {
+                // User is signed in
+                userProfileSection.style.display = 'flex';
+                guestProfileSection.style.display = 'none';
+                
+                // Update mobile menu option
+                if (mobileAuthOption) {
+                    mobileAuthOption.textContent = 'DASHBOARD';
+                    mobileAuthOption.onclick = () => navigateTo('dashboard.html');
+                }
+                
+                // Set user initials in avatar
+                const userInitials = document.getElementById('userInitials');
+                if (userInitials) {
+                    // Try to get user's display name first
+                    if (user.displayName) {
+                        const nameParts = user.displayName.split(' ');
+                        if (nameParts.length > 1) {
+                            // First letter of first and last name
+                            userInitials.textContent = nameParts[0][0] + nameParts[nameParts.length - 1][0];
+                        } else {
+                            // First letter of display name
+                            userInitials.textContent = user.displayName[0];
+                        }
+                    } 
+                    // Fallback to email
+                    else if (user.email) {
+                        userInitials.textContent = user.email[0].toUpperCase();
+                    } 
+                    // Last resort
+                    else {
+                        userInitials.textContent = 'U';
+                    }
+                }
+                
+                console.log("User is signed in:", user.email);
+            } else {
+                // User is signed out
+                userProfileSection.style.display = 'none';
+                guestProfileSection.style.display = 'flex';
+                
+                // Update mobile menu option
+                if (mobileAuthOption) {
+                    mobileAuthOption.textContent = 'PROFILE';
+                    mobileAuthOption.onclick = redirectToLogin;
+                }
+                
+                console.log("User is signed out");
+            }
+        }
+
+        // Toggle user menu dropdown
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            if (userMenu) {
+                userMenu.classList.toggle('active');
+            }
+        }
+
+        // Function to toggle mobile dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.querySelector('.dropdown');
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Function to handle redirection to the login page
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Function to handle navigation to specific pages
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+        
+        // Function to show toast notification
+        function showToast(message, type = 'success') {
+            // Remove existing toast if any
+            const existingToast = document.getElementById('toast');
+            if (existingToast) {
+                document.body.removeChild(existingToast);
+            }
+            
+            // Create new toast
+            const toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Show toast with animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>

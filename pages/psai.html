@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS AI - PEDIASCAPE</title>
+    <link rel="stylesheet" href="./styles/newps1_copy.css">
+    <link rel="stylesheet" href="./styles/psai.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header >
+        <nav>
+            <div class="navbar">
+                <div class="title" onclick="navigateTo('index.html')">PEDIASCAPE</div>
+                <div class="contents">
+                    <ul class="lists">
+                        <li class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</li>
+                        <li class="listnav" onclick="navigateTo('materials2.html')">MATERIALS</li>
+                        <li class="listnav" onclick="navigateTo('Projects1.html')">PROJECTS</li>
+                        <li class="listnav">CAREER GUIDANCE</li>
+                        <li class="listnav active" onclick="navigateTo('psai.html')">PS AI</li>
+                    </ul>
+
+                    <div>
+                        <img class="profilelogo" src="./imgg/nav/profile.svg" alt="Profile">
+                    </div>
+                </div>
+                <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+                <div class="dropdown">
+                    <div class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</div>
+                    <div class="listnav" onclick="navigateTo('materials2.html')">MATERIALS</div>
+                    <div class="listnav" onclick="navigateTo('Projects1.html')">PROJECTS</div>
+                    <div class="listnav">CAREER GUIDANCE</div>
+                    <div class="listnav active" onclick="navigateTo('psai.html')">PS AI</div>
+                    <div class="listnav">PROFILE</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="ai-main">
+        <div class="ai-container">
+            <div class="ai-header">
+                <h1>PS AI Assistant</h1>
+                <div class="ai-tabs">
+                    <button class="tab-btn active" data-tab="chat">Chat</button>
+                    <button class="tab-btn" data-tab="roadmap">Learning Roadmap</button>
+                </div>
+            </div>
+
+            <!-- Chat Tab -->
+            <div id="chat-tab" class="tab-content active">
+                <div id="chat-container">
+                    <div id="chat-messages">
+                        <div class="message bot">
+                            <div class="message-content">
+                                <p>Hello! I'm your PEDIASCAPE AI assistant. How can I help with your learning journey
+                                    today?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="question-form">
+                        <div class="input-container">
+                            <input type="text" id="question-input"
+                                placeholder="Ask me anything about your learning path...">
+                            <button type="submit">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Roadmap Tab -->
+            <div id="roadmap-tab" class="tab-content">
+                <div id="roadmap-container">
+                    <form id="roadmap-form">
+                        <div class="form-group">
+                            <label for="topic">Learning Topic</label>
+                            <input type="text" id="topic" placeholder="e.g., JavaScript, Machine Learning, Photography">
+                        </div>
+                        <div class="form-group">
+                            <label for="level">Your Level</label>
+                            <select id="level">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="timeframe">Timeframe</label>
+                            <select id="timeframe">
+                                <option value="1 month">1 Month</option>
+                                <option value="3 months" selected>3 Months</option>
+                                <option value="6 months">6 Months</option>
+                                <option value="1 year">1 Year</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="primary-btn">Generate Roadmap</button>
+                    </form>
+
+                    <div id="roadmap-loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Generating your personalized learning roadmap...</p>
+                    </div>
+
+                    <div id="roadmap-content"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>company</h4>
+                    <ul>
+                        <li><a href="#">about us</a></li>
+                        <li><a href="#">our services</a></li>
+                        <li><a href="#">privacy policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>get help</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Login/Signup</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>follow us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.querySelector('.dropdown');
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Function to handle redirection to the login page
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Function to handle navigation to specific pages
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // Add event listeners for the profile logo and profile menu option
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileLogo = document.querySelector('.profilelogo');
+            const profileOption = document.querySelector('.dropdown .listnav:last-child');
+
+            if (profileLogo) {
+                profileLogo.addEventListener('click', redirectToLogin);
+            }
+
+            if (profileOption) {
+                profileOption.addEventListener('click', redirectToLogin);
+            }
+        });
+        function toggleDropdown() {
+            const dropdown = document.querySelector('.dropdown');
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Function to handle redirection to the login page
+        function redirectToLogin() {
+            window.location.href = 'login.html'; // Redirect to login.html
+        }
+
+        // Function to handle navigation to specific pages
+        function navigateTo(page) {
+            window.location.href = page; // Redirect to the specified page
+        }
+
+        // Add event listeners for the profile logo and profile menu option
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileLogo = document.querySelector('.profilelogo'); // Select the profile logo
+            const profileOption = document.querySelector('.dropdown .listnav:last-child'); // Select the profile option in the dropdown
+
+            if (profileLogo) {
+                profileLogo.addEventListener('click', redirectToLogin); // Redirect when profile logo is clicked
+            }
+
+            if (profileOption) {
+                profileOption.addEventListener('click', redirectToLogin); // Redirect when profile option is clicked
+            }
+        });
+
+    </script>
+    <script src="./script/psai.js"></script>
+</body>
+
+</html>

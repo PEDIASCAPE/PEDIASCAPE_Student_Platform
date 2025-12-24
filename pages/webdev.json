@@ -1,0 +1,68 @@
+{
+    "nodes": [
+      {
+        "id": "html",
+        "label": "HTML",
+        "description": "HTML (HyperText Markup Language) is the standard markup language for documents designed to be displayed in a web browser. It defines the structure and content of web pages.",
+        "resources": [
+          "https://developer.mozilla.org/en-US/docs/Web/HTML",
+          "https://www.w3schools.com/html/"
+        ]
+      },
+      {
+        "id": "css",
+        "label": "CSS",
+        "description": "CSS (Cascading Style Sheets) is a stylesheet language used to describe the presentation of a document written in HTML. CSS describes how elements should be rendered on screen, on paper, in speech, or on other media.",
+        "resources": [
+          "https://developer.mozilla.org/en-US/docs/Web/CSS",
+          "https://www.w3schools.com/css/"
+        ]
+      },
+      {
+        "id": "js",
+        "label": "JavaScript",
+        "description": "JavaScript is a programming language that enables interactive web pages. It is an essential part of web applications, and the vast majority of websites use it for client-side page behavior.",
+        "resources": [
+          "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+          "https://javascript.info/"
+        ]
+      },
+      {
+        "id": "framework",
+        "label": "Frameworks",
+        "description": "JavaScript frameworks are collections of JavaScript code libraries that provide developers with pre-written code for routine programming tasks. Popular frameworks include React, Vue, and Angular.",
+        "resources": [
+          "https://reactjs.org/",
+          "https://vuejs.org/",
+          "https://angular.io/"
+        ]
+      },
+      {
+        "id": "backend",
+        "label": "Backend",
+        "description": "Backend development refers to server-side web application logic and integration. Backend developers write code to connect the web application with database services and ensure the server, application, and database communicate efficiently.",
+        "resources": [
+          "https://nodejs.org/",
+          "https://expressjs.com/",
+          "https://www.python.org/"
+        ]
+      },
+      {
+        "id": "database",
+        "label": "Databases",
+        "description": "Databases are organized collections of structured information, or data, typically stored electronically in a computer system. They allow for efficient retrieval, manipulation, and management of data.",
+        "resources": [
+          "https://www.mongodb.com/",
+          "https://www.postgresql.org/",
+          "https://www.mysql.com/"
+        ]
+      }
+    ],
+    "edges": [
+      { "from": "html", "to": "css" },
+      { "from": "css", "to": "js" },
+      { "from": "js", "to": "framework" },
+      { "from": "js", "to": "backend" },
+      { "from": "backend", "to": "database" }
+    ]
+  }

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+        @import url("https://fonts.googleapis.com/css?family=Montserrat:800");
+
+        * {
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0px;
+            height: 100%;
+        }
+
+        /* a blue color as a generic focus style */
+        button:focus-visible {
+            outline: 2px solid #4a90e2 !important;
+            outline: -webkit-focus-ring-color auto 5px !important;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .signup {
+            background-color: #000000;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .signup .div {
+            background-color: #000000;
+            width: 960px;
+            height: 1200px;
+            position: relative;
+        }
+
+        .signup .text-wrapper {
+            position: absolute;
+            height: 44px;
+            top: 24px;
+            left: 401px;
+            background: linear-gradient(118deg,
+                    rgba(243, 55, 66, 1) 0%,
+                    rgba(252, 177, 17, 1) 25%,
+                    rgba(67, 130, 238, 1) 50%,
+                    rgba(184, 64, 180, 1) 75%,
+                    rgba(251, 159, 24, 1) 100%);
+            -webkit-background-clip: text !important;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-fill-color: transparent;
+            font-family: "Montserrat", Helvetica;
+            font-weight: 800;
+            color: transparent;
+            font-size: 36px;
+            text-align: center;
+            letter-spacing: 0;
+            line-height: normal;
+        }
+
+        .signup .don-t-have-an {
+            position: absolute;
+    height: 29px;
+    top: 720px;
+    left: 310px;
+    font-family: "Montserrat-ExtraBold", Helvetica;
+    font-weight: 800;
+    color: transparent;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+        }
+
+        .signup .span{
+            color: #b1aaa8;
+        }
+        .signup .text-wrapperr {
+        color: #fb5e3a;
+        font-size: 24px;
+        text-decoration: underline;
+        }
+
+        .signup .exclude {
+            left: 51px;
+            position: absolute;
+            width: 400px;
+            height: 82px;
+            top: 793px;
+        }
+
+        .signup .img {
+            left: 509px;
+            position: absolute;
+            width: 400px;
+            height: 82px;
+            top: 793px;
+        }
+
+        .signup .PASSWORD {
+            position: absolute;
+            width: 798px;
+            height: 122px;
+            top: 264px;
+            left: 84px;
+        }
+
+        .signup .text-wrapper-2 {
+            position: absolute;
+            height: 39px;
+            top: 0;
+            left: 0;
+            font-family: "Montserrat", Helvetica;
+            font-weight: 800;
+            color: #fb5e3a;
+            font-size: 32px;
+            text-align: center;
+            letter-spacing: 0;
+            line-height: normal;
+        }
+
+        .signup .overlap-group {
+            left: 6px;
+            position: absolute;
+            width: 788px;
+            height: 55px;
+            top: 67px;
+        }
+
+        .signup .text-wrapper-3 {
+            position: absolute;
+            height: 24px;
+            top: 15px;
+            left: 7px;
+            font-family: "Montserrat", Helvetica;
+            font-weight: 800;
+            color: #b1aaa8;
+            font-size: 20px;
+            text-align: center;
+            letter-spacing: 0;
+            line-height: normal;
+            white-space: nowrap;
+        }
+
+        .signup .rectangle {
+            background-color: #000000;
+            font-family: "Montserrat", Helvetica;
+            font-weight: 800;
+            font-size:20px;
+            position: absolute;
+            width: 788px;
+            height: 55px;
+            top: 0;
+            left: 0;
+            border: 1px solid;
+            border-color:#fb5e3a;
+            color:#ffffff;
+            padding-left: 10px;
+        }
+
+        .signup .PASSWORD-2 {
+            position: absolute;
+            width: 798px;
+            height: 122px;
+            top: 431px;
+            left: 89px;
+        }
+
+        .signup .text-wrapper-4 {
+            position: absolute;
+            height: 24px;
+            top: 16px;
+            left: 7px;
+            font-family: "Montserrat", Helvetica;
+            font-weight: 800;
+            color: #b1aaa8;
+            font-size: 20px;
+            text-align: center;
+            letter-spacing: 0;
+            line-height: normal;
+            white-space: nowrap;
+        }
+
+        .signup .EMAIL {
+            position: absolute;
+            width: 793px;
+            height: 122px;
+            top: 114px;
+            left: 89px;
+        }
+
+        .signup .overlap {
+            left: 1px;
+            position: absolute;
+            width: 788px;
+            height: 55px;
+            top: 67px;
+        }
+
+        .signup .rectangle-2 {
+            background-color: #000000;
+            font-family: "Montserrat", Helvetica;
+            font-weight: 800;
+            font-size:20px;
+            position: absolute;
+            width: 788px;
+            height: 55px;
+            top: 0;
+            left: 0;
+            border: 1px solid;
+            border-color:#fb5e3a;
+            padding-left: 10px;
+            color: #ffffff;
+        }
+
+        .signup .LOGIN-BUTTON {
+            position: absolute;
+            width: 140px;
+            height: 48px;
+            top: 615px;
+            left: 379px;
+            background-color: #000000;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .signup .LOGIN-BUTTON img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .signup input[type="email"],
+        .signup input[type="password"] {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .signup input::placeholder {
+            color: #b1aaa8;
+        }
+        
+    </style>
+    <script type="module" src="./script/register.js"></script>
+</head>
+
+<body>
+    <div class="signup">
+        <div class="div">
+            <div class="text-wrapper">SIGN UP</div>
+            <p class="don-t-have-an">
+                <span class="span">Already have an Account, </span> 
+                <span class="text-wrapperr"><a href="login.html" style="text-decoration: none; color: #fb5e3a;">Login</a></span>
+            </p>
+            <!-- <img class="exclude" src="https://c.animaapp.com/a1oNoL8Q/img/exclude.svg" />
+            <img class="img" src="https://c.animaapp.com/a1oNoL8Q/img/exclude-1.svg" /> -->
+            <form class="auth-form">
+                <div class="PASSWORD">
+                    <div class="text-wrapper-2">Password</div>
+                    <div class="overlap-group">
+                        <input type="password" id="password" placeholder="Enter your password" class="rectangle" required />
+                    </div>
+                </div>
+                <div class="PASSWORD-2">
+                    <div class="text-wrapper-2">Confirm Password</div>
+                    <div class="overlap-group">
+                        <input type="password" id="confirm-password" placeholder="Enter your confirm password" class="rectangle" required />
+                    </div>
+                </div>
+                <div class="EMAIL">
+                    <div class="text-wrapper-2">Email</div>
+                    <div class="overlap">
+                        <input type="email" id="email" placeholder="Enter your email address" class="rectangle-2" required />
+                    </div>
+                </div>
+                <button id="submit" type="submit" class="LOGIN-BUTTON">
+                    <img src="https://c.animaapp.com/a1oNoL8Q/img/login-button.svg"
+                         alt="Button Image" style="width: 200px; height: 90px; border: none; background: none; cursor: pointer;" />
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

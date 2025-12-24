@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Projects Hub</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            font-family: 'Montserrat', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+            font-weight: 400;
+
+            color-scheme: light dark;
+            color: rgba(255, 255, 255, 0.87);
+            background-color: #242424;
+
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            font-weight: 500;
+            color: #fb5e3a;
+            text-decoration: inherit;
+        }
+
+        a:hover {
+            color: #fb5e3a;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-width: 320px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: url('../imgg/cont2/roadmap.png');
+        }
+
+        h1 {
+            font-size: 3.2em;
+            line-height: 1.1;
+        }
+
+        button {
+            border-radius: 8px;
+            border: 1px solid transparent;
+            padding: 0.6em 1.2em;
+            font-size: 1em;
+            font-weight: 500;
+            font-family: inherit;
+            background-color: #1a1a1a;
+            cursor: pointer;
+            transition: border-color 0.25s;
+        }
+
+        button:hover {
+            border-color: #fb5e3a;
+        }
+
+        button:focus,
+        button:focus-visible {
+            outline: 4px auto -webkit-focus-ring-color;
+        }
+
+        /* Navbar styles from Roadmaps.css */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0px 20px;
+            background-color: #000000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-family: 'Tilt Warp', sans-serif;
+            font-size: 64px;
+            font-weight: 400;
+            color: #ffffff;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .contents {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .lists {
+            display: flex;
+            list-style: none;
+            gap: 22px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .listnav {
+          color: #FFF;
+    font-family: "Tilt Warp";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    list-style: none;
+        }
+
+        .listnav:hover {
+            color: #fcb111;
+            cursor: pointer;
+        }
+
+        .profilelogo {
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+        }
+
+        /* Dropdown menu */
+        .menu-icon {
+            cursor: pointer;
+            font-size: 24px;
+            display: none;
+        }
+
+        /* User profile menu styling */
+.user-profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #fb5e3a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-avatar:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+.user-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 150px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.user-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-menu-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 14px;
+    color: #333;
+}
+
+.user-menu-item:hover {
+    background-color: #f1f1f1;
+}
+
+.user-menu-item:not(:last-child) {
+    border-bottom: 1px solid #eee;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .user-menu {
+        position: fixed;
+        top: auto;
+        bottom: 15px;
+        right: 15px;
+        width: 160px;
+        border-radius: 8px;
+    }
+}
+
+        .dropdown {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            right: 40px;
+            top: 70px;
+            background-color: #1a1a1a;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .dropdown .listnav {
+            padding: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown .listnav:hover {
+            background-color: #2a2a2a;
+        }
+
+        /* App container */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header section */
+        .header {
+            background-color: #1a1a1a;
+            padding: 10px 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: #fb5e3a;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+
+        .search-box {
+            display: flex;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border-radius: 25px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #777;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: #ddd;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #2a2a2a;
+            color: #fb5e3a;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            padding: 20px 0;
+            background-color: #121212;
+            background-image: url("../imgg/Roadmaps/RMBG.png");
+            background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+        }
+
+        .main .container {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-header h2 {
+            margin-top: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .filters h3 {
+            margin: 15px 0 10px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ccc;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background-color: #2a2a2a;
+            color: #ccc;
+            border: none;
+            border-radius: 15px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background-color: #333;
+        }
+
+        .filter-btn.active {
+            background-color: #fb5e3a;
+            color: #fff;
+        }
+
+        .progress-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+        .progress-section h3 {
+            margin: 0 0 15px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ccc;
+        }
+
+        .progress-bar-container {
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            background-color: #fb5e3a;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: #fff;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Content area */
+        .content {
+            flex: 1;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .view-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .view-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+
+        .view-btn:hover,
+        .view-btn.active {
+            color: #fb5e3a;
+        }
+
+        /* Projects grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Project card */
+        .project-card {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .difficulty-badge {
+            background-color: #444;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+
+        .favorite-btn:hover {
+            color: #fb5e3a;
+        }
+
+        .card-body {
+            padding: 0 15px 15px;
+        }
+
+        .project-title {
+            margin: 0 0 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .project-description {
+            margin: 0 0 15px;
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .project-tag {
+            background-color: #2a2a2a;
+            color: #ccc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .card-footer {
+            padding: 15px;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .estimated-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .completion-status {
+            font-size: 12px;
+            color: #fb5e3a;
+        }
+
+        .view-project-btn {
+            background-color: #fb5e3a;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .view-project-btn:hover {
+            background-color: #fb5e3a;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1a1a1a;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* Project details view */
+        .project-details {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fb5e3a;
+        }
+
+        .details-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .details-actions button {
+            background: none;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px 12px;
+            transition: all 0.3s;
+        }
+
+        .details-actions button:hover {
+            background-color: #2a2a2a;
+            color: #fb5e3a;
+        }
+
+        .details-content {
+            display: flex;
+            gap: 30px;
+        }
+
+        .details-main {
+            flex: 3;
+        }
+
+        .details-sidebar {
+            flex: 1;
+        }
+
+        .details-title {
+            margin: 0 0 15px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .details-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .details-description {
+            margin-bottom: 30px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .details-objective h3,
+        .details-steps h3,
+        .details-tips h3,
+        .details-resources h3 {
+            margin: 0 0 15px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .objectives-list,
+        .tips-list,
+        .resources-list {
+            padding-left: 20px;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+
+        .objectives-list li,
+        .tips-list li,
+        .resources-list li {
+            margin-bottom: 10px;
+        }
+
+        .steps-container {
+            margin-bottom: 30px;
+        }
+
+        .step-item {
+            margin-bottom: 20px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            background-color: #fb5e3a;
+            color: #fff;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .step-content {
+            padding-left: 35px;
+            color: #ccc;
+        }
+
+        .code-block {
+            margin-left: 35px;
+            margin-top: 12px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .code-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background-color: #111;
+            border-bottom: 1px solid #333;
+            flex-wrap: wrap;
+        }
+
+        .code-toolbar button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            background-color: #1f1f1f;
+            color: #fff;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .code-toolbar button:hover {
+            border-color: #fb5e3a;
+        }
+
+        .step-code {
+            margin: 0;
+            padding: 12px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .code-block.is-collapsed .step-code {
+            display: none;
+        }
+
+        .project-progress {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .project-progress h3 {
+            margin: 0 0 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .progress-tracker {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-status {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .mark-complete-btn {
+            background-color: #fb5e3a;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .mark-complete-btn:hover {
+            background-color: #fb5e3a;
+        }
+
+        .similar-projects {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .similar-projects h3 {
+            margin: 0 0 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .similar-projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .similar-project-item {
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #333;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .similar-project-item:hover {
+            background-color: #444;
+        }
+
+        .similar-project-title {
+            margin: 0 0 5px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .similar-project-difficulty {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .comments-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+        .comments-section h3 {
+            margin: 0 0 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .comment-form {
+            margin-bottom: 20px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            height: 100px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
+        .comment-form button {
+            background-color: #fb5e3a;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .comment-form button:hover {
+            background-color: #fb5e3a;
+        }
+
+        .comment-item {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .comment-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .comment-content {
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        /* Media queries */
+        @media (max-width: 1024px) {
+            .title {
+                font-size: 64px;
+            }
+
+            .listnav {
+                font-size: 18px;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .main .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .details-content {
+                flex-direction: column;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contents {
+                display: none;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+
+            .title {
+                font-size: 64px;
+            }
+
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 10px 15px;
+            }
+
+            .title {
+                font-size: 60px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-card {
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                color: #213547;
+                background-color: #ffffff;
+            }
+
+            a:hover {
+                color: #fb5e3a;
+            }
+
+            button {
+                background-color: #f9f9f9;
+            }
+
+            .navbar, .header, .footer {
+                background-color: #f8f8f8;
+                color: #333;
+            }
+
+            .sidebar, .project-card, .project-details {
+                background-color: #fff;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .main {
+                background-color: #f5f5f5;
+            }
+
+            .search-box input {
+                background-color: #fff;
+                border-color: #ddd;
+                color: #333;
+            }
+
+            .filter-btn {
+                background-color: #eee;
+                color: #333;
+            }
+
+            .project-tag {
+                background-color: #eee;
+                color: #555;
+            }
+
+            .progress-bar {
+                background-color: #ddd;
+            }
+
+            .progress-section, .comments-section {
+                border-color: #ddd;
+            }
+
+            .card-footer {
+                border-color: #eee;
+            }
+
+            .comment-form textarea {
+                background-color: #fff;
+                border-color: #ddd;
+                color: #333;
+            }
+
+            .comment-item, .project-progress, .similar-projects {
+                background-color: #f0f0f0;
+            }
+
+            .similar-project-item {
+                background-color: #e0e0e0;
+            }
+
+            .similar-project-item:hover {
+                background-color: #d0d0d0;
+            }
+
+            .title, .logo h1, .details-title, .project-title {
+                color: #333;
+            }
+
+            .listnav, .nav-button {
+                color: #444;
+            }
+
+            .project-description, .comment-content, .details-description, 
+            .objectives-list, .tips-list, .resources-list {
+                color: #555;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                <div class="title" onclick="navigateTo('../index.html')">PEDIASCAPE</div>
+                <div class="contents">
+                    <ul class="lists">
+                        <li class="listnav" onclick="navigateTo('../Roadmaps.html')">ROADMAPS</li>
+                        <li class="listnav" onclick="navigateTo('../material.html')">MATERIALS</li>
+                        <li class="listnav" onclick="navigateTo('index.html')">PROJECTS</li>
+                        <li class="listnav" onclick="navigateTo('../carrier_guidance/index.html')">CAREER GUIDANCE</li>
+                        <li class="listnav" onclick="navigateTo('../psai1.html')">PS AI</li>
+                    </ul>
+                    <div class="auth-section">
+                        <div class="user-profile">
+                            <div class="user-avatar" id="userInitials" onclick="toggleUserMenu()"></div>
+                            <!-- User menu dropdown -->
+                            <div class="user-menu" id="userMenu">
+                                <div class="user-menu-item" onclick="navigateTo('../Dashboard.html')">Dashboard</div>
+                                <div class="user-menu-item" id="logoutButton">Logout</div>
+                            </div>
+                        </div>
+                        <img class="profilelogo" src="../imgg/nav/profile.svg" alt="Profile" onclick="redirectToLogin()">
+                    </div>
+                </div>
+                <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+                <div class="dropdown">
+                    <div class="listnav" onclick="navigateTo('../Roadmaps.html')">ROADMAPS</div>
+                    <div class="listnav" onclick="navigateTo('../material.html')">MATERIALS</div>
+                    <div class="listnav" onclick="navigateTo('index.html')">PROJECTS</div>
+                    <div class="listnav" onclick="navigateTo('../carrier_guidance/index.html')">CAREER GUIDANCE</div>
+                    <div class="listnav" onclick="navigateTo('../psai1.html')">PS AI</div>
+                    <div class="listnav" onclick="redirectToLogin()">PROFILE</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="app-container">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <h1>Projects<span>Hub</span></h1>
+                    </div>
+                    <div class="search-container">
+                        <div class="search-box">
+                            <input type="text" id="search-input" placeholder="Search projects...">
+                            <button id="search-button" title="Search projects" aria-label="Search projects">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <nav class="nav">
+                        <button id="favorites-toggle" class="nav-button" title="View Favorites">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button id="dark-mode-toggle" class="nav-button" title="Toggle Dark Mode">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h2>Categories</h2>
+                    </div>
+                    <div class="filters">
+                        <div class="difficulty-filters">
+                            <h3>Difficulty</h3>
+                            <div class="filter-options">
+                                <button class="filter-btn active" data-filter="all">All</button>
+                                <button class="filter-btn" data-filter="beginner">Beginner</button>
+                                <button class="filter-btn" data-filter="intermediate">Intermediate</button>
+                                <button class="filter-btn" data-filter="advanced">Advanced</button>
+                            </div>
+                        </div>
+                        <div class="category-filters">
+                            <h3>Type</h3>
+                            <div class="filter-options" id="category-filters">
+                                <!-- Dynamically populated from JS -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress-section">
+                        <h3>Your Progress</h3>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="overall-progress">
+                                <div class="progress-fill"></div>
+                                <span class="progress-text">0%</span>
+                            </div>
+                        </div>
+                        <div class="progress-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="completed-count">0</span>
+                                <span class="stat-label">Completed</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="favorites-count">0</span>
+                                <span class="stat-label">Favorites</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div id="projects-view" class="view active">
+                        <div class="view-header">
+                            <h2>All Projects</h2>
+                            <div class="view-controls">
+                                <button id="grid-view-btn" class="view-btn active" title="Grid view" aria-label="Grid view">
+                                    <i class="fas fa-th-large" aria-hidden="true"></i>
+                                </button>
+                                <button id="list-view-btn" class="view-btn" title="List view" aria-label="List view">
+                                    <i class="fas fa-list" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="projects-container" class="projects-grid">
+                            <!-- Projects will be dynamically added here -->
+                        </div>
+                    </div>
+
+                    <div id="project-details-view" class="view">
+                        <!-- Project details will be shown here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 DevProjectsHub. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Templates -->
+    <template id="project-card-template">
+        <div class="project-card">
+            <div class="card-header">
+                <div class="difficulty-badge"></div>
+                <button class="favorite-btn">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
+            <div class="card-body">
+                <h3 class="project-title"></h3>
+                <p class="project-description"></p>
+                <div class="project-tags"></div>
+            </div>
+            <div class="card-footer">
+                <div class="project-meta">
+                    <span class="estimated-time"></span>
+                    <span class="completion-status">Not started</span>
+                </div>
+                <button class="view-project-btn">View Project</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="project-details-template">
+        <div class="project-details">
+            <div class="details-header">
+                <button class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Projects
+                </button>
+                <div class="details-actions">
+                    <button class="bookmark-btn">
+                        <i class="far fa-bookmark"></i>
+                        <span>Bookmark</span>
+                    </button>
+                    <button class="favorite-btn">
+                        <i class="far fa-heart"></i>
+                        <span>Favorite</span>
+                    </button>
+                </div>
+            </div>
+            <div class="details-content">
+                <div class="details-main">
+                    <h2 class="details-title"></h2>
+                    <div class="details-meta">
+                        <span class="details-difficulty"></span>
+                        <span class="details-time"></span>
+                        <span class="details-category"></span>
+                    </div>
+                    <div class="details-description"></div>
+                    <div class="details-objective">
+                        <h3>Learning Objectives</h3>
+                        <ul class="objectives-list"></ul>
+                    </div>
+                    <div class="details-steps">
+                        <h3>Step-by-Step Guide</h3>
+                        <div class="steps-container"></div>
+                    </div>
+                    <div class="details-tips">
+                        <h3>Tips & Considerations</h3>
+                        <ul class="tips-list"></ul>
+                    </div>
+                    <div class="details-resources">
+                        <h3>Additional Resources</h3>
+                        <ul class="resources-list"></ul>
+                    </div>
+                </div>
+                <div class="details-sidebar">
+                    <div class="project-progress">
+                        <h3>Your Progress</h3>
+                        <div class="progress-tracker">
+                            <div class="progress-status">Not Started</div>
+                            <button class="mark-complete-btn">Mark as Complete</button>
+                        </div>
+                    </div>
+                    <div class="similar-projects">
+                        <h3>Similar Projects</h3>
+                        <div class="similar-projects-list"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="comments-section">
+                <h3>Community Comments & Tips</h3>
+                <div class="comments-container">
+                    <div class="comment-form">
+                        <textarea id="comment-input" placeholder="Share your experience or tips..."></textarea>
+                        <button id="post-comment-btn">Post Comment</button>
+                    </div>
+                    <div class="comments-list"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- JavaScript -->
+    <!-- <script>
+        // Navigation function
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // Toggle dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.querySelector('.dropdown');
+            if (dropdown.style.display === 'flex') {
+                dropdown.style.display = 'none'; // Hide the dropdown
+            } else {
+                dropdown.style.display = 'flex'; // Show the dropdown
+            }
+        }
+
+        // Sample project data (you can replace this with your actual data)
+        const projectsData = [
+            {
+                id: 1,
+                title: "Responsive Portfolio Website",
+                description: "Create a personal portfolio website that showcases your skills and projects.",
+                difficulty: "beginner",
+                estimatedTime: "4-6 hours",
+                tags: ["HTML", "CSS", "JavaScript"],
+                category: "web"
+            },
+            {
+                id: 2,
+                title: "Weather App",
+                description: "Build a weather application that fetches data from a weather API and displays current conditions.",
+                difficulty: "intermediate",
+                estimatedTime: "6-8 hours",
+                tags: ["JavaScript", "API", "Frontend"],
+                category: "web"
+            },
+            {
+                id: 3,
+                title: "Task Manager API",
+                description: "Create a RESTful API for a task management application with authentication.",
+                difficulty: "advanced",
+                estimatedTime: "10-12 hours",
+                tags: ["Node.js", "Express", "MongoDB"],
+                category: "backend"
+            },
+            {
+                id: 4,
+                title: "E-commerce Product Page",
+                description: "Develop an interactive product page with shopping cart functionality.",
+                difficulty: "intermediate",
+                estimatedTime: "8-10 hours",
+                tags: ["HTML", "CSS", "JavaScript"],
+                category: "web"
+            },
+            {
+                id: 5,
+                title: "Data Visualization Dashboard",
+                description: "Build a dashboard that visualizes data using charts and graphs.",
+                difficulty: "intermediate",
+                estimatedTime: "8-10 hours",
+                tags: ["JavaScript", "D3.js", "CSS"],
+                category: "data"
+            },
+            {
+                id: 6,
+                title: "Mobile-First Blog Template",
+                description: "Design and implement a responsive blog template with a mobile-first approach.",
+                difficulty: "beginner",
+                estimatedTime: "4-6 hours",
+                tags: ["HTML", "CSS", "Responsive"],
+                category: "web"
+            }
+        ];
+
+        // Function to populate projects
+        function populateProjects() {
+            const projectsContainer = document.getElementById('projects-container');
+            const projectCardTemplate = document.getElementById('project-card-template');
+            
+            projectsContainer.innerHTML = '';
+            
+            projectsData.forEach(project => {
+                const projectCard = document.importNode(projectCardTemplate.content, true);
+                
+                projectCard.querySelector('.project-title').textContent = project.title;
+                projectCard.querySelector('.project-description').textContent = project.description;
+                
+                const difficultyBadge = projectCard.querySelector('.difficulty-badge');
+                difficultyBadge.textContent = project.difficulty.charAt(0).toUpperCase() + project.difficulty.slice(1);
+                
+                if (project.difficulty === 'beginner') {
+                    difficultyBadge.style.backgroundColor = '#4CAF50';
+                } else if (project.difficulty === 'intermediate') {
+                    difficultyBadge.style.backgroundColor = '#FFC107';
+                } else {
+                    difficultyBadge.style.backgroundColor = '#F44336';
+                }
+                
+                const tagsContainer = projectCard.querySelector('.project-tags');
+                tagsContainer.innerHTML = '';
+                project.tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.classList.add('project-tag');
+                    tagElement.textContent = tag;
+                    tagsContainer.appendChild(tagElement);
+                });
+                
+                projectCard.querySelector('.estimated-time').textContent = `Estimated time: ${project.estimatedTime}`;
+                
+                const viewProjectBtn = projectCard.querySelector('.view-project-btn');
+                viewProjectBtn.addEventListener('click', () => {
+                    showProjectDetails(project.id);
+                });
+                
+                projectsContainer.appendChild(projectCard);
+            });
+        }
+
+        // Function to show project details
+        function showProjectDetails(projectId) {
+            const projectsView = document.getElementById('projects-view');
+            const projectDetailsView = document.getElementById('project-details-view');
+            
+            projectsView.classList.remove('active');
+            projectDetailsView.classList.add('active');
+            
+            // Find the project
+            const project = projectsData.find(p => p.id === projectId);
+            
+            if (!project) return;
+            
+            const detailsTemplate = document.getElementById('project-details-template');
+            const detailsContent = document.importNode(detailsTemplate.content, true);
+            
+            detailsContent.querySelector('.details-title').textContent = project.title;
+            detailsContent.querySelector('.details-difficulty').textContent = `Difficulty: ${project.difficulty.charAt(0).toUpperCase() + project.difficulty.slice(1)}`;
+            detailsContent.querySelector('.details-time').textContent = `Est. Time: ${project.estimatedTime}`;
+            detailsContent.querySelector('.details-category').textContent = `Category: ${project.category.charAt(0).toUpperCase() + project.category.slice(1)}`;
+            
+            // Add more details as needed
+            
+            const backBtn = detailsContent.querySelector('.back-btn');
+            backBtn.addEventListener('click', () => {
+                projectDetailsView.classList.remove('active');
+                projectsView.classList.add('active');
+            });
+            
+            projectDetailsView.innerHTML = '';
+            projectDetailsView.appendChild(detailsContent);
+        }
+
+        // Function to populate category filters
+        function populateCategoryFilters() {
+            const categoryFilters = document.getElementById('category-filters');
+            
+            // Extract unique categories
+            const categories = [...new Set(projectsData.map(project => project.category))];
+            
+            // Add "All" filter
+            const allBtn = document.createElement('button');
+            allBtn.classList.add('filter-btn', 'active');
+            allBtn.setAttribute('data-filter', 'all');
+            allBtn.textContent = 'All';
+            categoryFilters.appendChild(allBtn);
+            
+            // Add category filters
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.classList.add('filter-btn');
+                btn.setAttribute('data-filter', category);
+                btn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                categoryFilters.appendChild(btn);
+            });
+            
+            // Add filter functionality
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filterGroup = this.parentElement;
+                    filterGroup.querySelector('.active').classList.remove('active');
+                    this.classList.add('active');
+                    
+                    filterProjects();
+                });
+            });
+        }
+
+        // Function to filter projects
+        function filterProjects() {
+            const difficultyFilter = document.querySelector('.difficulty-filters .active').getAttribute('data-filter');
+            const categoryFilter = document.querySelector('.category-filters .active').getAttribute('data-filter');
+            
+            const filteredProjects = projectsData.filter(project => {
+                const matchesDifficulty = difficultyFilter === 'all' || project.difficulty === difficultyFilter;
+                const matchesCategory = categoryFilter === 'all' || project.category === categoryFilter;
+                
+                return matchesDifficulty && matchesCategory;
+            });
+            
+            const projectsContainer = document.getElementById('projects-container');
+            projectsContainer.innerHTML = '';
+            
+            if (filteredProjects.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.classList.add('no-results');
+                noResults.textContent = 'No projects match your filters.';
+                projectsContainer.appendChild(noResults);
+                return;
+            }
+            
+            filteredProjects.forEach(project => {
+                const projectCardTemplate = document.getElementById('project-card-template');
+                const projectCard = document.importNode(projectCardTemplate.content, true);
+                
+                projectCard.querySelector('.project-title').textContent = project.title;
+                projectCard.querySelector('.project-description').textContent = project.description;
+                
+                const difficultyBadge = projectCard.querySelector('.difficulty-badge');
+                difficultyBadge.textContent = project.difficulty.charAt(0).toUpperCase() + project.difficulty.slice(1);
+                
+                if (project.difficulty === 'beginner') {
+                    difficultyBadge.style.backgroundColor = '#4CAF50';
+                } else if (project.difficulty === 'intermediate') {
+                    difficultyBadge.style.backgroundColor = '#FFC107';
+                } else {
+                    difficultyBadge.style.backgroundColor = '#F44336';
+                }
+                
+                const tagsContainer = projectCard.querySelector('.project-tags');
+                tagsContainer.innerHTML = '';
+                project.tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.classList.add('project-tag');
+                    tagElement.textContent = tag;
+                    tagsContainer.appendChild(tagElement);
+                });
+                
+                projectCard.querySelector('.estimated-time').textContent = `Estimated time: ${project.estimatedTime}`;
+                
+                const viewProjectBtn = projectCard.querySelector('.view-project-btn');
+                viewProjectBtn.addEventListener('click', () => {
+                    showProjectDetails(project.id);
+                });
+                
+                projectsContainer.appendChild(projectCard);
+            });
+        }
+
+        // Toggle view (grid/list)
+        document.getElementById('grid-view-btn').addEventListener('click', function() {
+            document.getElementById('list-view-btn').classList.remove('active');
+            this.classList.add('active');
+            document.getElementById('projects-container').className = 'projects-grid';
+        });
+
+        document.getElementById('list-view-btn').addEventListener('click', function() {
+            document.getElementById('grid-view-btn').classList.remove('active');
+            this.classList.add('active');
+            document.getElementById('projects-container').className = 'projects-list';
+        });
+
+        // Toggle dark mode
+        document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-moon')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+
+        // Search functionality
+        document.getElementById('search-button').addEventListener('click', function() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+            if (!searchTerm) return;
+            
+            const searchResults = projectsData.filter(project => 
+                project.title.toLowerCase().includes(searchTerm) || 
+                project.description.toLowerCase().includes(searchTerm) ||
+                project.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            );
+            
+            const projectsContainer = document.getElementById('projects-container');
+            projectsContainer.innerHTML = '';
+            
+            if (searchResults.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.classList.add('no-results');
+                noResults.textContent = 'No projects match your search.';
+                projectsContainer.appendChild(noResults);
+                return;
+            }
+            
+            searchResults.forEach(project => {
+                const projectCardTemplate = document.getElementById('project-card-template');
+                const projectCard = document.importNode(projectCardTemplate.content, true);
+                
+                projectCard.querySelector('.project-title').textContent = project.title;
+                projectCard.querySelector('.project-description').textContent = project.description;
+                
+                const difficultyBadge = projectCard.querySelector('.difficulty-badge');
+                difficultyBadge.textContent = project.difficulty.charAt(0).toUpperCase() + project.difficulty.slice(1);
+                
+                if (project.difficulty === 'beginner') {
+                    difficultyBadge.style.backgroundColor = '#4CAF50';
+                } else if (project.difficulty === 'intermediate') {
+                    difficultyBadge.style.backgroundColor = '#FFC107';
+                } else {
+                    difficultyBadge.style.backgroundColor = '#F44336';
+                }
+                
+                const tagsContainer = projectCard.querySelector('.project-tags');
+                tagsContainer.innerHTML = '';
+                project.tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.classList.add('project-tag');
+                    tagElement.textContent = tag;
+                    tagsContainer.appendChild(tagElement);
+                });
+                
+                projectCard.querySelector('.estimated-time').textContent = `Estimated time: ${project.estimatedTime}`;
+                
+                const viewProjectBtn = projectCard.querySelector('.view-project-btn');
+                viewProjectBtn.addEventListener('click', () => {
+                    showProjectDetails(project.id);
+                });
+                
+                projectsContainer.appendChild(projectCard);
+            });
+        });
+
+        // Initialize the page
+        window.addEventListener('DOMContentLoaded', () => {
+            populateProjects();
+            populateCategoryFilters();
+        });
+    </script> -->
+   
+    <script type="module" src="js/navbar.js"></script>
+    <script src="js/utils/storage.js"></script>
+    <script src="js/data/projects.js"></script>
+    <script src="js/components/projectList.js"></script>
+    <script src="js/components/projectDetails.js?v=20251224"></script>
+    <script src="js/components/userProgress.js"></script>
+    <script src="js/components/comments.js"></script>
+    <script src="js/components/filters.js"></script>
+    <script src="js/components/favorites.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

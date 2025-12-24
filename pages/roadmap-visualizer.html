@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap Visualizer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.4/dagre-d3.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&family=Tilt+Warp&display=swap');
+  
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-image: url('imgg/cont1/cont1image.png');
+      background-color: #000;
+      overflow-x: hidden;
+      color: white;
+    }
+  
+    svg {
+      width: 100vw;
+      height: 100vh;
+      background-color: #111;
+      
+    }
+  
+    #domainSelector {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      padding: 8px 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Tilt Warp', cursive;
+      background-color: #000;
+      color: white;
+      box-shadow: 0 2px 4px rgba(243, 55, 66, 0.5);
+      background-image: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #certificationsBtn {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      z-index: 150;
+      padding: 8px 12px;
+      font-size: 16px;
+      border: 1px solid rgba(251, 94, 58, 0.7);
+      border-radius: 6px;
+      font-family: 'Tilt Warp', cursive;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(243, 55, 66, 0.35);
+    }
+
+    #certificationsBtn:hover {
+      border-color: rgba(255, 255, 255, 0.75);
+    }
+
+    #certificationsMenu {
+      position: absolute;
+      right: 20px;
+      bottom: 64px;
+      z-index: 150;
+      display: none;
+      width: min(420px, calc(100vw - 40px));
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.92);
+      border: 1px solid rgba(251, 94, 58, 0.45);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+
+    #certificationsMenu.show {
+      display: block;
+    }
+
+    .cert-link {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      margin: 8px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cert-link:hover {
+      border-color: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.10);
+    }
+
+    @media (max-width: 520px) {
+      #certificationsBtn {
+        right: 20px;
+        bottom: 20px;
+      }
+
+      #certificationsMenu {
+        right: 20px;
+        bottom: 64px;
+      }
+    }
+  
+    #sidebar {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 300px;
+      height: 100%;
+      background: #000;
+      border-left: 2px solid transparent;
+      padding: 20px;
+      display: none;
+      overflow-y: auto;
+      z-index: 200;
+      box-shadow: -2px 0 10px #fb5d3a9c;
+    }
+  
+    .node rect {
+      fill: #000;
+      stroke: #fb5e3a;
+      stroke-width: 2px;
+      cursor: pointer;
+      box-shadow: #B840B4;
+    }
+  
+    .node:hover rect {
+      fill: #111;
+      stroke: #fff;
+    }
+  
+    .node text {
+      fill: white;
+      font-size: 13px;
+      font-family: 'Montserrat', sans-serif;
+    }
+  
+    .edgePath path {
+      stroke: #ffffff; /* Fallback: gradient not supported on path stroke */
+      stroke-width: 1.5px;
+      fill: none;
+    }
+  
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: white;
+      background: none;
+      border: none;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+  
+    .close-btn:hover {
+      background: #222;
+    }
+  
+    #topicName {
+      font-family: 'Tilt Warp', cursive;
+      font-size: 20px;
+      background-image: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      border-bottom: 1px solid white;
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+  
+    #resourceList {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+    }
+  
+    #resourceDescription p {
+      line-height: 1.5;
+      color: #ccc;
+    }
+  
+    .resource-card {
+      background-color: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 15px;
+      transition: 0.2s ease;
+    }
+  
+    .resource-card:hover {
+      background-color: #222;
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+    }
+  
+    .resource-title {
+      font-weight: bold;
+      color: white;
+      margin-bottom: 5px;
+      background-image: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  
+    .resource-link {
+      color: #fff;
+      text-decoration: none;
+      background-color: #ffffff;
+      /* background-image: linear-gradient(101deg, #F33742, #FCB111, #4382EE, #B840B4, #FB9F18); */
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  
+    .resource-link:hover {
+      text-decoration: underline;
+    }
+  
+    #loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Tilt Warp', cursive;
+      text-align: center;
+      z-index: 1000;
+    }
+  
+    .roadmap-title {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 28px;
+      font-family: 'Tilt Warp', cursive;
+      font-weight: 800;
+      z-index: 100;
+      padding: 10px 20px;
+      border-radius: 10px;
+      background: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+  
+    .debug {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+  
+  
+</head>
+<body>
+
+<div id="roadmapTitle" class="roadmap-title"></div>
+
+<select id="domainSelector" aria-label="Select roadmap domain">
+  <option value="webdev.json">Web Development</option>
+  <option value="ai.json">Artificial Intelligence</option>
+  <option value="datascience.json">Data Science</option>
+  <option value="mobile.json">Mobile Development</option>
+  <option value="devops.json">DevOps</option>
+  <option value="cybersecurity.json">Cybersecurity</option>
+  <option value="gamedev.json">Game Development</option>
+  <option value="blockchain.json">Blockchain</option>
+  <option value="uiux.json">UI/UX Design</option>
+</select>
+
+<button id="certificationsBtn" type="button">Certifications</button>
+<div id="certificationsMenu" aria-label="Certification links"></div>
+
+<div id="loading">Loading roadmap...</div>
+
+<svg id="svg-canvas">
+  <g>
+    <defs>
+      <filter id="nodeShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#F33742" flood-opacity="0.7" />
+      </filter>
+    </defs>
+    
+  </g>
+</svg>
+
+<div id="sidebar">
+  <button class="close-btn" id="closeBtn">×</button>
+  <h2 id="topicName"></h2>
+  <div id="resourceDescription"></div>
+  <div id="resourceContainer">
+    <ul id="resourceList"></ul>
+  </div>
+</div>
+
+<script>
+// DOM elements
+const svg = d3.select("svg");
+const inner = svg.select("g");
+const sidebar = document.getElementById("sidebar");
+const topicName = document.getElementById("topicName");
+const resourceList = document.getElementById("resourceList");
+const resourceDescription = document.getElementById("resourceDescription");
+const closeBtn = document.getElementById("closeBtn");
+const loading = document.getElementById("loading");
+const domainSelector = document.getElementById("domainSelector");
+const roadmapTitle = document.getElementById("roadmapTitle");
+const certificationsBtn = document.getElementById("certificationsBtn");
+const certificationsMenu = document.getElementById("certificationsMenu");
+
+const CERTIFICATION_LINKS = {
+  "webdev.json": [
+    { label: "Meta Full-Stack Developer (Coursera)", url: "https://www.coursera.org/specializations/meta-full-stack-developer" }
+  ],
+  "ai.json": [
+    { label: "AI for Everyone (Coursera)", url: "https://www.coursera.org/learn/ai-for-everyone" }
+  ],
+  "datascience.json": [
+    { label: "Machine Learning (Coursera)", url: "https://www.coursera.org/learn/machine-learning" },
+    { label: "IBM Data Analyst (Coursera)", url: "https://www.coursera.org/professional-certificates/ibm-data-analyst" }
+  ],
+  "mobile.json": [
+    { label: "Intro to Android Mobile App Development (Coursera)", url: "https://www.coursera.org/learn/introduction-to-android-mobile-application-development" }
+  ],
+  "devops.json": [
+    { label: "AI Cloud Computing & DevOps Course (IITM Pravartak)", url: "https://sl-courses.iitmpravartak.org.in/ai-cloud-computing-devops-course?utm_source=google&utm_medium=cpc&utm_term=devops%20certification%20course&utm_content=23316700695-196316117984-786546224845&utm_device=c&utm_campaign=Search-TechCluster-CCloudDevops-PG-IITM-IN-Main-AllDevice-IITMdomain-adgroup-IITM-CloudDevops&gad_source=1&gad_campaignid=23316700695&gbraid=0AAAAADt9AXPGSLdwBhxIJlSLQdpkLc9j-&gclid=CjwKCAiAu67KBhAkEiwAY0jAlY24HYmCw-m9IpC4GXQ_SMaeeHPRa9TYop_LgRpX8VWDYTuL9u8hYBoCU4QQAvD_BwE" }
+  ],
+  "cybersecurity.json": [
+    { label: "Cyber Security Courses (Simplilearn)", url: "https://www.simplilearn.com/search-new?new_item_type=course%2Cbundle&tag=cyber%20security" }
+  ],
+  "gamedev.json": [
+    { label: "Game Development Courses (Udemy)", url: "https://www.udemy.com/courses/development/game-development/?utm_campaign=Search_Keyword_Beta_Prof_la.ES_cc.ROW-Spanish&utm_source=google&utm_medium=paid-search&portfolio=ROW-Spanish&utm_audience=mx&utm_tactic=nb&utm_term=curso%20de%20dise%C3%B1o%20de%20juegos&utm_content=g&funnel=&test=&gad_source=1&gad_campaignid=21487757259&gbraid=0AAAAADROdO1H1vnEOH_PkoGE96SOUrqJT&gclid=CjwKCAiAu67KBhAkEiwAY0jAlbH945eUePu2of0TexhUBDMgqMEgG1cYn1KzkU4BcqVfDM58Mlgc_xoC9C0QAvD_BwE" }
+  ],
+  "blockchain.json": [
+    { label: "Blockchain Certifications (AI Certs)", url: "https://www.aicerts.ai/search/?q=blockchain&practice_area=" }
+  ],
+  "uiux.json": [
+    { label: "UI/UX Courses (IITM Pravartak)", url: "https://digitalskills.iitmpravartak.org.in/courses.php?utm_source=chatgpt.com" }
+  ]
+};
+
+function hideCertificationsMenu() {
+  if (certificationsMenu) certificationsMenu.classList.remove("show");
+}
+
+function renderCertificationsMenu(file) {
+  const links = CERTIFICATION_LINKS[file] || [];
+  if (!certificationsBtn || !certificationsMenu) return;
+
+  certificationsMenu.innerHTML = "";
+  if (!links.length) {
+    certificationsBtn.style.display = "none";
+    hideCertificationsMenu();
+    return;
+  }
+
+  certificationsBtn.style.display = "";
+  links.forEach((l) => {
+    const a = document.createElement("a");
+    a.className = "cert-link";
+    a.href = l.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = l.label;
+    certificationsMenu.appendChild(a);
+  });
+}
+
+if (certificationsBtn && certificationsMenu) {
+  certificationsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    certificationsMenu.classList.toggle("show");
+  });
+
+  certificationsMenu.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+  document.addEventListener("click", () => {
+    hideCertificationsMenu();
+  });
+}
+
+// Setup zoom behavior
+const zoom = d3.zoom().on("zoom", (event) => {
+  inner.attr("transform", event.transform);
+});
+svg.call(zoom);
+
+// Close sidebar when close button is clicked
+closeBtn.addEventListener("click", () => {
+  sidebar.style.display = "none";
+});
+
+// Variable to store the current roadmap data
+let currentRoadmap = null;
+
+// Helper function to extract domain from URL
+function extractDomain(url) {
+  try {
+    const domain = new URL(url).hostname;
+    return domain.replace('www.', '');
+  } catch (e) {
+    return url;
+  }
+}
+
+// Helper function to create resource card
+function createResourceCard(link, index) {
+  const li = document.createElement("li");
+  li.className = "resource-card";
+  
+  // Extract domain for display
+  const domain = extractDomain(link);
+  
+  const resourceTitle = document.createElement("div");
+  resourceTitle.className = "resource-title";
+  resourceTitle.innerText = `Resource ${index + 1}: ${domain}`;
+  
+  const resourceLink = document.createElement("a");
+  resourceLink.href = link;
+  resourceLink.innerText = "Visit resource";
+  resourceLink.target = "_blank";
+  resourceLink.className = "resource-link";
+  
+  li.appendChild(resourceTitle);
+  li.appendChild(resourceLink);
+  
+  return li;
+}
+
+// Display node information in sidebar
+function showResources(node) {
+  console.log("Showing resources for node:", node);
+  
+  sidebar.style.display = "block";
+  topicName.innerText = node.label;
+  resourceList.innerHTML = "";
+  resourceDescription.innerHTML = "";
+  
+  // Display description if available
+  if (node.description) {
+    const descEl = document.createElement("div");
+    descEl.innerHTML = `<h3>About ${node.label}</h3><p>${node.description}</p>`;
+    resourceDescription.appendChild(descEl);
+  }
+  
+  // Display resources with improved styling
+  if (node.resources && node.resources.length > 0) {
+    const resourceHeader = document.createElement("h3");
+    resourceHeader.innerText = "Learning Resources";
+    resourceList.appendChild(resourceHeader);
+    
+    node.resources.forEach((link, index) => {
+      const resourceCard = createResourceCard(link, index);
+      resourceList.appendChild(resourceCard);
+    });
+  } else {
+    const li = document.createElement("li");
+    li.innerText = "No resources available for this topic.";
+    resourceList.appendChild(li);
+  }
+}
+
+function wrapNodeLabel(label, maxCharsPerLine = 18, maxLines = 3) {
+  const text = String(label || "").trim();
+  if (!text) return "";
+
+  const words = text.split(/\s+/g);
+  const lines = [];
+  let current = "";
+
+  const pushCurrent = () => {
+    if (current) lines.push(current);
+    current = "";
+  };
+
+  const pushWord = (word) => {
+    if (!word) return;
+    if (!current) {
+      current = word;
+      return;
+    }
+    if ((current + " " + word).length <= maxCharsPerLine) {
+      current = current + " " + word;
+      return;
+    }
+    pushCurrent();
+    current = word;
+  };
+
+  for (const rawWord of words) {
+    const word = String(rawWord || "");
+    if (word.length <= maxCharsPerLine) {
+      pushWord(word);
+      continue;
+    }
+
+    if (current) pushCurrent();
+
+    for (let i = 0; i < word.length; i += maxCharsPerLine) {
+      lines.push(word.slice(i, i + maxCharsPerLine));
+      if (lines.length >= maxLines) break;
+    }
+
+    current = "";
+    if (lines.length >= maxLines) break;
+  }
+
+  if (current && lines.length < maxLines) lines.push(current);
+
+  if (lines.length > maxLines) {
+    return lines.slice(0, maxLines).join("\n").replace(/\s+$/g, "") + "…";
+  }
+
+  if (lines.length === maxLines && words.join(" ").length > lines.join(" ").length) {
+    lines[maxLines - 1] = lines[maxLines - 1].replace(/\s+$/g, "") + "…";
+  }
+
+  return lines.join("\n");
+}
+
+// Render the roadmap
+function renderRoadmap(roadmap) {
+  // Store the current roadmap data
+  currentRoadmap = roadmap;
+  
+  // Clear previous graph
+  inner.selectAll("*").remove();
+
+  // Create a new directed graph
+  const g = new dagreD3.graphlib.Graph().setGraph({ 
+    rankdir: "LR", 
+    marginx: 40, 
+    marginy: 40,
+    nodesep: 70,
+    edgesep: 25,
+    ranksep: 70,
+    acyclicer: "greedy"
+  });
+  
+  g.setDefaultEdgeLabel(() => ({}));
+
+  // Add nodes to the graph
+  roadmap.nodes.forEach(node => {
+    console.log("Adding node to graph:", node.id, node.label);
+    const wrappedLabel = wrapNodeLabel(node.label, 18, 3);
+    const lineCount = Math.max(1, wrappedLabel.split("\n").length);
+    const nodeWidth = 190;
+    const nodeHeight = 22 + lineCount * 16;
+
+    g.setNode(node.id, {
+      label: wrappedLabel,
+      rx: 5, 
+      ry: 5,
+      class: "node",
+      width: nodeWidth,
+      height: nodeHeight
+    });
+  });
+
+  // Add edges to the graph
+  roadmap.edges.forEach(edge => {
+    g.setEdge(edge.from, edge.to, {
+      curve: d3.curveBasis
+    });
+  });
+
+  // Create the renderer
+  const render = new dagreD3.render();
+  render(inner, g);
+
+  // Center the graph
+  const graphWidth = g.graph().width + 40;
+  const graphHeight = g.graph().height + 40;
+  const svgWidth = svg.node().clientWidth;
+  const svgHeight = svg.node().clientHeight;
+  const xCenterOffset = Math.max((svgWidth - graphWidth) / 2, 0);
+  const yCenterOffset = Math.max((svgHeight - graphHeight) / 2, 0);
+
+  svg.transition().duration(500).call(
+    zoom.transform,
+    d3.zoomIdentity.translate(xCenterOffset, yCenterOffset)
+  );
+
+  // Add click handlers to nodes
+  inner.selectAll(".node").on("click", function(event, nodeId) {
+    event.stopPropagation();
+
+    const rawId =
+      (typeof nodeId === "string" && nodeId) ||
+      d3.select(this).attr("id") ||
+      "";
+    const id = String(rawId).replace(/^node-/, "");
+    const node = id ? roadmap.nodes.find(n => n.id === id) : null;
+    if (node) showResources(node);
+  });
+  
+  // Click on SVG background closes sidebar
+  svg.on("click", function(event) {
+    if (event.target === svg.node()) {
+      sidebar.style.display = "none";
+    }
+  });
+  
+  // Hide loading indicator
+  loading.style.display = "none";
+}
+
+// Create example JSON data for testing
+const exampleWebDevData = {
+  "nodes": [
+    {
+      "id": "html",
+      "label": "HTML",
+      "description": "HTML (HyperText Markup Language) is the standard markup language for creating web pages. It defines the structure of web content.",
+      "resources": [
+        "https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "https://www.w3schools.com/html/",
+        "https://htmlreference.io/"
+      ]
+    },
+    {
+      "id": "css",
+      "label": "CSS",
+      "description": "CSS (Cascading Style Sheets) is a style sheet language used for describing the presentation of a document written in HTML.",
+      "resources": [
+        "https://developer.mozilla.org/en-US/docs/Web/CSS",
+        "https://www.w3schools.com/css/",
+        "https://css-tricks.com/"
+      ]
+    },
+    {
+      "id": "js",
+      "label": "JavaScript",
+      "description": "JavaScript is a programming language that enables interactive web pages and is an essential part of web applications.",
+      "resources": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://javascript.info/",
+        "https://eloquentjavascript.net/"
+      ]
+    },
+    {
+      "id": "react",
+      "label": "React",
+      "description": "React is a JavaScript library for building user interfaces, particularly single-page applications.",
+      "resources": [
+        "https://reactjs.org/",
+        "https://beta.reactjs.org/learn",
+        "https://www.freecodecamp.org/news/the-react-handbook-b71c27b0a795/"
+      ]
+    },
+    {
+      "id": "node",
+      "label": "Node.js",
+      "description": "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine, used for building scalable network applications.",
+      "resources": [
+        "https://nodejs.org/",
+        "https://nodejs.dev/learn",
+        "https://www.freecodecamp.org/news/the-definitive-node-js-handbook-6912378afc6e/"
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "html", "to": "css" },
+    { "from": "css", "to": "js" },
+    { "from": "js", "to": "react" },
+    { "from": "js", "to": "node" }
+  ]
+};
+
+const exampleAIData = {
+  "nodes": [
+    {
+      "id": "python",
+      "label": "Python",
+      "description": "Python is a high-level, interpreted programming language with a design philosophy that emphasizes code readability. It's the most popular language for AI and machine learning.",
+      "resources": [
+        "https://www.python.org/",
+        "https://docs.python.org/3/tutorial/",
+        "https://www.learnpython.org/"
+      ]
+    },
+    {
+      "id": "numpy",
+      "label": "NumPy",
+      "description": "NumPy is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays.",
+      "resources": [
+        "https://numpy.org/",
+        "https://numpy.org/doc/stable/user/quickstart.html",
+        "https://www.w3schools.com/python/numpy/default.asp"
+      ]
+    },
+    {
+      "id": "pandas",
+      "label": "Pandas",
+      "description": "Pandas is a software library written for the Python programming language for data manipulation and analysis. It offers data structures and operations for manipulating numerical tables and time series.",
+      "resources": [
+        "https://pandas.pydata.org/",
+        "https://pandas.pydata.org/docs/getting_started/index.html",
+        "https://www.w3schools.com/python/pandas/default.asp"
+      ]
+    },
+    {
+      "id": "ml",
+      "label": "Machine Learning",
+      "description": "Machine learning is a field of study that gives computers the ability to learn without being explicitly programmed.",
+      "resources": [
+        "https://www.coursera.org/learn/machine-learning",
+        "https://scikit-learn.org/stable/tutorial/index.html",
+        "https://developers.google.com/machine-learning/crash-course"
+      ]
+    },
+    {
+      "id": "dl",
+      "label": "Deep Learning",
+      "description": "Deep learning is a subset of machine learning that uses neural networks with multiple layers (deep neural networks) to analyze various factors of data.",
+      "resources": [
+        "https://www.deeplearningbook.org/",
+        "https://www.coursera.org/specializations/deep-learning",
+        "https://www.tensorflow.org/tutorials"
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "python", "to": "numpy" },
+    { "from": "numpy", "to": "pandas" },
+    { "from": "pandas", "to": "ml" },
+    { "from": "ml", "to": "dl" }
+  ]
+};
+
+const dataScienceData = {
+  "nodes": [
+    {
+      "id": "statistics",
+      "label": "Statistics",
+      "description": "Statistics is the discipline that concerns the collection, organization, analysis, interpretation, and presentation of data.",
+      "resources": [
+        "https://www.khanacademy.org/math/statistics-probability",
+        "https://www.statlearning.com/",
+        "https://www.coursera.org/specializations/statistics"
+      ]
+    },
+    {
+      "id": "python_ds",
+      "label": "Python for Data Science",
+      "description": "Python is widely used in data science due to its simplicity and the vast number of libraries available for data manipulation and analysis.",
+      "resources": [
+        "https://www.python.org/",
+        "https://www.datacamp.com/tracks/python-programmer",
+        "https://www.edx.org/professional-certificate/python-data-science"
+      ]
+    },
+    {
+      "id": "data_manipulation",
+      "label": "Data Manipulation",
+      "description": "Data manipulation involves transforming and mapping data from one format to another to prepare it for analysis.",
+      "resources": [
+        "https://pandas.pydata.org/docs/user_guide/",
+        "https://www.kaggle.com/learn/pandas",
+        "https://www.datacamp.com/courses/data-manipulation-with-pandas"
+      ]
+    },
+    {
+      "id": "data_visualization",
+      "label": "Data Visualization",
+      "description": "Data visualization is the graphical representation of information and data using visual elements like charts, graphs, and maps.",
+      "resources": [
+        "https://matplotlib.org/",
+        "https://seaborn.pydata.org/",
+        "https://www.tableau.com/learn/training"
+      ]
+    },
+    {
+      "id": "advanced_analytics",
+      "label": "Advanced Analytics",
+      "description": "Advanced analytics involves using sophisticated methods to examine data, including predictive modeling, machine learning algorithms, and statistical analysis.",
+      "resources": [
+        "https://scikit-learn.org/stable/",
+        "https://www.coursera.org/learn/advanced-data-science-capstone",
+        "https://www.edx.org/professional-certificate/harvardx-data-science"
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "statistics", "to": "python_ds" },
+    { "from": "python_ds", "to": "data_manipulation" },
+    { "from": "data_manipulation", "to": "data_visualization" },
+    { "from": "data_visualization", "to": "advanced_analytics" }
+  ]
+};
+
+const mobileDevelopmentData = {
+  "nodes": [
+    {
+      "id": "programming_basics",
+      "label": "Programming Fundamentals",
+      "description": "Understanding basic programming concepts like variables, data types, control structures, and functions is essential before diving into mobile development.",
+      "resources": [
+        "https://www.codecademy.com/learn/learn-how-to-code",
+        "https://www.edx.org/course/cs50s-introduction-to-computer-science",
+        "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/"
+      ]
+    },
+    {
+      "id": "native_android",
+      "label": "Native Android Development",
+      "description": "Android development using Kotlin or Java, understanding the Android SDK, and the Android app lifecycle.",
+      "resources": [
+        "https://developer.android.com/courses",
+        "https://www.udacity.com/course/android-developer-nanodegree--nd801",
+        "https://kotlinlang.org/docs/android-overview.html"
+      ]
+    },
+    {
+      "id": "native_ios",
+      "label": "Native iOS Development",
+      "description": "iOS development using Swift or Objective-C, understanding the iOS SDK, and the iOS app lifecycle.",
+      "resources": [
+        "https://developer.apple.com/tutorials/swiftui",
+        "https://www.raywenderlich.com/ios/paths",
+        "https://www.codecademy.com/learn/learn-swift"
+      ]
+    },
+    {
+      "id": "cross_platform",
+      "label": "Cross-Platform Development",
+      "description": "Frameworks like React Native, Flutter, or Xamarin that allow you to write code once and deploy to multiple platforms.",
+      "resources": [
+        "https://reactnative.dev/docs/getting-started",
+        "https://flutter.dev/docs/get-started/install",
+        "https://docs.microsoft.com/en-us/xamarin/get-started/"
+      ]
+    },
+    {
+      "id": "mobile_backend",
+      "label": "Backend for Mobile",
+      "description": "Understanding how to connect mobile apps to backend services, APIs, and databases.",
+      "resources": [
+        "https://firebase.google.com/docs",
+        "https://aws.amazon.com/amplify/",
+        "https://www.mongodb.com/docs/realm/sdk/react-native/"
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "programming_basics", "to": "native_android" },
+    { "from": "programming_basics", "to": "native_ios" },
+    { "from": "programming_basics", "to": "cross_platform" },
+    { "from": "native_android", "to": "mobile_backend" },
+    { "from": "native_ios", "to": "mobile_backend" },
+    { "from": "cross_platform", "to": "mobile_backend" }
+  ]
+};
+
+const devOpsData = {
+  "nodes": [
+    {
+      "id": "linux",
+      "label": "Linux Fundamentals",
+      "description": "Understanding Linux operating system, command-line interface, and basic server administration.",
+      "resources": [
+        "https://linuxjourney.com/",
+        "https://www.linux.org/forums/linux-beginner-tutorials.123/",
+        "https://www.edx.org/course/introduction-to-linux"
+      ]
+    },
+    {
+      "id": "scripting",
+      "label": "Scripting",
+      "description": "Learning scripting languages like Bash, Python, or PowerShell for automation tasks.",
+      "resources": [
+        "https://www.learnshell.org/",
+        "https://automatetheboringstuff.com/",
+        "https://docs.microsoft.com/en-us/powershell/scripting/learn/ps101/01-getting-started"
+      ]
+    },
+    {
+      "id": "cicd",
+      "label": "CI/CD",
+      "description": "Continuous Integration and Continuous Deployment tools and practices, including Jenkins, GitHub Actions, and GitLab CI.",
+      "resources": [
+        "https://www.jenkins.io/doc/tutorials/",
+        "https://docs.github.com/en/actions",
+        "https://docs.gitlab.com/ee/ci/"
+      ]
+    },
+    {
+      "id": "containerization",
+      "label": "Containerization",
+      "description": "Understanding containerization technologies like Docker and container orchestration with Kubernetes.",
+      "resources": [
+        "https://docs.docker.com/get-started/",
+        "https://kubernetes.io/docs/tutorials/kubernetes-basics/",
+        "https://www.cncf.io/certification/cka/"
+      ]
+    },
+    {
+      "id": "iac",
+      "label": "Infrastructure as Code",
+      "description": "Managing and provisioning infrastructure through code rather than manual processes, using tools like Terraform, Ansible, or CloudFormation.",
+      "resources": [
+        "https://www.terraform.io/docs/tutorials/",
+        "https://docs.ansible.com/ansible/latest/user_guide/index.html",
+        "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/GettingStarted.html"
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "linux", "to": "scripting" },
+    { "from": "scripting", "to": "cicd" },
+    { "from": "cicd", "to": "containerization" },
+    { "from": "containerization", "to": "iac" }
+  ]
+};
+
+const cybersecurityData = {
+  "nodes": [
+    {
+      "id": "network_fundamentals",
+      "label": "Network Fundamentals",
+      "description": "Understanding how computer networks work, including TCP/IP, DNS, HTTP, and network topologies.",
+      "resources": [
+        "https://www.comptia.org/certifications/network",
+        "https://www.cisco.com/c/en/us/training-events/training-certifications/certifications/entry/ccna.html",
+        "https://www.coursera.org/learn/computer-networking"
+      ]
+    },
+    {
+      "id": "security_basics",
+      "label": "Security Fundamentals",
+      "description": "Basic security concepts including encryption, authentication, authorization, and common security threats.",
+      "resources": [
+        "https://www.comptia.org/certifications/security",
+        "https://www.coursera.org/learn/information-security-data",
+        "https://www.edx.org/course/cybersecurity-fundamentals"
+      ]
+    },
+    {
+      "id": "ethical_hacking",
+      "label": "Ethical Hacking",
+      "description": "Learning to identify and exploit vulnerabilities in systems, with permission, to improve security.",
+      "resources": [
+        "https://www.offensive-security.com/pwk-oscp/",
+        "https://www.hackthebox.eu/",
+        "https://tryhackme.com/"
+      ]
+    },
+    {
+      "id": "defensive_security",
+      "label": "Defensive Security",
+      "description": "Techniques and tools to protect systems and networks from attacks, including firewalls, IDS/IPS, and SIEM.",
+      "resources": [
+        "https://www.splunk.com/en_us/training/courses/splunk-fundamentals-1.html",
+        "https://www.paloaltonetworks.com/services/education",
+        "https://www.sans.org/cyber-security-courses/security-operations-defensive-analyst/"
+      ]
+    },
+    {
+      "id": "security_management",
+      "label": "Security Management",
+      "description": "Risk management, compliance, security policies, and security frameworks like NIST and ISO 27001.",
+      "resources": [
+        "https://www.isaca.org/credentialing/cism",
+        "https://www.isc2.org/Certifications/CISSP",
+        "https://www.nist.gov/cyberframework"
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "network_fundamentals", "to": "security_basics" },
+    { "from": "security_basics", "to": "ethical_hacking" },
+    { "from": "security_basics", "to": "defensive_security" },
+    { "from": "ethical_hacking", "to": "security_management" },
+    { "from": "defensive_security", "to": "security_management" }
+  ]
+};
+
+const gameDevData = {
+  "nodes": [
+    {
+      "id": "game_programming",
+      "label": "Game Programming Basics",
+      "description": "Understanding programming concepts specific to game development, including game loops, state management, and physics.",
+      "resources": [
+        "https://www.edx.org/professional-certificate/harvardx-computer-science-for-game-development",
+        "https://www.udemy.com/course/unrealcourse/",
+        "https://www.coursera.org/specializations/game-design-and-development"
+      ]
+    },
+    {
+      "id": "game_engines",
+      "label": "Game Engines",
+      "description": "Learning popular game engines like Unity, Unreal Engine, or Godot, which provide tools and frameworks for game development.",
+      "resources": [
+        "https://learn.unity.com/",
+        "https://www.unrealengine.com/en-US/onlinelearning-courses",
+        "https://docs.godotengine.org/en/stable/getting_started/introduction/index.html"
+      ]
+    },
+    {
+      "id": "game_design",
+      "label": "Game Design",
+      "description": "Understanding principles of game design, including mechanics, dynamics, aesthetics, level design, and user experience.",
+      "resources": [
+        "https://www.coursera.org/learn/game-design",
+        "https://www.edx.org/course/cs50s-introduction-to-game-development",
+        "https://www.gamedesigning.org/learn/game-design/"
+      ]
+    },
+    {
+      "id": "game_art",
+      "label": "Game Art and Animation",
+      "description": "Creating visual assets for games, including 2D sprites, 3D models, textures, and animations.",
+      "resources": [
+        "https://www.pluralsight.com/paths/unity-game-art",
+        "https://www.udemy.com/course/blender-character-creator/",
+        "https://www.schoolism.com/"
+      ]
+    },
+    {
+      "id": "game_audio",
+      "label": "Game Audio",
+      "description": "Creating and implementing sound effects, music, and voice acting in games.",
+      "resources": [
+        "https://www.audiokinetic.com/learn/wwise/",
+        "https://www.fmod.com/learn",
+        "https://www.pluralsight.com/courses/unity-audio-fundamentals"
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "game_programming", "to": "game_engines" },
+    { "from": "game_engines", "to": "game_design" },
+    { "from": "game_design", "to": "game_art" },
+    { "from": "game_design", "to": "game_audio" }
+  ]
+};
+
+const blockchainData = {
+  "nodes": [
+    {
+      "id": "blockchain_basics",
+      "label": "Blockchain Fundamentals",
+      "description": "Understanding the basic concepts of blockchain, including distributed ledgers, consensus mechanisms, and cryptography.",
+      "resources": [
+        "https://www.coursera.org/learn/blockchain-basics",
+        "https://www.edx.org/professional-certificate/uc-berkeleyx-blockchain-fundamentals",
+        "https://www.ibm.com/topics/blockchain"
+      ]
+    },
+    {
+      "id": "smart_contracts",
+      "label": "Smart Contracts",
+      "description": "Self-executing contracts with the terms directly written into code, primarily on Ethereum and other blockchain platforms.",
+      "resources": [
+        "https://ethereum.org/en/developers/docs/smart-contracts/",
+        "https://solidity.readthedocs.io/",
+        "https://cryptozombies.io/"
+      ]
+    },
+    {
+      "id": "dapps",
+      "label": "Decentralized Applications (DApps)",
+      "description": "Applications that run on a decentralized network, using blockchain for data storage and smart contracts for logic.",
+      "resources": [
+        "https://ethereum.org/en/developers/tutorials/",
+        "https://docs.ethers.io/v5/",
+        "https://trufflesuite.com/docs/truffle/"
+      ]
+    },
+    {
+      "id": "web3",
+      "label": "Web3 Development",
+      "description": "Building applications that interact with blockchain networks, including wallets, tokens, and decentralized finance (DeFi) protocols.",
+      "resources": [
+        "https://docs.web3js.org/",
+        "https://hardhat.org/getting-started/",
+        "https://moralis.io/resources/"
+      ]
+    },
+    {
+      "id": "blockchain_security",
+      "label": "Blockchain Security",
+      "description": "Understanding security considerations specific to blockchain applications, including smart contract vulnerabilities and audit practices.",
+      "resources": [
+        "https://consensys.net/diligence/",
+        "https://github.com/crytic/slither",
+        "https://secureum.xyz/"
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "blockchain_basics", "to": "smart_contracts" },
+    { "from": "smart_contracts", "to": "dapps" },
+    { "from": "dapps", "to": "web3" },
+    { "from": "web3", "to": "blockchain_security" }
+  ]
+};
+
+const uiuxData = {
+  "nodes": [
+    {
+      "id": "design_principles",
+      "label": "Design Principles",
+      "description": "Understanding fundamental design principles like color theory, typography, layout, and visual hierarchy.",
+      "resources": [
+        "https://www.interaction-design.org/literature/topics/design-principles",
+        "https://material.io/design",
+        "https://www.nngroup.com/articles/ten-usability-heuristics/"
+      ]
+    },
+    {
+      "id": "ux_research",
+      "label": "UX Research",
+      "description": "Methods for understanding user needs, behaviors, and motivations, including user interviews, surveys, and usability testing.",
+      "resources": [
+        "https://www.nngroup.com/articles/ux-research-cheat-sheet/",
+        "https://www.usability.gov/how-to-and-tools/methods/index.html",
+        "https://www.interaction-design.org/literature/topics/user-research"
+      ]
+    },
+    {
+      "id": "wireframing",
+      "label": "Wireframing and Prototyping",
+      "description": "Creating low-fidelity and high-fidelity representations of user interfaces to plan and test designs before implementation.",
+      "resources": [
+        "https://www.figma.com/resources/learn-design/",
+        "https://www.sketch.com/docs/",
+        "https://www.adobe.com/products/xd/learn/design/wireframing.html"
+      ]
+    },
+    {
+      "id": "ui_design",
+      "label": "UI Design",
+      "description": "Creating visually appealing and effective user interfaces, considering accessibility, responsiveness, and brand consistency.",
+      "resources": [
+        "https://www.refactoringui.com/",
+        "https://www.designsystems.com/",
+        "https://www.udacity.com/course/user-interface-design--ud578"
+      ]
+    },
+    {
+      "id": "design_systems",
+      "label": "Design Systems",
+      "description": "Creating and maintaining consistent design languages and component libraries that can be used across products and teams.",
+      "resources": [
+        "https://airbnb.design/building-a-visual-language/",
+        "https://designsystemsrepo.com/design-systems/",
+        "https://www.invisionapp.com/inside-design/guide-to-design-systems/"
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "design_principles", "to": "ux_research" },
+    { "from": "ux_research", "to": "wireframing" },
+    { "from": "wireframing", "to": "ui_design" },
+    { "from": "ui_design", "to": "design_systems" }
+  ]
+};
+
+// Create a map of example data
+const exampleData = {
+  "webdev.json": { 
+    data: exampleWebDevData,
+    title: "Web Development Roadmap"
+  },
+  "ai.json": { 
+    data: exampleAIData,
+    title: "Artificial Intelligence Roadmap"
+  },
+  "datascience.json": { 
+    data: dataScienceData,
+    title: "Data Science Roadmap"
+  },
+  "mobile.json": { 
+    data: mobileDevelopmentData,
+    title: "Mobile Development Roadmap"
+  },
+  "devops.json": { 
+    data: devOpsData,
+    title: "DevOps Roadmap"
+  },
+  "cybersecurity.json": { 
+    data: cybersecurityData,
+    title: "Cybersecurity Roadmap"
+  },
+  "gamedev.json": { 
+    data: gameDevData,
+    title: "Game Development Roadmap"
+  },
+  "blockchain.json": { 
+    data: blockchainData,
+    title: "Blockchain Roadmap"
+  },
+  "uiux.json": { 
+    data: uiuxData,
+    title: "UI/UX Design Roadmap"
+  }
+};
+
+// Function to get URL parameters
+function getURLParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
+// Load roadmap data from JSON file or use example data
+function loadRoadmap(file) {
+  // Show loading indicator
+  loading.style.display = "block";
+  
+  // Hide sidebar
+  sidebar.style.display = "none";
+  
+  // Update selector to match current roadmap
+  domainSelector.value = file;
+
+  renderCertificationsMenu(file);
+  hideCertificationsMenu();
+  
+  // For this demo, we'll use our example data
+  if (exampleData[file]) {
+    console.log(`Using example data for ${file}`);
+    
+    const roadmapInfo = exampleData[file];
+    
+    // Update roadmap title
+    roadmapTitle.textContent = roadmapInfo.title;
+    
+    if (roadmapInfo.comingSoon) {
+      // Show "coming soon" message for unimplemented roadmaps
+      loading.style.display = "none";
+      alert(`${roadmapInfo.title} is coming soon! This roadmap is still under development.`);
+      // Load default Web Development roadmap instead
+      loadRoadmap("webdev.json");
+      return;
+    }
+    
+    if (roadmapInfo.data) {
+      setTimeout(() => {
+        renderRoadmap(roadmapInfo.data);
+      }, 500); // Add a small delay to show loading indicator
+    } else {
+      loading.style.display = "none";
+      alert(`Data for ${roadmapInfo.title} not found!`);
+    }
+    return;
+  }
+  
+  // If not using example data, try to fetch from server
+  fetch(file)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then(data => {
+      console.log("Loaded roadmap data:", data);
+      renderRoadmap(data);
+    })
+    .catch(err => {
+      console.error("Failed to load roadmap:", err);
+      alert(`Failed to load roadmap: ${err.message}`);
+      loading.style.display = "none";
+    });
+}
+
+// Domain selector change event
+domainSelector.addEventListener("change", function() {
+  sidebar.style.display = "none";
+  loadRoadmap(this.value);
+});
+
+// Handle window resize
+window.addEventListener("resize", function() {
+  if (currentRoadmap) {
+    renderRoadmap(currentRoadmap);
+  }
+});
+
+// Get the roadmap from URL parameter, default to web dev if not specified
+const roadmapParam = getURLParameter("roadmap") || "webdev.json";
+
+// Initial load with the roadmap from URL parameter
+loadRoadmap(roadmapParam);
+</script>
+
+</body>
+</html>

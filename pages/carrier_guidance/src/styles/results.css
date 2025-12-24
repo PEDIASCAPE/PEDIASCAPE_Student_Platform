@@ -1,0 +1,109 @@
+/* Results CSS file */
+
+.results-card {
+  text-align: center;
+}
+
+.result-title {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  color: var(--primary);
+}
+
+.result-description {
+  margin-bottom: var(--space-3);
+  font-size: var(--fs-md);
+  color: var(--text-secondary);
+}
+
+.career-matches {
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.career-match {
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  margin-bottom: var(--space-2);
+  text-align: left;
+  animation: slideIn var(--transition-normal);
+  animation-fill-mode: both;
+}
+
+.match-percentage {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-1);
+}
+
+.percentage-bar {
+  height: 8px;
+  flex-grow: 1;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  margin-right: var(--space-1);
+  overflow: hidden;
+}
+
+.percentage-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  width: 0;
+  transition: width 1s ease-out;
+}
+
+.percentage-text {
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 50px;
+  text-align: right;
+}
+
+.match-title {
+  font-size: var(--fs-md);
+  font-weight: 500;
+  margin-bottom: var(--space-1);
+}
+
+.match-description {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.match-skills {
+  margin-top: var(--space-1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.skill-tag {
+  background-color: rgba(124, 77, 255, 0.1);
+  color: var(--primary);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-xs);
+}
+
+#restart-btn {
+  margin-top: var(--space-3);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.career-match:nth-child(1) { animation-delay: 0.1s; }
+.career-match:nth-child(2) { animation-delay: 0.2s; }
+.career-match:nth-child(3) { animation-delay: 0.3s; }
+.career-match:nth-child(4) { animation-delay: 0.4s; }
+.career-match:nth-child(5) { animation-delay: 0.5s; }

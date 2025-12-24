@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEDIASCAPE - Dashboard</title>
+    <link rel="stylesheet" href="./styles/newps1_copy.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            /* min-height: 100vh; */
+            height: 700px;
+
+            background-image: url("./imgg/cont2/cont2image.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        }
+
+        .navbar {
+    display: flex
+;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: black;
+    position: inherit;
+}
+        
+        /* Auth UI styles */
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #4285F4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            width: 150px;
+            display: none;
+            z-index: 100;
+        }
+
+        .user-menu.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #333;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Toast notification styles */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+        }
+
+        .toast.success {
+            background-color: #4CAF50;
+        }
+
+        .toast.error {
+            background-color: #F44336;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Dashboard styles */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-text h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text p {
+            font-family: 'Montserrat', sans-serif;
+            opacity: 0.8;
+        }
+
+        .user-email {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .user-email i {
+            margin-right: 8px;
+            color: #4285F4;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .card-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header h2 i {
+            margin-right: 10px;
+            font-size: 1.4rem;
+            color: #4285F4;
+        }
+
+        /* Calendar styles */
+        #calendar .fc-toolbar-title {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        #calendar .fc-button {
+            background-color: #4285F4;
+            border-color: #4285F4;
+        }
+
+        #calendar .fc-col-header,
+        #calendar .fc-daygrid-body {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        #calendar .fc-col-header-cell {
+            background-color: rgba(66, 133, 244, 0.2);
+        }
+
+        #calendar .fc-day-today {
+            background-color: rgba(66, 133, 244, 0.1) !important;
+        }
+
+        #calendar .fc-daygrid-day-number {
+            color: white;
+        }
+
+        #calendar .fc-event {
+            background-color: #4285F4;
+            border-color: #4285F4;
+        }
+
+        /* Todo task event styles */
+        #calendar .fc-event.todo-task {
+            background-color: #E91E63;
+            border-color: #E91E63;
+        }
+
+        #calendar .fc-event.todo-task-completed {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        /* Date picker for todo tasks */
+        .todo-date {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin-right: 5px;
+            width: 130px;
+        }
+
+        .todo-date:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Todo list styles */
+        .todo-list {
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .todo-input-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .todo-input {
+            flex-grow: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px 0 0 4px;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .todo-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .add-todo-btn {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .todo-item.completed {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .todo-checkbox {
+            margin-right: 15px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .todo-text {
+            flex-grow: 1;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .todo-date-display {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-right: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .delete-todo {
+            color: #F44336;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .delete-todo:hover {
+            opacity: 1;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .user-email {
+                margin-top: 15px;
+            }
+
+            .todo-input-group {
+                flex-direction: column;
+            }
+
+            .todo-date {
+                width: 100%;
+                margin-bottom: 5px;
+                border-radius: 4px;
+            }
+
+            .todo-input {
+                border-radius: 4px;
+                margin-bottom: 5px;
+            }
+
+            .add-todo-btn {
+                border-radius: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                <div class="title" onclick="navigateTo('index.html')">PEDIASCAPE</div>
+                <div class="contents">
+                    <ul class="lists">
+                        <li class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</li>
+                        <li class="listnav" onclick="navigateTo('material.html')">MATERIALS</li>
+                        <li class="listnav" onclick="navigateTo('project/index.html')">PROJECTS</li>
+                        <li class="listnav" onclick="navigateTo('carrier_guidance/index.html')">CAREER GUIDANCE</li>
+                        <li class="listnav" onclick="navigateTo('psai1.html')">PS AI</li>
+                    </ul>
+
+                    <!-- User profile section -->
+                    <div class="user-profile" id="userProfileSection">
+                        <div id="userInitials" class="user-avatar" onclick="toggleUserMenu()"></div>
+                        <div id="userMenu" class="user-menu">
+                            <div class="menu-item" onclick="navigateTo('dashboard.html')">Dashboard</div>
+                            <div class="menu-item" id="logoutButton">Logout</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+                <div class="dropdown">
+                    <div class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</div>
+                    <div class="listnav" onclick="navigateTo('material.html')">MATERIALS</div>
+                    <div class="listnav" onclick="navigateTo('project/index.html')">PROJECTS</div>
+                    <div class="listnav" onclick="navigateTo('carrier_guidance/index.html')">CAREER GUIDANCE</div>
+                    <div class="listnav" onclick="navigateTo('psai1.html')">PS AI</div>
+                    <div class="listnav" id="mobileAuthOption" onclick="navigateTo('dashboard.html')">DASHBOARD</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h1>Welcome to your Dashboard</h1>
+                <p>Track your progress and manage your tasks</p>
+            </div>
+            <div class="user-email">
+                <i class="fas fa-user-circle"></i>
+                <span id="userEmailDisplay">Loading...</span>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2><i class="far fa-calendar"></i> Calendar</h2>
+                </div>
+                <div id="calendar"></div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-tasks"></i> To-Do List</h2>
+                </div>
+                <div class="todo-input-group">
+                    <input type="date" class="todo-date" id="todoDate" aria-label="Task date">
+                    <input type="text" class="todo-input" id="todoInput" placeholder="Add a new task..." aria-label="Task description">
+                    <button class="add-todo-btn" id="addTodoBtn" aria-label="Add task">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="todo-list" id="todoList">
+                    <!-- Todo items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>company</h4>
+                    <ul>
+                        <li><a href="#">about us</a></li>
+                        <li><a href="#">our services</a></li>
+                        <li><a href="#">privacy policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>get help</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="login.html">Login/Signup</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>follow us</h4>
+                    <div class="social-links">
+                        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add a toast container -->
+    <div id="toast" class="toast"></div>
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+
+    <!-- Supabase Integration -->
+    <script type="module" src="./script/dashboard-supabase.js"></script>
+</body>
+
+</html>
