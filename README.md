@@ -1,6 +1,6 @@
-## 🎓 PEDIASCAPE — Student Platform
+## 🎓 PEDIASCAPE - Student E Learning & Guidance Platform
 
-PEDIASCAPE is an innovative web-based e-learning platform designed to address the diverse academic and career planning needs of undergraduate students. It combines personalized career guidance, curated study materials, hands-on projects, an intelligent AI chatbot, and an interactive user dashboard to empower students for both academic and professional success.
+PEDIASCAPE is an innovative web-based e-learning platform designed to address the diverse academic and career planning needs of students. It combines personalized career guidance, curated study materials, hands-on projects, an intelligent AI chatbot, and an interactive user dashboard to empower students for both academic and professional success.
 
 
 ## ✨ Features
@@ -32,7 +32,7 @@ AI Chatbot:	Hugging Face Inference API (Qwen 2.5 Coder 7B Instruct)
 Deployment	Docker-ready, Cloud-agnostic
 
 ## 📦 What's New (Latest Updates)
-## 🎨 Roadmaps Module — UI/UX Improvements
+## 🎨 Roadmaps Module - UI/UX Improvements
 Fixed node label overflow (e.g., "Mobile Development") by removing fixed node dimensions and enabling auto-sizing in the dagreD3 graph
 
 
@@ -42,7 +42,7 @@ Added robust node label wrapping with multi-line support, including handling lon
 Improved grid-card containment with safer title/description wrapping and clamping in the Roadmaps listing
 
 
-## ⚙️ Roadmaps Module — Functionality & Interactions
+## ⚙️ Roadmaps Module - Functionality & Interactions
 Restored all buttons across Roadmaps module by preventing click interception and restoring missing handlers:
 
 Disabled pointer events on rotated "ROADMAPS" side header + adjusted stacking
