@@ -31,6 +31,15 @@ AI Chatbot:	Hugging Face Inference API (Qwen 2.5 Coder 7B Instruct)
 
 Deployment	Docker-ready, Cloud-agnostic
 
+## 🧩 Module Overview
+PEDIASCAPE is organized into focused modules so students can move from learning → practice → guidance:
+
+- **Roadmaps**: Interactive learning roadmaps for different domains. Each roadmap is visualized as a node-based graph, where every topic opens a sidebar with curated learning resources and descriptions. Includes certification links where available.
+- **Materials**: A structured library of study materials across courses, branches, and school boards. Designed to help students quickly find notes/resources by category and level.
+- **Projects**: A project-guidance hub that helps students practice by building real projects. Provides project ideas, steps, and resources to support hands-on learning.
+- **Career Guidance**: Helps students explore and choose career paths with domain-specific guidance and learning direction.
+- **PSAI (AI Assistant)**: Answers questions, supports learning, and can assist with generating roadmaps and guidance using integrated AI services.
+
 ## 📦 What's New (Latest Updates)
 ## 🎨 Roadmaps Module - UI/UX Improvements
 Fixed node label overflow (e.g., "Mobile Development") by removing fixed node dimensions and enabling auto-sizing in the dagreD3 graph
@@ -48,7 +57,7 @@ Restored all buttons across Roadmaps module by preventing click interception and
 Disabled pointer events on rotated "ROADMAPS" side header + adjusted stacking
 
 
-Added global navigation/menu handlers (toggleDropdown(), navigateTo(), redirectToLogin(), toggleUserMenu())
+Added global navigation/menu handlers
 
 
 Fixed roadmap node click reliability by binding handlers to rendered node groups (g.node) and mapping nodes via stable IDs (data-node-id)
@@ -59,8 +68,6 @@ Confirmed sidebar links open correctly in new tabs
 
 ## 🎭 Modal / Roadmap Launch Flow
 Roadmap cards now open the visualizer inside a modal iframe
-
-URL pattern: roadmap-visualizer.html?roadmap=<domain>.json
 
 
 Modal features:
