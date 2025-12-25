@@ -2,7 +2,16 @@
 
 PEDIASCAPE is an innovative web-based e-learning platform designed to address the diverse academic and career planning needs of students. It combines personalized career guidance, curated study materials, hands-on projects, an intelligent AI chatbot, and an interactive user dashboard to empower students for both academic and professional success.
 
+## 🧩 Module Overview
+PEDIASCAPE is organized into focused modules so students can move from learning → practice → guidance:
 
+- **Roadmaps**: Interactive learning roadmaps for different domains. Each roadmap is visualized as a node-based graph, where every topic opens a sidebar with curated learning resources and descriptions. Includes certification links where available.
+- **Materials**: A structured library of study materials across courses, branches, and school boards. Designed to help students quickly find notes/resources by category and level.
+- **Projects**: A project-guidance hub that helps students practice by building real projects. Provides project ideas, steps, and resources to support hands-on learning.
+- **Career Guidance**: Helps students explore and choose career paths with domain-specific guidance and learning direction.
+- **PSAI (AI Assistant)**: Answers questions, supports learning, and can assist with generating roadmaps and guidance using integrated AI services.
+
+## Developers Section
 ## ✨ Features
 📚 Student-focused e-learning experience with responsive UI across all devices
 
@@ -30,15 +39,6 @@ Database/Auth:	Supabase (PostgreSQL, Auth, Realtime, Storage)
 AI Chatbot:	Hugging Face Inference API (Qwen 2.5 Coder 7B Instruct)
 
 Deployment	Docker-ready, Cloud-agnostic
-
-## 🧩 Module Overview
-PEDIASCAPE is organized into focused modules so students can move from learning → practice → guidance:
-
-- **Roadmaps**: Interactive learning roadmaps for different domains. Each roadmap is visualized as a node-based graph, where every topic opens a sidebar with curated learning resources and descriptions. Includes certification links where available.
-- **Materials**: A structured library of study materials across courses, branches, and school boards. Designed to help students quickly find notes/resources by category and level.
-- **Projects**: A project-guidance hub that helps students practice by building real projects. Provides project ideas, steps, and resources to support hands-on learning.
-- **Career Guidance**: Helps students explore and choose career paths with domain-specific guidance and learning direction.
-- **PSAI (AI Assistant)**: Answers questions, supports learning, and can assist with generating roadmaps and guidance using integrated AI services.
 
 ## 📦 What's New (Latest Updates)
 ## 🎨 Roadmaps Module - UI/UX Improvements
