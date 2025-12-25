@@ -7,11 +7,7 @@
     <link rel="stylesheet" href="./styles/material.css">
     <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script type="module" src="./script/auth-ui.js"></script>
 </head>
 <body>
     <div class="page-wrapper">
@@ -42,7 +38,7 @@
                 <div class="menu-icon" onclick="toggleDropdown()">☰</div>
                 <div class="dropdown">
                     <div class="listnav" onclick="navigateTo('Roadmaps.html')">ROADMAPS</div>
-                    <div class="listnav" onclick="navigateTo('materials.html')">MATERIALS</div>
+                    <div class="listnav" onclick="navigateTo('material.html')">MATERIALS</div>
                     <div class="listnav" onclick="navigateTo('./project/index.html')">PROJECTS</div>
                     <div class="listnav" onclick="navigateTo('./carrier_guidance/index.html')">CAREER GUIDANCE</div>
                     <div class="listnav" onclick="navigateTo('psai1.html')">PS AI</div>
@@ -64,29 +60,21 @@
                     <header>
                         <!-- <h1>Educational Materials</h1> -->
                         <div class="filters">
-                            <input type="text" id="searchInput" placeholder="Search materials...">
+                            <input type="text" id="searchInput" placeholder="Search materials..." aria-label="Search materials">
                             <div class="filter-group">
-                                <select id="courseFilter">
-                                    <option value="">All Courses</option>
-                                    <option value="Computer Science">Computer Science</option>
-                                    <option value="Artificial Intelligence">Artificial Intelligence</option>
-                                    <option value="Data Science">Data Science</option>
-                                    <option value="Web Development">Web Development</option>
-                                    <option value="UI/UX Design">UI/UX Designing</option>
-                                </select>
-                                <select id="yearFilter">
-                                    <option value="">All Years</option>
-                                    <option value="1st year">1st Year</option>
-                                    <option value="2nd year">2nd Year</option>
-                                    <option value="3rd year">3rd Year</option>
-                                    <option value="4th year">4th Year</option>
+                                <select id="categoryFilter" aria-label="Filter by category">
+                                    <option value="">All Categories</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="bba">BBA</option>
+                                    <option value="bcom">BCOM</option>
+                                    <option value="class-11-12">Class 11 & 12</option>
                                 </select>
                             </div>
                         </div>
                     </header>
                     
                     <!-- Login Message -->
-                    <div id="loginMessage" style="display: none;" class="login-message">
+                    <div id="loginMessage" class="login-message hidden">
                         <p>Please login to upload and download materials.</p>
                         <button onclick="redirectToLogin()" class="action-btn">Login</button>
                     </div>
@@ -111,6 +99,6 @@
     </div>
     
     <!-- Custom Scripts -->
-    <script src="./script/materials.js"></script>
+    <script type="module" src="./script/materials-supa.js"></script>
 </body>
 </html>

@@ -107,8 +107,8 @@ body {
     font-weight: 800;
     line-height: normal;
     background: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
-    background-clip: text;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     transform: rotate(-90deg);
     position: absolute;
@@ -162,8 +162,8 @@ body {
     text-align: center;
     background:#fb5e3a;
     /* background: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%); */
-    background-clip: text;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 
 
@@ -180,8 +180,8 @@ body {
 
     text-align: center;
     background: rgb(255, 255, 255);
-    background-clip: text;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -360,5 +360,4 @@ body {
     font-size: 0.35rem;
   }
 }
-
-
+ 

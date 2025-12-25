@@ -1,20 +1,5 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyCgz8plPo9kiZw0e5HrlBpGq0NrfT_6kkY",
-    authDomain: "pediascape-6b99b.firebaseapp.com",
-    projectId: "pediascape-6b99b",
-    storageBucket: "pediascape-6b99b.firebasestorage.app",
-    messagingSenderId: "128341831687",
-    appId: "1:128341831687:web:e44b694935e7ab37013aa2",
-    measurementId: "G-J354SK3B93"
-};
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+// Import Supabase client
+import { supabase } from "./supabase-client.js";
 
 // Function to handle the form submission
 async function handleSignup(event) {
@@ -38,16 +23,32 @@ async function handleSignup(event) {
     }
 
     try {
-        // Create a new user in Firebase Authentication
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        // Create a new user in Supabase Authentication
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+        });
+
+        if (error) {
+            throw error;
+        }
 
         // User successfully registered
-        const user = userCredential.user;
+        const user = data.user;
 
         console.log('User registered:', user);
 
+        // If a session exists, ensure profile row exists (email confirmation may defer session)
+        const { data: current } = await supabase.auth.getUser();
+        const uid = current?.user?.id;
+        if (uid) {
+            await supabase
+                .from('profiles')
+                .upsert({ user_id: uid, email });
+        }
+
         // Show success message
-        alert('Signed up successfully!');
+        alert('Signed up successfully! Please check your email for verification.');
 
         // Redirect to login page
         window.location.href = 'login.html';

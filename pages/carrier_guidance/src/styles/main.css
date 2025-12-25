@@ -146,6 +146,7 @@ nav {
 .user-profile {
   position: relative;
   margin-right: 15px;
+  display: none;
 }
 
 .user-avatar {
@@ -243,8 +244,8 @@ nav {
   font-size: 58px;
   font-weight: 800;
   background: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
-  background-clip: text;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   transform: rotate(-90deg);
   white-space: nowrap;
@@ -262,6 +263,7 @@ nav {
   max-width: 800px;
   margin: 0 auto;
   padding: var(--space-3);
+  transform: translateX(-50px);
 }
 
 header {
@@ -409,6 +411,7 @@ footer {
   
   .container {
     padding: var(--space-2);
+    transform: translateX(-30px);
   }
 }
 
@@ -451,6 +454,10 @@ footer {
   .dropdown {
     top: 70px;
   }
+
+  .container {
+    transform: translateX(-20px);
+  }
 }
 
 @media (max-width: 480px) {
@@ -464,5 +471,6 @@ footer {
   
   .container {
     padding: var(--space-1);
+    transform: none;
   }
 }

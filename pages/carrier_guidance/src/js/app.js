@@ -2,7 +2,7 @@
 import { questions } from './questions.js';
 import { calculateResults } from './results.js';
 import { animations } from './animations.js';
-import { currentUser, saveAssessmentResults, redirectToLogin, toggleUserMenu, navigateTo } from './auth.js';
+import { currentUser, saveAssessmentResults, redirectToLogin, toggleUserMenu, navigateTo } from './auth-supabase.js';
 
 // DOM Elements
 const welcomeScreen = document.getElementById('welcome-screen');
@@ -22,6 +22,7 @@ const restartBtn = document.getElementById('restart-btn');
 window.toggleUserMenu = toggleUserMenu;
 window.redirectToLogin = redirectToLogin;
 window.navigateTo = navigateTo;
+window.toggleDropdown = toggleDropdown;
 
 // Application state
 let currentQuestionIndex = 0;

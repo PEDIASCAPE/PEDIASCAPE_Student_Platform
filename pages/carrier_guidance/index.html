@@ -8,11 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
-  
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
   <div class="page-wrapper">
@@ -34,11 +29,11 @@
           <!-- User Authentication Section -->
           <div class="auth-section">
             <!-- User profile (when logged in) -->
-            <div class="user-profile" style="display: none;">
+            <div class="user-profile">
               <div class="user-avatar" id="userInitials" onclick="toggleUserMenu()"></div>
               <!-- User menu dropdown -->
               <div class="user-menu" id="userMenu">
-                <div class="user-menu-item" onclick="navigateTo('../dashboard.html')">Dashboard</div>
+                <div class="user-menu-item" onclick="navigateTo('../Dashboard.html')">Dashboard</div>
                 <div class="user-menu-item" id="logoutButton">Logout</div>
               </div>
             </div>
@@ -81,7 +76,7 @@
               <h2>Find Your Perfect Career Match</h2>
               <p>Answer 15 questions about your preferences, skills, and personality to discover career paths that align with your unique profile.</p>
               <p>This assessment takes approximately 5 minutes to complete.</p>
-              <button id="start-btn" class="btn primary-btn">Start Assessment</button>
+              <button id="start-btn" class="btn primary-btn" type="button">Start Assessment</button>
             </div>
           </section>
 
@@ -98,8 +93,8 @@
                 <!-- Questions will be inserted here by JavaScript -->
               </div>
               <div class="navigation-buttons">
-                <button id="prev-btn" class="btn secondary-btn" disabled>Previous</button>
-                <button id="next-btn" class="btn primary-btn" disabled>Next</button>
+                <button id="prev-btn" class="btn secondary-btn" type="button" disabled>Previous</button>
+                <button id="next-btn" class="btn primary-btn" type="button" disabled>Next</button>
               </div>
             </div>
           </section>
@@ -111,7 +106,7 @@
               <div id="results-container">
                 <!-- Results will be inserted here by JavaScript -->
               </div>
-              <button id="restart-btn" class="btn primary-btn">Take Assessment Again</button>
+              <button id="restart-btn" class="btn primary-btn" type="button">Take Assessment Again</button>
             </div>
           </section>
         </div>
@@ -125,6 +120,10 @@
   </div>
 
   <!-- JavaScript Module Imports -->
+  <!-- Firebase v8 SDK for auth.js -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   <script type="module" src="src/js/app.js"></script>
 </body>
 </html>

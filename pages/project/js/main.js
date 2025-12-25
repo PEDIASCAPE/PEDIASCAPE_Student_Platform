@@ -83,22 +83,21 @@ function updateProgress() {
   progressText.textContent = `${progressPercentage}%`;
 }
 
-// Function to redirect to login page
-function redirectToLogin() {
-  // Redirect to separate login page instead of showing a modal
-  window.location.href = '../login.html';
+if (typeof window.redirectToLogin !== "function") {
+  window.redirectToLogin = function () {
+    window.location.href = "../login.html";
+  };
 }
 
-// Add function for mobile menu toggle
-function toggleDropdown() {
-  const dropdown = document.querySelector('.dropdown');
-  if (dropdown) {
-      dropdown.classList.toggle('active');
-  }
+if (typeof window.toggleDropdown !== "function") {
+  window.toggleDropdown = function () {
+    const dropdown = document.querySelector(".dropdown");
+    if (dropdown) dropdown.classList.toggle("active");
+  };
 }
 
-// Navigation function
-function navigateTo(page) {
-  window.location.href = page;
+if (typeof window.navigateTo !== "function") {
+  window.navigateTo = function (page) {
+    window.location.href = page;
+  };
 }
-

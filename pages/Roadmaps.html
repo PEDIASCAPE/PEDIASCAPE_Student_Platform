@@ -157,6 +157,50 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Roadmap Modal */
+        .roadmap-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+        .roadmap-modal-content {
+            position: relative;
+            width: 92%;
+            max-width: 1200px;
+            background: #0f0f0f;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 12px;
+        }
+        .roadmap-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        #roadmapFrame {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            border-radius: 8px;
+            background: #000;
+        }
+
         /* Show the menu icon only on smaller screens */
         /* Responsive Styles */
         @media (max-width: 1024px) {
@@ -356,72 +400,24 @@
     </main>
 
     <!-- Modal container for roadmap visualization -->
-    <div id="roadmapModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); z-index: 1000;">
-        <button id="closeModal" style="position: absolute; top: 20px; right: 20px; background: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; z-index: 1100;">×</button>
-        <iframe id="roadmapFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+    <div id="roadmapModal" class="roadmap-modal">
+        <div class="roadmap-modal-content">
+            <button id="closeModal" class="roadmap-close">×</button>
+            <iframe id="roadmapFrame" title="Roadmap Visualizer"></iframe>
+        </div>
     </div>
 
-    <!-- Firebase scripts -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script type="module" src="./script/auth-ui.js"></script>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCgz8plPo9kiZw0e5HrlBpGq0NrfT_6kkY",
-            authDomain: "pediascape-6b99b.firebaseapp.com",
-            projectId: "pediascape-6b99b",
-            storageBucket: "pediascape-6b99b.appspot.com",
-            messagingSenderId: "128341831687",
-            appId: "1:128341831687:web:e44b694935e7ab37013aa2",
-            measurementId: "G-J354SK3B93"
-        };
-
-        // Global variable for current user
-        let currentUser = null;
-
-        // Initialize Firebase and set up event listeners
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Firebase
-            try {
-                firebase.initializeApp(firebaseConfig);
-                
-                // Check authentication state
-                firebase.auth().onAuthStateChanged(user => {
-                    currentUser = user;
-                    updateAuthUI(user);
-                });
-                
-                // Click outside user menu to close it
-                document.addEventListener('click', (event) => {
-                    const userAvatar = document.getElementById('userInitials');
-                    const menu = document.getElementById('userMenu');
-                    
-                    if (menu && userAvatar && event.target !== userAvatar && !menu.contains(event.target)) {
-                        menu.classList.remove('active');
-                    }
-                });
-                
-                // Set up logout functionality
-                const logoutButton = document.getElementById('logoutButton');
-                if (logoutButton) {
-                    logoutButton.addEventListener('click', () => {
-                        firebase.auth().signOut()
-                            .then(() => {
-                                showToast('Logged out successfully', 'success');
-                            })
-                            .catch(error => {
-                                showToast('Error logging out: ' + error.message, 'error');
-                            });
-                    });
+            document.addEventListener('click', (event) => {
+                const userAvatar = document.getElementById('userInitials');
+                const menu = document.getElementById('userMenu');
+                if (menu && userAvatar && event.target !== userAvatar && !menu.contains(event.target)) {
+                    menu.classList.remove('active');
                 }
-                
-            } catch (error) {
-                showToast("Error connecting to database. Please try again later.", "error");
-                console.error("Firebase initialization error:", error);
-            }
+            });
         });
 
         // Store roadmap data (example roadmaps to demonstrate functionality)
@@ -500,7 +496,7 @@
             roadmapFrame.src = url;
             
             // Show the modal
-            modal.style.display = 'block';
+            modal.style.display = 'flex';
             
             // Disable scrolling on the body
             document.body.style.overflow = 'hidden';
@@ -541,39 +537,7 @@
         }
 
         // Update UI based on authentication state
-        function updateAuthUI(user) {
-            if (user) {
-                // User is signed in
-                showToast('Logged in as ' + user.email, 'success');
-                
-                // Update profile display
-                const profileLogo = document.querySelector('.profilelogo');
-                if (profileLogo) profileLogo.style.display = 'none';
-                
-                const userProfile = document.querySelector('.user-profile');
-                if (userProfile) {
-                    userProfile.style.display = 'flex';
-                    
-                    // Set user initials in avatar
-                    const userInitials = document.getElementById('userInitials');
-                    if (userInitials) {
-                        const email = user.email || '';
-                        const initials = email.charAt(0).toUpperCase();
-                        userInitials.textContent = initials;
-                    }
-                }
-            } else {
-                // User is signed out
-                // Update profile display
-                const profileLogo = document.querySelector('.profilelogo');
-                if (profileLogo) profileLogo.style.display = 'block';
-                
-                const userProfile = document.querySelector('.user-profile');
-                if (userProfile) {
-                    userProfile.style.display = 'none';
-                }
-            }
-        }
+        function updateAuthUI(user) {}
 
         // Function to navigate to different pages
         function navigateTo(page) {

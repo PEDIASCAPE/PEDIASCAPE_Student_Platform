@@ -800,15 +800,1049 @@ function getRelatedProjects(projectId, limit = 3) {
   return relatedProjects.slice(0, limit);
 }
 
+function slugifyTitle(title) {
+  return String(title || '')
+    .toLowerCase()
+    .replace(/['"]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40) || 'project';
+}
+
+function uniqStrings(arr) {
+  return Array.from(new Set((arr || []).filter(Boolean).map(s => String(s))));
+}
+
+function resourcesFromTags(tags = []) {
+  const lowerTags = uniqStrings(tags).map(t => t.toLowerCase());
+  const resources = [];
+
+  const add = (text, url) => {
+    if (!url || resources.some(r => r.url === url)) return;
+    resources.push({ text, url });
+  };
+
+  if (lowerTags.some(t => t.includes('html'))) add('MDN: HTML', 'https://developer.mozilla.org/en-US/docs/Web/HTML');
+  if (lowerTags.some(t => t.includes('css'))) add('MDN: CSS', 'https://developer.mozilla.org/en-US/docs/Web/CSS');
+  if (lowerTags.some(t => t.includes('javascript'))) add('MDN: JavaScript', 'https://developer.mozilla.org/en-US/docs/Web/JavaScript');
+  if (lowerTags.some(t => t.includes('dom'))) add('MDN: DOM', 'https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model');
+  if (lowerTags.some(t => t.includes('localstorage'))) add('MDN: Web Storage', 'https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API');
+  if (lowerTags.some(t => t.includes('fetch'))) add('MDN: Fetch API', 'https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API');
+  if (lowerTags.some(t => t.includes('api'))) add('MDN: Web APIs', 'https://developer.mozilla.org/en-US/docs/Web/API');
+  if (lowerTags.some(t => t.includes('websocket'))) add('MDN: WebSocket API', 'https://developer.mozilla.org/en-US/docs/Web/API/WebSocket');
+  if (lowerTags.some(t => t.includes('geolocation'))) add('MDN: Geolocation API', 'https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API');
+  if (lowerTags.some(t => t.includes('drag') || t.includes('drop'))) add('MDN: Drag and Drop API', 'https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API');
+  if (lowerTags.some(t => t.includes('markdown'))) add('CommonMark Spec', 'https://spec.commonmark.org/');
+  if (lowerTags.some(t => t.includes('date'))) add('MDN: Date', 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date');
+  if (lowerTags.some(t => t.includes('chart') || t.includes('visualization'))) add('Chart.js Docs', 'https://www.chartjs.org/docs/latest/');
+  if (lowerTags.some(t => t.includes('react'))) add('React Docs', 'https://react.dev/learn');
+  if (lowerTags.some(t => t.includes('node'))) add('Node.js Docs', 'https://nodejs.org/en/docs');
+  if (lowerTags.some(t => t.includes('express'))) add('Express Guide', 'https://expressjs.com/en/guide/routing.html');
+  if (lowerTags.some(t => t.includes('typescript'))) add('TypeScript Handbook', 'https://www.typescriptlang.org/docs/handbook/intro.html');
+  if (lowerTags.some(t => t.includes('d3'))) add('D3.js Documentation', 'https://d3js.org/');
+  if (lowerTags.some(t => t.includes('webrtc'))) add('MDN: WebRTC', 'https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API');
+  if (lowerTags.some(t => t.includes('web audio'))) add('MDN: Web Audio API', 'https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API');
+  if (lowerTags.some(t => t.includes('service worker') || t.includes('pwa'))) add('MDN: Progressive Web Apps', 'https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps');
+  if (lowerTags.some(t => t.includes('canvas'))) add('MDN: Canvas API', 'https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API');
+  if (lowerTags.some(t => t.includes('svg'))) add('MDN: SVG', 'https://developer.mozilla.org/en-US/docs/Web/SVG');
+  if (lowerTags.some(t => t.includes('codemirror'))) add('CodeMirror Docs', 'https://codemirror.net/docs/');
+  if (lowerTags.some(t => t.includes('pdf'))) add('MDN: Canvas API Tutorial', 'https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial');
+  if (lowerTags.some(t => t.includes('crypto'))) add('MDN: Web Crypto API', 'https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API');
+  if (lowerTags.some(t => t.includes('animation'))) add('MDN: CSS Animations', 'https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animations/Using_CSS_animations');
+  if (lowerTags.some(t => t.includes('validation') || t.includes('form'))) add('MDN: Constraint Validation', 'https://developer.mozilla.org/en-US/docs/Web/HTML/Constraint_validation');
+  if (lowerTags.some(t => t.includes('webgl'))) add('MDN: WebGL API', 'https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API');
+  if (lowerTags.some(t => t.includes('webgl'))) add('Learn WebGL', 'https://learnwebgl.brown37.net/');
+  if (lowerTags.some(t => t.includes('neural') || t.includes('machine learning'))) add('Neural Networks and Deep Learning', 'http://neuralnetworksanddeeplearning.com/');
+  if (lowerTags.some(t => t.includes('neural') || t.includes('math'))) add('3Blue1Brown: Neural Networks', 'https://www.3blue1brown.com/topics/neural-networks');
+  if (lowerTags.some(t => t.includes('math'))) add('Khan Academy: Linear Algebra', 'https://www.khanacademy.org/math/linear-algebra');
+  if (lowerTags.some(t => t.includes('algorithm') || t.includes('data structure'))) add('VisuAlgo: Data Structures & Algorithms', 'https://visualgo.net/en');
+  if (lowerTags.some(t => t.includes('crdt'))) add('CRDT Tech', 'https://crdt.tech/');
+  if (lowerTags.some(t => t.includes('collaboration'))) add('Yjs Documentation', 'https://docs.yjs.dev/');
+  if (lowerTags.some(t => t.includes('parsing'))) add('Pratt Parsing', 'https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html');
+  if (lowerTags.some(t => t.includes('testing') || t.includes('tdd') || t.includes('unit'))) add('Testing JavaScript', 'https://testingjavascript.com/');
+  if (lowerTags.some(t => t.includes('security'))) add('OWASP Top 10', 'https://owasp.org/www-project-top-ten/');
+
+  add('freeCodeCamp: JavaScript', 'https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures-v8/');
+  add('web.dev Guides', 'https://web.dev/learn/');
+
+  return resources.slice(0, 8);
+}
+
+function generateObjectives(project) {
+  const tags = uniqStrings(project.tags || []);
+  const techs = tags.length ? tags.join(', ') : 'web fundamentals';
+  const category = String(project.category || 'this area');
+  const difficulty = String(project.difficulty || 'beginner');
+  const lowerTags = tags.map(t => t.toLowerCase());
+
+  const domain = [];
+  if (lowerTags.some(t => t.includes('external api') || t.includes('api integration'))) domain.push('Fetch and display data from an external API with loading/error states');
+  if (lowerTags.some(t => t.includes('api'))) domain.push('Work with async/await, JSON parsing, and request error handling');
+  if (lowerTags.some(t => t.includes('localstorage'))) domain.push('Persist user data using localStorage');
+  if (lowerTags.some(t => t.includes('drag') || t.includes('drop'))) domain.push('Implement drag-and-drop interactions for a better UX');
+  if (lowerTags.some(t => t.includes('websocket'))) domain.push('Implement real-time features using WebSockets');
+  if (lowerTags.some(t => t.includes('webrtc'))) domain.push('Implement peer-to-peer media communication with WebRTC fundamentals');
+  if (lowerTags.some(t => t.includes('chart') || t.includes('visualization'))) domain.push('Visualize data using charts and interactive UI elements');
+  if (lowerTags.some(t => t.includes('markdown'))) domain.push('Parse and render Markdown safely with a live preview');
+  if (lowerTags.some(t => t.includes('security'))) domain.push('Apply secure defaults and avoid common web security mistakes');
+  if (lowerTags.some(t => t.includes('webgl'))) domain.push('Render and manipulate 3D scenes using WebGL fundamentals');
+  if (lowerTags.some(t => t.includes('crdt') || t.includes('collaboration'))) domain.push('Handle concurrent edits and conflict resolution in collaborative workflows');
+  if (lowerTags.some(t => t.includes('algorithm') || t.includes('data structure'))) domain.push('Apply core data structures and algorithms to real features');
+  if (lowerTags.some(t => t.includes('neural') || t.includes('machine learning'))) domain.push('Implement backpropagation and training loops from scratch');
+  if (lowerTags.some(t => t.includes('pdf'))) domain.push('Generate structured documents with pagination, layout, and rendering');
+
+  const common = [
+    `Build a complete ${difficulty}-level project from scratch`,
+    `Practice core concepts in ${category}`,
+    `Improve problem-solving and debugging skills`,
+    `Create a portfolio-ready deliverable`,
+  ];
+
+  const techObjective = tags.length ? `Apply ${techs} in a real project` : null;
+  const obj = techObjective ? [techObjective, ...domain, ...common] : [...domain, ...common];
+  return obj.slice(0, 5);
+}
+
+function generateSteps(project) {
+  const title = String(project.title || 'Project');
+  const slug = slugifyTitle(project.title);
+  const category = String(project.category || 'Project');
+  const difficulty = String(project.difficulty || 'beginner');
+  const tags = uniqStrings(project.tags || []);
+  const lowerTags = tags.map(t => t.toLowerCase());
+  const lowerTitle = title.toLowerCase();
+  const description = String(project.description || '').trim();
+
+  const hasApi = lowerTags.some(t => t.includes('external api') || t.includes('api integration') || t === 'api' || t.includes('fetch'));
+  const hasLocalStorage = lowerTags.some(t => t.includes('localstorage'));
+  const hasDragDrop = lowerTags.some(t => t.includes('drag') || t.includes('drop'));
+  const hasCharts = lowerTags.some(t => t.includes('chart') || t.includes('visualization'));
+  const hasDate = lowerTags.some(t => t.includes('date')) || lowerTitle.includes('timer') || lowerTitle.includes('countdown') || lowerTitle.includes('calendar');
+  const hasValidation = lowerTags.some(t => t.includes('validation')) || category.toLowerCase().includes('form') || lowerTitle.includes('validation');
+  const hasAnimation = lowerTags.some(t => t.includes('animation')) || category.toLowerCase().includes('animation') || lowerTitle.includes('slider') || lowerTitle.includes('clock');
+  const hasAudio = lowerTags.some(t => t.includes('audio')) || category.toLowerCase().includes('audio') || lowerTitle.includes('music') || lowerTitle.includes('synth');
+  const hasWebSocket = lowerTags.some(t => t.includes('websocket')) || category.toLowerCase().includes('real-time');
+  const hasWebRTC = lowerTags.some(t => t.includes('webrtc'));
+  const hasMarkdown = lowerTags.some(t => t.includes('markdown'));
+  const hasSecurity = lowerTags.some(t => t.includes('security')) || lowerTitle.includes('password');
+  const hasCanvas = lowerTags.some(t => t.includes('canvas')) || lowerTitle.includes('canvas');
+  const hasPdf = lowerTags.some(t => t.includes('pdf')) || category.toLowerCase().includes('document');
+  const hasSearch = lowerTags.some(t => t.includes('search')) || category.toLowerCase().includes('search');
+  const hasAlgorithm = lowerTags.some(t => t.includes('algorithm') || t.includes('data structure'));
+  const hasWebGL = lowerTags.some(t => t.includes('webgl'));
+  const hasEditor = lowerTags.some(t => t.includes('codemirror') || t.includes('code editor')) || lowerTitle.includes('editor');
+  const hasCollaboration = lowerTags.some(t => t.includes('crdt') || t.includes('collaboration'));
+
+  const setupCode = `mkdir ${slug}\ncd ${slug}\n# Create: index.html, style.css, app.js`;
+  const advancedSetupCode =
+    `mkdir ${slug}\ncd ${slug}\n# Choose your structure: /src, /server, /public\n# Add: README.md, .gitignore\n# Create your entry files, then start building features`;
+
+  const htmlBody = (() => {
+    if (hasValidation || lowerTitle.includes('bmi') || lowerTitle.includes('tip calculator')) {
+      return `
+    <section class="card">
+      <h2>Inputs</h2>
+      <form id="main-form" class="form">
+        <label class="field">
+          <span class="label">Field 1</span>
+          <input id="field1" class="input" type="text" placeholder="Enter value" />
+          <small class="error" id="field1-error"></small>
+        </label>
+        <label class="field">
+          <span class="label">Field 2</span>
+          <input id="field2" class="input" type="text" placeholder="Enter value" />
+          <small class="error" id="field2-error"></small>
+        </label>
+        <button class="btn" type="submit">Submit</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Output</h2>
+      <div id="output" class="output">—</div>
+    </section>
+`.trim();
+    }
+
+    if (hasDate) {
+      return `
+    <section class="card">
+      <h2>Configure</h2>
+      <div class="row">
+        <input id="target-datetime" class="input" type="datetime-local" />
+        <button id="start-btn" class="btn" type="button">Start</button>
+        <button id="reset-btn" class="btn secondary" type="button">Reset</button>
+      </div>
+      <small class="muted">Pick a date/time and start the timer.</small>
+    </section>
+
+    <section class="card">
+      <h2>Countdown</h2>
+      <div id="timer" class="timer">
+        <div class="time-box"><div id="days" class="num">0</div><div class="cap">Days</div></div>
+        <div class="time-box"><div id="hours" class="num">0</div><div class="cap">Hours</div></div>
+        <div class="time-box"><div id="minutes" class="num">0</div><div class="cap">Minutes</div></div>
+        <div class="time-box"><div id="seconds" class="num">0</div><div class="cap">Seconds</div></div>
+      </div>
+      <div id="status" class="muted"></div>
+    </section>
+`.trim();
+    }
+
+    if (lowerTitle.includes('slider') || lowerTitle.includes('carousel')) {
+      return `
+    <section class="card">
+      <h2>Carousel</h2>
+      <div class="carousel" id="carousel">
+        <button class="btn icon" id="prev-btn" type="button" aria-label="Previous">◀</button>
+        <div class="viewport">
+          <img id="slide" class="slide" alt="Slide" />
+        </div>
+        <button class="btn icon" id="next-btn" type="button" aria-label="Next">▶</button>
+      </div>
+      <div class="row">
+        <button class="btn secondary" id="play-btn" type="button">Play</button>
+        <button class="btn secondary" id="pause-btn" type="button">Pause</button>
+      </div>
+      <div id="dots" class="dots"></div>
+    </section>
+`.trim();
+    }
+
+    if (hasAudio) {
+      return `
+    <section class="card">
+      <h2>Player</h2>
+      <audio id="audio" controls class="audio"></audio>
+      <div class="row">
+        <button id="prev-track" class="btn secondary" type="button">Prev</button>
+        <button id="next-track" class="btn secondary" type="button">Next</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Playlist</h2>
+      <ul id="playlist" class="list"></ul>
+    </section>
+`.trim();
+    }
+
+    if (hasCharts) {
+      return `
+    <section class="card">
+      <h2>Controls</h2>
+      <div class="row">
+        <button id="refresh-btn" class="btn" type="button">Refresh</button>
+        <button id="randomize-btn" class="btn secondary" type="button">Randomize</button>
+      </div>
+      <small class="muted">Start with a simple bar chart, then add filters and time ranges.</small>
+    </section>
+
+    <section class="card">
+      <h2>Chart</h2>
+      <canvas id="chart" width="900" height="420"></canvas>
+    </section>
+`.trim();
+    }
+
+    if (hasMarkdown) {
+      return `
+    <section class="grid">
+      <div class="card">
+        <h2>Editor</h2>
+        <textarea id="md-input" class="textarea" placeholder="Write Markdown..."></textarea>
+        <div class="row">
+          <button id="save-btn" class="btn" type="button">Save</button>
+          <button id="export-btn" class="btn secondary" type="button">Export</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Preview</h2>
+        <div id="preview" class="preview"></div>
+      </div>
+    </section>
+`.trim();
+    }
+
+    if (lowerTitle.includes('quiz') || category.toLowerCase().includes('game')) {
+      return `
+    <section class="card">
+      <h2>Quiz</h2>
+      <div id="hud" class="row">
+        <div class="pill">Score: <span id="score">0</span></div>
+        <div class="pill">Question: <span id="index">1</span></div>
+      </div>
+      <div id="question" class="question">Click Start</div>
+      <div id="answers" class="answers"></div>
+      <div class="row">
+        <button id="start-btn" class="btn" type="button">Start</button>
+        <button id="restart-btn" class="btn secondary" type="button">Restart</button>
+      </div>
+    </section>
+`.trim();
+    }
+
+    if (lowerTitle.includes('password')) {
+      return `
+    <section class="card">
+      <h2>Generator</h2>
+      <div class="row">
+        <input id="length" class="input" type="number" min="6" max="64" value="16" />
+        <button id="generate-btn" class="btn" type="button">Generate</button>
+        <button id="copy-btn" class="btn secondary" type="button">Copy</button>
+      </div>
+      <div class="checks">
+        <label><input id="use-upper" type="checkbox" checked /> Uppercase</label>
+        <label><input id="use-lower" type="checkbox" checked /> Lowercase</label>
+        <label><input id="use-num" type="checkbox" checked /> Numbers</label>
+        <label><input id="use-symbol" type="checkbox" /> Symbols</label>
+      </div>
+      <pre id="password" class="output"></pre>
+    </section>
+`.trim();
+    }
+
+    if (hasApi) {
+      return `
+    <section class="card">
+      <h2>Search</h2>
+      <form id="search-form" class="row">
+        <input id="query" class="input" type="text" placeholder="Type and search..." />
+        <button class="btn" type="submit">Search</button>
+      </form>
+      <div id="status" class="muted"></div>
+    </section>
+
+    <section class="card">
+      <h2>Results</h2>
+      <div id="results" class="grid results"></div>
+    </section>
+`.trim();
+    }
+
+    return `
+    <section class="card">
+      <h2>Workspace</h2>
+      <div class="row">
+        <input id="input" class="input" type="text" placeholder="Add item..." />
+        <button id="add-btn" class="btn" type="button">Add</button>
+      </div>
+      <ul id="list" class="list"></ul>
+    </section>
+`.trim();
+  })();
+
+  const htmlTemplate = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${title}</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>${title}</h1>
+      ${description ? `<p class="subtitle">${description}</p>` : ''}
+    </header>
+
+${htmlBody.split('\n').map(line => `    ${line}`.replace(/\s+$/g, '')).join('\n')}
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>`;
+
+  const cssTemplate = `:root {
+  --bg: #0b1220;
+  --card: #111a2e;
+  --text: #e8eefc;
+  --muted: #a7b3d1;
+  --accent: #5b8cff;
+  --border: rgba(255, 255, 255, 0.1);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: radial-gradient(1200px 800px at 20% 10%, #1a2b57 0%, var(--bg) 60%);
+  color: var(--text);
+}
+
+.container { max-width: 980px; margin: 0 auto; padding: 24px; }
+.header { margin-bottom: 16px; }
+.subtitle { color: var(--muted); margin-top: 6px; }
+
+.card {
+  background: rgba(17, 26, 46, 0.92);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 14px 0;
+}
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+
+.input, .textarea {
+  width: min(520px, 100%);
+  padding: 12px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+}
+.textarea { min-height: 280px; resize: vertical; }
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(91, 140, 255, 0.9), rgba(60, 105, 225, 0.9));
+  color: white;
+  cursor: pointer;
+}
+.btn.secondary { background: rgba(255, 255, 255, 0.08); }
+.btn.icon { width: 44px; height: 44px; display: grid; place-items: center; }
+
+.muted { color: var(--muted); }
+.list { list-style: none; padding: 0; margin: 12px 0 0; }
+.list li {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 8px 0;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.error { color: #ffb4b4; min-height: 16px; display: block; }
+.output {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: auto;
+}
+
+.timer { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 760px) { .timer { grid-template-columns: repeat(2, 1fr); } }
+.time-box { border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+.num { font-size: 32px; font-weight: 700; }
+.cap { color: var(--muted); font-size: 12px; }
+
+.carousel { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+.viewport { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.04); }
+.slide { width: 100%; height: 340px; object-fit: cover; display: block; }
+.dots { display: flex; gap: 8px; margin-top: 10px; }
+.dots button { width: 10px; height: 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.15); cursor: pointer; }
+.dots button.active { background: var(--accent); }
+
+.results { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 860px) { .results { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .results { grid-template-columns: 1fr; } }
+.pill { padding: 8px 10px; border: 1px solid var(--border); border-radius: 999px; background: rgba(255, 255, 255, 0.04); }
+.question { font-size: 18px; margin: 12px 0; }
+.answers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 520px) { .answers { grid-template-columns: 1fr; } }
+.answers button { text-align: left; }
+
+.preview { min-height: 280px; border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: rgba(255, 255, 255, 0.04); }
+`;
+
+  const jsSkeleton = (() => {
+    const lines = [];
+    const add = (s) => lines.push(String(s));
+    add(`const state = {`);
+    if (hasApi) add(`  query: '',`);
+    if (hasLocalStorage) add(`  items: [],`);
+    if (lowerTitle.includes('quiz') || category.toLowerCase().includes('game')) {
+      add(`  score: 0,`);
+      add(`  index: 0,`);
+      add(`  questions: [],`);
+    }
+    if (hasCharts) add(`  series: [],`);
+    if (hasDate) add(`  targetMs: null,`);
+    if (hasAudio) add(`  playlist: [],`);
+    add(`};`);
+    add('');
+    add(`function $(selector) {`);
+    add(`  return document.querySelector(selector);`);
+    add(`}`);
+    add('');
+    add(`function safeJsonParse(value, fallback) {`);
+    add(`  try { return JSON.parse(value); } catch { return fallback; }`);
+    add(`}`);
+    add('');
+    if (hasLocalStorage) {
+      add(`function loadState() {`);
+      add(`  const raw = localStorage.getItem('${slug}:state');`);
+      add(`  const data = safeJsonParse(raw, null);`);
+      add(`  if (data && Array.isArray(data.items)) state.items = data.items;`);
+      add(`}`);
+      add('');
+      add(`function saveState() {`);
+      add(`  localStorage.setItem('${slug}:state', JSON.stringify({ items: state.items }));`);
+      add(`}`);
+      add('');
+    }
+    add(`function render() {`);
+    if (hasLocalStorage) {
+      add(`  const list = $('#list');`);
+      add(`  if (list) {`);
+      add(`    list.innerHTML = '';`);
+      add(`    state.items.forEach((item, idx) => {`);
+      add(`      const li = document.createElement('li');`);
+      add(`      li.innerHTML = \`<span>\${item.text}</span><button class="btn secondary" data-remove="\${idx}">Remove</button>\`;`);
+      add(`      list.appendChild(li);`);
+      add(`    });`);
+      add(`  }`);
+    } else if (hasApi) {
+      add(`  $('#status') && ($('#status').textContent = state.query ? 'Searching…' : '');`);
+    } else {
+      add(`  // Update UI based on state`);
+    }
+    add(`}`);
+    add('');
+    add(`function init() {`);
+    if (hasLocalStorage) {
+      add(`  loadState();`);
+      add(`  render();`);
+      add('');
+      add(`  const addBtn = $('#add-btn');`);
+      add(`  const input = $('#input');`);
+      add(`  addBtn && addBtn.addEventListener('click', () => {`);
+      add(`    const text = String(input && input.value || '').trim();`);
+      add(`    if (!text) return;`);
+      add(`    state.items.unshift({ text, done: false });`);
+      add(`    input.value = '';`);
+      add(`    saveState();`);
+      add(`    render();`);
+      add(`  });`);
+      add('');
+      add(`  document.addEventListener('click', (e) => {`);
+      add(`    const btn = e.target && e.target.closest && e.target.closest('[data-remove]');`);
+      add(`    if (!btn) return;`);
+      add(`    const idx = Number(btn.getAttribute('data-remove'));`);
+      add(`    if (!Number.isFinite(idx)) return;`);
+      add(`    state.items.splice(idx, 1);`);
+      add(`    saveState();`);
+      add(`    render();`);
+      add(`  });`);
+    } else if (hasApi) {
+      add(`  const form = $('#search-form');`);
+      add(`  const input = $('#query');`);
+      add(`  form && form.addEventListener('submit', async (e) => {`);
+      add(`    e.preventDefault();`);
+      add(`    state.query = String(input && input.value || '').trim();`);
+      add(`    if (!state.query) return;`);
+      add(`    await searchAndRender(state.query);`);
+      add(`  });`);
+    } else if (hasDate) {
+      add(`  const startBtn = $('#start-btn');`);
+      add(`  const resetBtn = $('#reset-btn');`);
+      add(`  const input = $('#target-datetime');`);
+      add(`  startBtn && startBtn.addEventListener('click', () => {`);
+      add(`    const value = input && input.value;`);
+      add(`    state.targetMs = value ? new Date(value).getTime() : null;`);
+      add(`    tick();`);
+      add(`  });`);
+      add(`  resetBtn && resetBtn.addEventListener('click', () => {`);
+      add(`    state.targetMs = null;`);
+      add(`    tick();`);
+      add(`  });`);
+      add(`  setInterval(tick, 1000);`);
+    } else {
+      add(`  render();`);
+    }
+    add(`}`);
+    add('');
+    if (hasApi) {
+      add(`async function searchAndRender(query) {`);
+      add(`  const status = $('#status');`);
+      add(`  const results = $('#results');`);
+      add(`  if (status) status.textContent = 'Loading…';`);
+      add(`  if (results) results.innerHTML = '';`);
+      add('');
+      add(`  try {`);
+      add(`    const url = \`https://api.example.com/search?q=\${encodeURIComponent(query)}\`;`);
+      add(`    const res = await fetch(url);`);
+      add(`    if (!res.ok) throw new Error('Request failed: ' + res.status);`);
+      add(`    const data = await res.json();`);
+      add(`    const items = Array.isArray(data.items) ? data.items : [];`);
+      add(`    if (status) status.textContent = items.length ? '' : 'No results.';`);
+      add(`    if (results) {`);
+      add(`      items.slice(0, 12).forEach(item => {`);
+      add(`        const card = document.createElement('div');`);
+      add(`        card.className = 'card';`);
+      add(`        card.innerHTML = \`<h3>\${item.title || 'Item'}</h3><p class="muted">\${item.subtitle || ''}</p>\`;`);
+      add(`        results.appendChild(card);`);
+      add(`      });`);
+      add(`    }`);
+      add(`  } catch (err) {`);
+      add(`    if (status) status.textContent = String(err && err.message || err);`);
+      add(`  }`);
+      add(`}`);
+      add('');
+    }
+    if (hasDate) {
+      add(`function tick() {`);
+      add(`  const status = $('#status');`);
+      add(`  if (!state.targetMs) {`);
+      add(`    ['days','hours','minutes','seconds'].forEach(id => { const el = $('#' + id); if (el) el.textContent = '0'; });`);
+      add(`    if (status) status.textContent = 'Not started';`);
+      add(`    return;`);
+      add(`  }`);
+      add(`  const diff = Math.max(0, state.targetMs - Date.now());`);
+      add(`  const days = Math.floor(diff / 86400000);`);
+      add(`  const hours = Math.floor((diff % 86400000) / 3600000);`);
+      add(`  const minutes = Math.floor((diff % 3600000) / 60000);`);
+      add(`  const seconds = Math.floor((diff % 60000) / 1000);`);
+      add(`  const set = (id, v) => { const el = $('#' + id); if (el) el.textContent = String(v); };`);
+      add(`  set('days', days); set('hours', hours); set('minutes', minutes); set('seconds', seconds);`);
+      add(`  if (status) status.textContent = diff === 0 ? 'Done!' : '';`);
+      add(`}`);
+      add('');
+    }
+    add(`document.addEventListener('DOMContentLoaded', init);`);
+    return lines.join('\n');
+  })();
+
+  const coreProcedure = (() => {
+    if (hasWebRTC) {
+      return {
+        title: 'Implement WebRTC flow',
+        content: 'Create signaling, then establish peer connections, media tracks, and cleanup logic. Start with one-to-one video, then add reconnection and device switching.',
+        code: `// Pseudocode: signaling + peer connection
+// 1) Connect to signaling server (WebSocket)
+// 2) Create RTCPeerConnection with STUN/TURN
+// 3) getUserMedia() -> add tracks to peer connection
+// 4) Exchange offer/answer + ICE candidates
+// 5) Render remote stream on <video> element`
+      };
+    }
+    if (hasWebSocket) {
+      return {
+        title: 'Implement real-time communication',
+        content: 'Define message shapes, connect client to server, broadcast updates, and keep the UI consistent when messages arrive out-of-order.',
+        code: `// Client pseudocode
+const ws = new WebSocket('ws://localhost:8080');
+ws.addEventListener('message', (e) => {
+  const msg = JSON.parse(e.data);
+  // apply msg to state then render()
+});
+
+function sendMessage(type, payload) {
+  ws.send(JSON.stringify({ type, payload, ts: Date.now() }));
+}`
+      };
+    }
+    if (hasCollaboration) {
+      return {
+        title: 'Add collaborative conflict resolution',
+        content: 'Model edits as operations, merge changes deterministically, and sync state efficiently. Start with simple last-write-wins, then graduate to CRDT/OT as needed.',
+        code: `// Pseudocode outline
+// - Represent each edit as an operation (opId, clientId, baseVersion)
+// - Apply ops locally and broadcast
+// - On receive: transform/merge op into local state
+// - Resolve conflicts deterministically (e.g., CRDT rules)`
+      };
+    }
+    if (hasEditor) {
+      return {
+        title: 'Implement editor features',
+        content: 'Support large documents, keep editor state stable, and implement shortcuts/commands. Start with plain textarea, then add rich editor features.',
+        code: `// Procedures
+// 1) Keep a single source of truth (document text)
+// 2) Track selection/cursor position
+// 3) Add commands: find/replace, go-to-line, indent/outdent
+// 4) Add persistence + export/import`
+      };
+    }
+    if (hasWebGL) {
+      return {
+        title: 'Render a basic 3D scene',
+        content: 'Build a render loop, camera controls, geometry buffers, and shaders. Start with a rotating cube, then add lighting and textures.',
+        code: `// Pseudocode: render loop
+initGL();
+loadShaders();
+createBuffers();
+function frame(t) {
+  updateCamera(t);
+  drawScene();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);`
+      };
+    }
+    if (hasPdf) {
+      return {
+        title: 'Implement document layout and rendering',
+        content: 'Define a layout model (pages, margins, flow), paginate content, then render text/images/tables. Start by exporting a simple “report” first.',
+        code: `// Pseudocode: pagination
+pages = [];
+cursor = { page: 0, y: marginTop };
+for each block in blocks:
+  if cursor.y + block.height > pageHeight - marginBottom:
+    new page; cursor.y = marginTop
+  place block at cursor; cursor.y += block.height`
+      };
+    }
+    if (hasSearch) {
+      return {
+        title: 'Build indexing and search',
+        content: 'Tokenize documents, build an inverted index, then score results and return matches with snippets. Start with prefix search, then add ranking.',
+        code: `// Pseudocode: inverted index
+index = new Map(); // token -> Set(docId)
+for each doc:
+  tokens = tokenize(doc.text)
+  for each token:
+    if !index.has(token) index.set(token, new Set())
+    index.get(token).add(doc.id)
+
+function search(q) {
+  qTokens = tokenize(q)
+  return intersect(index[t] for t in qTokens)
+}`
+      };
+    }
+    if (hasAlgorithm) {
+      return {
+        title: 'Design core data structures and algorithms',
+        content: 'Pick the correct structures for your features (maps, heaps, tries, graphs). Define invariants and write small tests for correctness.',
+        code: `// Procedure checklist
+// - Define operations: insert/remove/query and their complexity targets
+// - Choose structure: Map, Heap, Trie, Graph, etc.
+// - Write invariants (must always be true)
+// - Test with edge cases and random inputs`
+      };
+    }
+    if (hasCharts) {
+      return {
+        title: 'Render and update charts',
+        content: 'Turn raw data into series, render a simple chart first, then add interactions (hover tooltips, filtering, ranges).',
+        code: `// Canvas bar chart starter (no libraries)
+const canvas = document.getElementById('chart');
+const ctx = canvas.getContext('2d');
+
+function drawBars(values) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const w = canvas.width / values.length;
+  values.forEach((v, i) => {
+    const h = Math.max(0, v) * (canvas.height - 40);
+    ctx.fillStyle = '#5b8cff';
+    ctx.fillRect(i * w + 10, canvas.height - h - 20, w - 20, h);
+  });
+}`
+      };
+    }
+    if (hasDragDrop) {
+      return {
+        title: 'Add drag-and-drop interactions',
+        content: 'Implement drag start/over/drop handlers, update your state, then re-render. Ensure keyboard fallbacks and clear drop targets.',
+        code: `// Basic drag & drop pattern
+function onDragStart(e) {
+  e.dataTransfer.setData('text/plain', e.target.dataset.id);
+}
+function onDrop(e) {
+  e.preventDefault();
+  const id = e.dataTransfer.getData('text/plain');
+  const targetCol = e.currentTarget.dataset.column;
+  moveItem(id, targetCol);
+  render();
+}`
+      };
+    }
+    if (hasApi) {
+      return {
+        title: 'Integrate an API (loading, error, mapping)',
+        content: 'Choose a public API, define endpoints, and handle loading/error states. Map response fields into a UI card layout.',
+        code: `// API integration checklist
+// 1) Build URL with encodeURIComponent
+// 2) Show loading spinner/text
+// 3) fetch() -> check res.ok -> parse JSON
+// 4) Validate shape (Array.isArray)
+// 5) Render results, handle empty state`
+      };
+    }
+    if (hasMarkdown) {
+      return {
+        title: 'Parse and preview Markdown',
+        content: 'Start with plain text preview, then progressively add support for headings, lists, links, and code blocks. Keep output safe.',
+        code: `// Pseudocode: minimal Markdown rendering
+// - Split into lines
+// - If line starts with "# " => <h1>
+// - If line starts with "- " => list item
+// - Else => paragraph
+// - Never set innerHTML from untrusted input without sanitizing`
+      };
+    }
+    if (hasAudio) {
+      return {
+        title: 'Implement playback and playlist logic',
+        content: 'Model a playlist array, current track index, and controls (next/prev, seek). Keep UI in sync with audio events.',
+        code: `// Core state
+const state = { tracks: [], idx: 0 };
+
+function loadTrack(idx) {
+  state.idx = idx;
+  audio.src = state.tracks[idx].url;
+  audio.play();
+  renderPlaylist();
+}
+
+audio.addEventListener('ended', () => loadTrack((state.idx + 1) % state.tracks.length));`
+      };
+    }
+    if (hasSecurity) {
+      return {
+        title: 'Add secure defaults and validation',
+        content: 'Validate inputs, avoid unsafe HTML injection, and ensure generated secrets are strong. Treat user input as untrusted.',
+        code: `// Password generator example approach
+const pools = {
+  upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  lower: 'abcdefghijklmnopqrstuvwxyz',
+  num: '0123456789',
+  sym: '!@#$%^&*()_+-=[]{};:,.?'
+};
+// Pick from selected pools, enforce at least 1 from each checked pool`
+      };
+    }
+    if (hasDate) {
+      return {
+        title: 'Handle time, intervals, and edge cases',
+        content: 'Compute diffs from timestamps, update UI on intervals, and handle invalid dates and timezone issues.',
+        code: `// Time diff formula
+diffMs = max(0, targetMs - nowMs)
+days = floor(diffMs / 86400000)
+hours = floor((diffMs % 86400000) / 3600000)
+minutes = floor((diffMs % 3600000) / 60000)
+seconds = floor((diffMs % 60000) / 1000)`
+      };
+    }
+    if (hasAnimation || hasCanvas) {
+      return {
+        title: 'Implement animation and state updates',
+        content: 'Choose CSS animations for simple UI effects, or requestAnimationFrame for Canvas-driven animations. Keep rendering smooth.',
+        code: `// requestAnimationFrame loop
+let last = performance.now();
+function frame(t) {
+  const dt = t - last; last = t;
+  update(dt);
+  draw();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);`
+      };
+    }
+    return {
+      title: 'Implement core functionality',
+      content: 'Add the main features one by one. After each feature, test it in the browser and keep your UI/state consistent.',
+      code: `// Procedure
+// 1) Pick one feature
+// 2) Update state/data model
+// 3) Update UI rendering
+// 4) Add event handlers
+// 5) Test + iterate`
+    };
+  })();
+
+  const persistenceOrExtension = (() => {
+    if (hasLocalStorage) {
+      return {
+        title: 'Add persistence (save/load)',
+        content: 'Store your state in localStorage. Make sure you can load existing data and handle version changes without breaking old users.',
+        code: `// Save/load example
+function saveState(state) {
+  localStorage.setItem('${slug}:state', JSON.stringify(state));
+}
+function loadState() {
+  const raw = localStorage.getItem('${slug}:state');
+  return raw ? JSON.parse(raw) : { items: [] };
+}`
+      };
+    }
+    if (hasValidation) {
+      return {
+        title: 'Add validation and user feedback',
+        content: 'Validate each input, show inline messages, and prevent submission when invalid. Keep error messages specific and actionable.',
+        code: `function validate(fields) {
+  const errors = {};
+  if (!fields.field1) errors.field1 = 'This field is required';
+  if (fields.field2 && fields.field2.length < 3) errors.field2 = 'Minimum 3 characters';
+  return errors;
+}`
+      };
+    }
+    if (hasApi) {
+      return {
+        title: 'Add caching and rate limiting',
+        content: 'Cache recent responses in memory/localStorage, debounce search input, and avoid sending repeated requests for the same query.',
+        code: `// Debounce helper
+function debounce(fn, ms) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), ms);
+  };
+}`
+      };
+    }
+    if (difficulty === 'advanced') {
+      return {
+        title: 'Architect for scale',
+        content: 'Split the code into modules, define stable interfaces, and add basic tests or invariant checks for the tricky parts.',
+        code: `// Suggested structure
+// /src
+//   /core   (state, reducers, domain)
+//   /ui     (rendering, components)
+//   /infra  (storage, api, sockets)
+//   index.js`
+      };
+    }
+    return {
+      title: 'Enhance features and UX',
+      content: 'Add improvements like keyboard shortcuts, better empty states, animations, and accessibility labels.',
+      code: `// Checklist
+// - empty states
+// - loading states
+// - keyboard navigation
+// - ARIA labels for controls`
+    };
+  })();
+
+  const base = [
+    {
+      title: 'Set up the project structure',
+      content: 'Create the folder and files. Keep it plain HTML/CSS/JS first; add tooling only if you need it.',
+      code: difficulty === 'advanced' ? advancedSetupCode : setupCode
+    },
+    {
+      title: 'Create the HTML structure',
+      content: 'Build the UI skeleton with meaningful IDs/classes so JavaScript can target elements predictably.',
+      code: htmlTemplate
+    },
+    {
+      title: 'Style with CSS (layout + components)',
+      content: 'Start with base styles, then add component styling for the project UI. Make sure it is responsive.',
+      code: cssTemplate
+    },
+    {
+      title: 'Plan state, data model, and event wiring',
+      content: `Define the state you will store and the main procedures for ${category}. Connect UI events to functions.`,
+      code: jsSkeleton
+    },
+    coreProcedure,
+    persistenceOrExtension,
+    {
+      title: 'Handle edge cases and validation',
+      content: 'Add input validation, empty states, error handling, and accessibility basics (labels, focus states).',
+      code: `// Edge-case checklist
+// - empty input
+// - network failure / timeout
+// - invalid data shape
+// - very large lists / performance
+// - keyboard accessibility`
+    },
+    {
+      title: 'Test, refactor, and document',
+      content: 'Test the main flows, remove duplication, and write a short README with setup + usage + screenshots.',
+      code: `// Quick manual test plan
+// - happy path: create/use core feature
+// - error path: invalid input / offline
+// - refresh: state restored correctly (if applicable)`
+    },
+    {
+      title: 'Deploy and share',
+      content: 'Deploy to GitHub Pages or Netlify. Include screenshots and a short usage guide.',
+      code: `# GitHub Pages (simple static site)
+git init
+git add .
+git commit -m "Initial commit"
+# Push to GitHub then enable Pages in repo settings`
+    },
+  ];
+
+  if (difficulty === 'beginner') return base.slice(0, 6);
+  if (difficulty === 'intermediate') return base.slice(0, 8);
+  return base.slice(0, 9);
+}
+
+function generateTips(project) {
+  const difficulty = String(project.difficulty || 'beginner');
+  const title = String(project.title || 'Project');
+  const tags = uniqStrings(project.tags || []);
+  const lowerTags = tags.map(t => t.toLowerCase());
+  const lowerTitle = title.toLowerCase();
+  const category = String(project.category || '').toLowerCase();
+
+  const tips = [
+    'Start small: get a minimal version working before adding extras',
+    'Keep functions short and focused; name variables clearly',
+    'Use browser DevTools (Console/Network/Elements) to debug faster',
+    'Test after every change to avoid hard-to-find bugs later',
+    `Write a short README explaining how to use "${title}"`,
+  ];
+
+  if (lowerTags.some(t => t.includes('api'))) {
+    tips.unshift('Design your UI for loading, empty, and error states from day one');
+  }
+  if (lowerTags.some(t => t.includes('localstorage'))) {
+    tips.unshift('Version your saved data shape so you can evolve it safely');
+  }
+  if (lowerTags.some(t => t.includes('validation')) || category.includes('form')) {
+    tips.unshift('Show validation errors next to the field and keep messages actionable');
+  }
+  if (lowerTitle.includes('password') || lowerTags.some(t => t.includes('security'))) {
+    tips.unshift('Avoid unsafe HTML injection; treat all user input as untrusted');
+  }
+  if (lowerTags.some(t => t.includes('websocket')) || lowerTags.some(t => t.includes('webrtc'))) {
+    tips.unshift('Log message/connection state during development, then remove noisy logs before final');
+  }
+
+  if (difficulty === 'advanced') {
+    tips.unshift('Add instrumentation/logging during development, then remove noisy logs before final');
+  }
+
+  return tips.slice(0, 6);
+}
+
+function enrichProject(project) {
+  if (!project) return project;
+
+  const hasObjectives = Array.isArray(project.objectives) && project.objectives.length > 0;
+  const hasSteps = Array.isArray(project.steps) && project.steps.length > 0;
+  const hasTips = Array.isArray(project.tips) && project.tips.length > 0;
+  const hasResources = Array.isArray(project.resources) && project.resources.length > 0;
+
+  return {
+    ...project,
+    objectives: hasObjectives ? project.objectives : generateObjectives(project),
+    steps: hasSteps ? project.steps : generateSteps(project),
+    tips: hasTips ? project.tips : generateTips(project),
+    resources: hasResources ? project.resources : resourcesFromTags(project.tags || []),
+  };
+}
+
+function withEnrichment(projects) {
+  return (projects || []).map(enrichProject);
+}
+
 // Export the data and utility functions
 const ProjectsAPI = {
-  getAllProjects: () => PROJECTS_DATA,
-  getProjectById: (id) => PROJECTS_DATA.find(project => project.id === id),
-  getBeginnerProjects: () => getProjectsByDifficulty('beginner'),
-  getIntermediateProjects: () => getProjectsByDifficulty('intermediate'),
-  getAdvancedProjects: () => getProjectsByDifficulty('advanced'),
-  getProjectsByCategory,
-  getProjectsBySearchTerm,
+  getAllProjects: () => withEnrichment(PROJECTS_DATA),
+  getProjectById: (id) => enrichProject(PROJECTS_DATA.find(project => project.id === id)),
+  getBeginnerProjects: () => withEnrichment(getProjectsByDifficulty('beginner')),
+  getIntermediateProjects: () => withEnrichment(getProjectsByDifficulty('intermediate')),
+  getAdvancedProjects: () => withEnrichment(getProjectsByDifficulty('advanced')),
+  getProjectsByDifficulty: (difficulty) => withEnrichment(getProjectsByDifficulty(difficulty)),
+  getProjectsByCategory: (category) => withEnrichment(getProjectsByCategory(category)),
+  getProjectsBySearchTerm: (term) => withEnrichment(getProjectsBySearchTerm(term)),
   getAllCategories,
-  getRelatedProjects
+  getRelatedProjects: (projectId, limit = 3) => withEnrichment(getRelatedProjects(projectId, limit))
 };

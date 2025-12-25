@@ -19,6 +19,9 @@
             position: relative;
             cursor: pointer;
         }
+        #userProfileSection {
+            display: none;
+        }
         .user-avatar {
             width: 32px;
             height: 32px;
@@ -93,7 +96,7 @@
                     </ul>
 
                     <!-- User profile section -->
-                    <div class="user-profile" id="userProfileSection" style="display: none;">
+                    <div class="user-profile" id="userProfileSection">
                         <div id="userInitials" class="user-avatar" onclick="toggleUserMenu()"></div>
                         <div id="userMenu" class="user-menu">
                             <div class="menu-item" onclick="navigateTo('dashboard.html')">Dashboard</div>
@@ -182,190 +185,16 @@
                 <div class="footer-col">
                     <h4>follow us</h4>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Add Firebase scripts -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCgz8plPo9kiZw0e5HrlBpGq0NrfT_6kkY",
-            authDomain: "pediascape-6b99b.firebaseapp.com",
-            projectId: "pediascape-6b99b",
-            storageBucket: "pediascape-6b99b.appspot.com",
-            messagingSenderId: "128341831687",
-            appId: "1:128341831687:web:e44b694935e7ab37013aa2",
-            measurementId: "G-J354SK3B93"
-        };
-
-        // Initialize Firebase
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                // Initialize Firebase if it hasn't been initialized already
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                
-                // Check authentication state
-                firebase.auth().onAuthStateChanged(user => {
-                    updateAuthUI(user);
-                });
-                
-                // Set up logout functionality
-                const logoutButton = document.getElementById('logoutButton');
-                if (logoutButton) {
-                    logoutButton.addEventListener('click', () => {
-                        firebase.auth().signOut()
-                            .then(() => {
-                                showToast('Logged out successfully', 'success');
-                                // Redirect to home page after logout
-                                setTimeout(() => {
-                                    window.location.href = 'newps1 copy.html';
-                                }, 1000);
-                            })
-                            .catch(error => {
-                                showToast('Error logging out: ' + error.message, 'error');
-                            });
-                    });
-                }
-                
-                // Close user menu when clicking outside
-                document.addEventListener('click', (event) => {
-                    const userAvatar = document.getElementById('userInitials');
-                    const userMenu = document.getElementById('userMenu');
-                    
-                    if (userMenu && userAvatar && event.target !== userAvatar && !userMenu.contains(event.target)) {
-                        userMenu.classList.remove('active');
-                    }
-                });
-                
-            } catch (error) {
-                console.error("Firebase initialization error:", error);
-            }
-        });
-
-        // Update UI based on authentication state
-        function updateAuthUI(user) {
-            const userProfileSection = document.getElementById('userProfileSection');
-            const guestProfileSection = document.getElementById('guestProfileSection');
-            const mobileAuthOption = document.getElementById('mobileAuthOption');
-            
-            if (user) {
-                // User is signed in
-                userProfileSection.style.display = 'flex';
-                guestProfileSection.style.display = 'none';
-                
-                // Update mobile menu option
-                if (mobileAuthOption) {
-                    mobileAuthOption.textContent = 'DASHBOARD';
-                    mobileAuthOption.onclick = () => navigateTo('dashboard.html');
-                }
-                
-                // Set user initials in avatar
-                const userInitials = document.getElementById('userInitials');
-                if (userInitials) {
-                    // Try to get user's display name first
-                    if (user.displayName) {
-                        const nameParts = user.displayName.split(' ');
-                        if (nameParts.length > 1) {
-                            // First letter of first and last name
-                            userInitials.textContent = nameParts[0][0] + nameParts[nameParts.length - 1][0];
-                        } else {
-                            // First letter of display name
-                            userInitials.textContent = user.displayName[0];
-                        }
-                    } 
-                    // Fallback to email
-                    else if (user.email) {
-                        userInitials.textContent = user.email[0].toUpperCase();
-                    } 
-                    // Last resort
-                    else {
-                        userInitials.textContent = 'U';
-                    }
-                }
-                
-                console.log("User is signed in:", user.email);
-            } else {
-                // User is signed out
-                userProfileSection.style.display = 'none';
-                guestProfileSection.style.display = 'flex';
-                
-                // Update mobile menu option
-                if (mobileAuthOption) {
-                    mobileAuthOption.textContent = 'PROFILE';
-                    mobileAuthOption.onclick = redirectToLogin;
-                }
-                
-                console.log("User is signed out");
-            }
-        }
-
-        // Toggle user menu dropdown
-        function toggleUserMenu() {
-            const userMenu = document.getElementById('userMenu');
-            if (userMenu) {
-                userMenu.classList.toggle('active');
-            }
-        }
-
-        // Function to toggle mobile dropdown menu
-        function toggleDropdown() {
-            const dropdown = document.querySelector('.dropdown');
-            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        // Function to handle redirection to the login page
-        function redirectToLogin() {
-            window.location.href = 'login.html';
-        }
-
-        // Function to handle navigation to specific pages
-        function navigateTo(page) {
-            window.location.href = page;
-        }
-
-        // Function to show toast notification
-        function showToast(message, type = 'success') {
-            // Remove existing toast if any
-            const existingToast = document.getElementById('toast');
-            if (existingToast) {
-                document.body.removeChild(existingToast);
-            }
-            
-            // Create new toast
-            const toast = document.createElement('div');
-            toast.id = 'toast';
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            
-            document.body.appendChild(toast);
-            
-            // Show toast with animation
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
-            
-            // Hide after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    if (document.body.contains(toast)) {
-                        document.body.removeChild(toast);
-                    }
-                }, 300);
-            }, 3000);
-        }
-    </script>
-</body>
+    <script type="module" src="./script/auth-ui.js"></script>
+  </body>
 </html>

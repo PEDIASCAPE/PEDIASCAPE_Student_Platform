@@ -784,6 +784,54 @@
             color: #ccc;
         }
 
+        .code-block {
+            margin-left: 35px;
+            margin-top: 12px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .code-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background-color: #111;
+            border-bottom: 1px solid #333;
+            flex-wrap: wrap;
+        }
+
+        .code-toolbar button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            background-color: #1f1f1f;
+            color: #fff;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .code-toolbar button:hover {
+            border-color: #fb5e3a;
+        }
+
+        .step-code {
+            margin: 0;
+            padding: 12px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .code-block.is-collapsed .step-code {
+            display: none;
+        }
+
         .project-progress {
             background-color: #2a2a2a;
             border-radius: 8px;
@@ -1112,7 +1160,7 @@
                             <div class="user-avatar" id="userInitials" onclick="toggleUserMenu()"></div>
                             <!-- User menu dropdown -->
                             <div class="user-menu" id="userMenu">
-                                <div class="user-menu-item" onclick="navigateTo('dashboard.html')">Dashboard</div>
+                                <div class="user-menu-item" onclick="navigateTo('../Dashboard.html')">Dashboard</div>
                                 <div class="user-menu-item" id="logoutButton">Logout</div>
                             </div>
                         </div>
@@ -1142,8 +1190,8 @@
                     <div class="search-container">
                         <div class="search-box">
                             <input type="text" id="search-input" placeholder="Search projects...">
-                            <button id="search-button">
-                                <i class="fas fa-search"></i>
+                            <button id="search-button" title="Search projects" aria-label="Search projects">
+                                <i class="fas fa-search" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
@@ -1208,11 +1256,11 @@
                         <div class="view-header">
                             <h2>All Projects</h2>
                             <div class="view-controls">
-                                <button id="grid-view-btn" class="view-btn active">
-                                    <i class="fas fa-th-large"></i>
+                                <button id="grid-view-btn" class="view-btn active" title="Grid view" aria-label="Grid view">
+                                    <i class="fas fa-th-large" aria-hidden="true"></i>
                                 </button>
-                                <button id="list-view-btn" class="view-btn">
-                                    <i class="fas fa-list"></i>
+                                <button id="list-view-btn" class="view-btn" title="List view" aria-label="List view">
+                                    <i class="fas fa-list" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
@@ -1669,11 +1717,11 @@
         });
     </script> -->
    
-    <script src="js/navbar.js"></script>
+    <script type="module" src="js/navbar.js"></script>
     <script src="js/utils/storage.js"></script>
     <script src="js/data/projects.js"></script>
     <script src="js/components/projectList.js"></script>
-    <script src="js/components/projectDetails.js"></script>
+    <script src="js/components/projectDetails.js?v=20251224"></script>
     <script src="js/components/userProgress.js"></script>
     <script src="js/components/comments.js"></script>
     <script src="js/components/filters.js"></script>

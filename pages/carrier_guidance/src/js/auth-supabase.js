@@ -1,53 +1,47 @@
-// Firebase Authentication and User Management for Career Path Finder
-// This file handles user authentication and dashboard functionality
 
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyCX0hI8o32hBFUchmEwtyeQLbIezmLyauI",
-    authDomain: "pediascape-6b99b.firebaseapp.com",
-    projectId: "pediascape-6b99b",
-    storageBucket: "pediascape-6b99b.appspot.com",
-    messagingSenderId: "128341831687",
-    appId: "1:128341831687:web:e44b694935e7ab37013aa2",
-    measurementId: "G-J354SK3B93"
-};
+import { supabase } from '../../../script/supabase-client.js';
 
 // Global variables
 let currentUser = null;
 let userAssessmentHistory = [];
 
-// Initialize Firebase and set up authentication listeners
-function initializeAuth() {
+// Initialize Auth
+async function initializeAuth() {
     try {
-        // Initialize Firebase if not already initialized
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        
         // Check authentication state
-        firebase.auth().onAuthStateChanged(user => {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
             currentUser = user;
             updateAuthUI(user);
-            
-            if (user) {
-                loadUserAssessmentHistory();
+        } else {
+            updateAuthUI(null);
+        }
+
+        // Listen for auth changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT') {
+                currentUser = null;
+                updateAuthUI(null);
+            } else if (session?.user) {
+                currentUser = session.user;
+                updateAuthUI(currentUser);
             }
         });
-        
-        // Set up event listeners
+
+        // Set up logout button
         const logoutButton = document.getElementById('logoutButton');
         if (logoutButton) {
-            logoutButton.addEventListener('click', () => {
-                firebase.auth().signOut()
-                    .then(() => {
-                        showToast('Logged out successfully', 'success');
-                    })
-                    .catch(error => {
-                        showToast('Error logging out: ' + error.message, 'error');
-                    });
+            logoutButton.addEventListener('click', async () => {
+                const { error } = await supabase.auth.signOut();
+                if (error) {
+                    showToast('Error logging out: ' + error.message, 'error');
+                } else {
+                    showToast('Logged out successfully', 'success');
+                }
             });
         }
-        
+
         // Click outside user menu to close it
         document.addEventListener('click', (event) => {
             const userMenu = document.getElementById('userMenu');
@@ -59,10 +53,10 @@ function initializeAuth() {
                 userMenu.classList.remove('active');
             }
         });
-        
+
     } catch (error) {
-        showToast("Error connecting to database. Please try again later.", "error");
-        console.error("Firebase initialization error:", error);
+        console.error("Auth initialization error:", error);
+        showToast("Error initializing authentication", "error");
     }
 }
 
@@ -83,7 +77,7 @@ function updateAuthUI(user) {
     
     if (user) {
         // User is signed in
-        showToast('Logged in as ' + user.email, 'success');
+        // showToast('Logged in as ' + user.email, 'success'); // Optional: prevent toast spam on page load
         
         // Update profile display - hide profile.svg and show user avatar
         if (profileLogo) profileLogo.style.display = 'none';
@@ -110,75 +104,15 @@ function updateAuthUI(user) {
 }
 
 // Save assessment results to user's history
-function saveAssessmentResults(results) {
-    if (!results) return; // Don't save if results are empty
-    
-    if (!currentUser) {
-        // If not logged in, store temporarily in local storage
-        const savedResults = JSON.parse(localStorage.getItem('tempAssessmentResults') || '[]');
-        savedResults.push({
-            date: new Date().toISOString(),
-            results: results
-        });
-        localStorage.setItem('tempAssessmentResults', JSON.stringify(savedResults));
-        return;
-    }
-    
-    // If logged in, save to Firebase
-    try {
-        const assessmentData = {
-            userId: currentUser.uid,
-            email: currentUser.email,
-            date: firebase.firestore.FieldValue.serverTimestamp(),
-            results: results
-        };
-        
-        firebase.firestore().collection('assessmentHistory').add(assessmentData)
-            .then(() => {
-                console.log('Assessment results saved successfully');
-                loadUserAssessmentHistory(); // Refresh the history
-            })
-            .catch(error => {
-                console.error('Error saving assessment results:', error);
-                showToast('Error saving results. Please try again.', 'error');
-            });
-    } catch (error) {
-        console.error('Error in saveAssessmentResults:', error);
-        showToast('Error saving results. Please try again.', 'error');
-    }
+async function saveAssessmentResults(results) {
+    return;
 }
 
 // Load user's assessment history
-function loadUserAssessmentHistory() {
-    if (!currentUser) return;
-    
-    try {
-        firebase.firestore().collection('assessmentHistory')
-            .where('userId', '==', currentUser.uid)
-            .orderBy('date', 'desc')
-            .get()
-            .then(querySnapshot => {
-                userAssessmentHistory = [];
-                querySnapshot.forEach(doc => {
-                    const data = doc.data();
-                    userAssessmentHistory.push({
-                        id: doc.id,
-                        date: data.date?.toDate() || new Date(), // Handle case when date is undefined
-                        results: data.results
-                    });
-                });
-                
-                // If we're on the dashboard page, display the history
-                if (window.location.href.includes('dashboard.html')) {
-                    displayAssessmentHistory();
-                }
-            })
-            .catch(error => {
-                console.error('Error loading assessment history:', error);
-                showToast('Error loading assessment history', 'error');
-            });
-    } catch (error) {
-        console.error('Error in loadUserAssessmentHistory:', error);
+async function loadUserAssessmentHistory() {
+    userAssessmentHistory = [];
+    if (window.location.href.includes('dashboard.html')) {
+        displayAssessmentHistory();
     }
 }
 
@@ -389,6 +323,10 @@ function showToast(message, type = 'success') {
 
 // Redirect to login page
 function redirectToLogin() {
+    if (currentUser) {
+        window.location.href = '../Dashboard.html';
+        return;
+    }
     window.location.href = '../login.html';
 }
 

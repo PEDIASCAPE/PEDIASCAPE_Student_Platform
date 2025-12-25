@@ -3,7 +3,7 @@
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
         // Your Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyCgz8plPo9kiZw0e5HrlBpGq0NrfT_6kkY",
+            apiKey: "AIzaSyCX0hI8o32hBFUchmEwtyeQLbIezmLyauI",
             authDomain: "pediascape-6b99b.firebaseapp.com",
             projectId: "pediascape-6b99b",
             storageBucket: "pediascape-6b99b.firebasestorage.app",

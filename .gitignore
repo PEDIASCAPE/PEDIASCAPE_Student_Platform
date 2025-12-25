@@ -65,5 +65,8 @@ node_modules/
 # dotenv environment variables file
 .env
 
+# Large local assets / bulk uploads
+bulk_upload/
+
 # dataconnect generated files
 .dataconnect

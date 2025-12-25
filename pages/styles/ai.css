@@ -1,17 +1,16 @@
 /* PS AI Specific Styles */
 body{
     background-color: #000;
-    height: 100vh;
     margin: 0;
-    
+    min-height: 100vh;
+    height: auto;
+    display: flex;
+    flex-direction: column;
 }
 .ai-main {
-    top: 30px;
-    position: relative;
+    margin-top: 30px;
     padding: 30px 20px;
-    /* min-height: calc(100vh - 1050px); */
-    height: 52rem;
-    
+    flex: 1;
     background-color: #000000;
     z-index: 0;
 }
@@ -104,6 +103,39 @@ body{
     max-width: 80%;
     padding: 12px 15px;
     border-radius: 15px;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.5;
+}
+
+.message-content p {
+    margin: 0 0 10px 0;
+}
+
+.message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.message-content ul,
+.message-content ol {
+    margin: 8px 0 12px 22px;
+}
+
+.message-content ul {
+    list-style: disc;
+}
+
+.message-content ol {
+    list-style: decimal;
+}
+
+.message-content li {
+    margin: 6px 0;
+}
+
+.message-content h3,
+.message-content h4 {
+    margin: 12px 0 8px 0;
+    color: #333;
 }
 
 .message.user .message-content {
@@ -195,7 +227,7 @@ select {
 }
 
 #roadmap-loading {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     gap: 20px;
@@ -219,6 +251,7 @@ select {
 #roadmap-content {
     margin-top: 30px;
     font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
 }
 
 #roadmap-content h2 {
@@ -245,6 +278,14 @@ select {
 #roadmap-content ol {
     margin-left: 25px;
     margin-bottom: 15px;
+}
+
+#roadmap-content ul {
+    list-style: disc;
+}
+
+#roadmap-content ol {
+    list-style: decimal;
 }
 
 #roadmap-content li {
@@ -295,5 +336,3 @@ select {
     justify-content: space-between;
     margin-top: 30px;
 }
-
-

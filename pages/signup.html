@@ -226,12 +226,29 @@
 
         .signup .LOGIN-BUTTON {
             position: absolute;
-            width: 166px;
-            height: 68px;
+            width: 140px;
+            height: 48px;
             top: 615px;
             left: 379px;
             background-color: #000000;
             border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .signup .LOGIN-BUTTON img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .signup input[type="email"],
+        .signup input[type="password"] {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .signup input::placeholder {
+            color: #b1aaa8;
         }
         
     </style>

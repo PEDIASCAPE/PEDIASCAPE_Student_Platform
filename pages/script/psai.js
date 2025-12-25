@@ -1,4 +1,93 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+    const hostname = window.location.hostname || '127.0.0.1';
+    const origin = (window.location.origin && window.location.origin !== 'null')
+        ? window.location.origin
+        : `${protocol}//${hostname}:3000`;
+    const basePath = (typeof window.location.pathname === 'string' && window.location.pathname.indexOf('/PEDIASCAPE_Student_Platform-main/') === 0)
+        ? '/PEDIASCAPE_Student_Platform-main'
+        : '';
+    
+    function uniqueStrings(arr) {
+        return Array.from(new Set((arr || []).filter(Boolean)));
+    }
+
+    function buildBackendOrigins() {
+        const list = [origin];
+        const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+
+        if (isLocalhost) {
+            const ports = ['3000', '3001'];
+            const hosts = uniqueStrings([hostname, hostname === '127.0.0.1' ? 'localhost' : '127.0.0.1', 'localhost']);
+            for (const h of hosts) {
+                for (const p of ports) {
+                    list.push(`${protocol}//${h}:${p}`);
+                }
+            }
+        }
+
+        return uniqueStrings(list);
+    }
+
+    const backendOrigins = buildBackendOrigins();
+
+    async function postChat(body) {
+        const candidates = [];
+        for (const backendOrigin of backendOrigins) {
+            if (basePath) candidates.push(`${backendOrigin}${basePath}/api/chatbot/chat`);
+            candidates.push(`${backendOrigin}/api/chatbot/chat`);
+            candidates.push(`${backendOrigin}/chatbot/chat`);
+        }
+        let lastError;
+        for (const url of uniqueStrings(candidates)) {
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
+                if (res.ok) return res;
+                lastError = await safeReadError(res);
+            } catch (e) {
+                lastError = e;
+            }
+        }
+        if (lastError) throw lastError instanceof Error ? lastError : new Error('Failed to get response');
+        throw new Error('Failed to get response');
+    }
+    
+    async function postRoadmap(body) {
+        const candidates = [];
+        for (const backendOrigin of backendOrigins) {
+            if (basePath) candidates.push(`${backendOrigin}${basePath}/api/roadmap`);
+            candidates.push(`${backendOrigin}/api/roadmap`);
+        }
+        let lastError;
+        for (const url of uniqueStrings(candidates)) {
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
+                if (res.ok) return res;
+                lastError = await safeReadError(res);
+            } catch (e) {
+                lastError = e;
+            }
+        }
+        if (lastError) throw lastError instanceof Error ? lastError : new Error('Failed to get response');
+        throw new Error('Failed to get response');
+    }
+
+    async function safeReadError(res) {
+        try {
+            const data = await res.json();
+            if (data && typeof data.error === 'string' && data.error.trim() !== '') return new Error(data.error);
+        } catch (_) {}
+        return new Error('Failed to get response');
+    }
+
     // Tab switching functionality
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -22,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chat-messages');
     const questionForm = document.getElementById('question-form');
     const questionInput = document.getElementById('question-input');
+    const conversationHistory = [];
     
     questionForm.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -39,17 +129,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const loadingId = addMessage('bot', 'Thinking...');
 
         try {
-            // Send request to API
-            const response = await fetch('http://localhost:3000/api/answer', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ question }),
-            });
+            // Send request to Hugging Face-backed PSAI Chatbot
+            conversationHistory.push({ role: 'user', content: question });
+            const response = await postChat({ message: question, conversationHistory });
 
             if (!response.ok) {
-                throw new Error('Failed to get response');
+                let errorMessage = 'Failed to get response';
+                try {
+                    const errorData = await response.json();
+                    if (errorData && typeof errorData.error === 'string' && errorData.error.trim() !== '') {
+                        errorMessage = errorData.error;
+                    }
+                } catch (_) {
+                }
+                throw new Error(errorMessage);
             }
 
             const data = await response.json();
@@ -58,7 +151,11 @@ document.addEventListener('DOMContentLoaded', function() {
             removeMessage(loadingId);
 
             // Add bot response to chat with enhanced formatting
-            addFormattedMessage('bot', data.answer);
+            const botText = (data && data.message) ? data.message : (data && data.answer) ? data.answer : '';
+            addFormattedMessage('bot', botText);
+            if (botText) {
+                conversationHistory.push({ role: 'assistant', content: botText });
+            }
         } catch (error) {
             console.error('Error:', error);
 
@@ -66,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
             removeMessage(loadingId);
 
             // Add error message
-            addMessage('bot', 'Sorry, I encountered an error processing your request. Please try again.');
+            addMessage('bot', error && error.message ? error.message : 'Sorry, I encountered an error processing your request. Please try again.');
         }
 
         // Scroll to the bottom of the chat
@@ -184,17 +281,18 @@ document.addEventListener('DOMContentLoaded', function() {
         roadmapContent.innerHTML = '';
 
         try {
-            // Send request to API
-            const response = await fetch('http://localhost:3000/api/roadmap', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ topic, level, timeframe }),
-            });
+            const response = await postRoadmap({ topic, level, timeframe });
 
             if (!response.ok) {
-                throw new Error('Failed to get response');
+                let errorMessage = 'Failed to get response';
+                try {
+                    const errorData = await response.json();
+                    if (errorData && typeof errorData.error === 'string' && errorData.error.trim() !== '') {
+                        errorMessage = errorData.error;
+                    }
+                } catch (_) {
+                }
+                throw new Error(errorMessage);
             }
 
             const data = await response.json();
@@ -211,7 +309,8 @@ document.addEventListener('DOMContentLoaded', function() {
             roadmapLoading.style.display = 'none';
 
             // Display error message
-            roadmapContent.innerHTML = '<div class="error-message">Sorry, I encountered an error generating your roadmap. Please try again.</div>';
+            const message = error && error.message ? error.message : 'Sorry, I encountered an error generating your roadmap. Please try again.';
+            roadmapContent.innerHTML = `<div class="error-message">${message}</div>`;
         }
     });
     

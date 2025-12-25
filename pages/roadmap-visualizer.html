@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Roadmap Visualizer</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.4/dagre-d3.min.js"></script>
@@ -39,7 +40,81 @@
       box-shadow: 0 2px 4px rgba(243, 55, 66, 0.5);
       background-image: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    #certificationsBtn {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      z-index: 150;
+      padding: 8px 12px;
+      font-size: 16px;
+      border: 1px solid rgba(251, 94, 58, 0.7);
+      border-radius: 6px;
+      font-family: 'Tilt Warp', cursive;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(243, 55, 66, 0.35);
+    }
+
+    #certificationsBtn:hover {
+      border-color: rgba(255, 255, 255, 0.75);
+    }
+
+    #certificationsMenu {
+      position: absolute;
+      right: 20px;
+      bottom: 64px;
+      z-index: 150;
+      display: none;
+      width: min(420px, calc(100vw - 40px));
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.92);
+      border: 1px solid rgba(251, 94, 58, 0.45);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+
+    #certificationsMenu.show {
+      display: block;
+    }
+
+    .cert-link {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      margin: 8px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cert-link:hover {
+      border-color: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.10);
+    }
+
+    @media (max-width: 520px) {
+      #certificationsBtn {
+        right: 20px;
+        bottom: 20px;
+      }
+
+      #certificationsMenu {
+        right: 20px;
+        bottom: 64px;
+      }
     }
   
     #sidebar {
@@ -72,7 +147,7 @@
   
     .node text {
       fill: white;
-      font-size: 14px;
+      font-size: 13px;
       font-family: 'Montserrat', sans-serif;
     }
   
@@ -106,6 +181,7 @@
       font-size: 20px;
       background-image: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       border-bottom: 1px solid white;
       padding-bottom: 10px;
@@ -143,6 +219,7 @@
       margin-bottom: 5px;
       background-image: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
   
@@ -152,6 +229,7 @@
       background-color: #ffffff;
       /* background-image: linear-gradient(101deg, #F33742, #FCB111, #4382EE, #B840B4, #FB9F18); */
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
   
@@ -185,8 +263,8 @@
       padding: 10px 20px;
       border-radius: 10px;
       background: linear-gradient(101deg, #F33742 20.15%, #FCB111 39.15%, #4382EE 58.16%, #B840B4 77.16%, #FB9F18 96.16%);
-      background-clip: text;
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       text-align: center;
     }
@@ -209,7 +287,7 @@
 
 <div id="roadmapTitle" class="roadmap-title"></div>
 
-<select id="domainSelector">
+<select id="domainSelector" aria-label="Select roadmap domain">
   <option value="webdev.json">Web Development</option>
   <option value="ai.json">Artificial Intelligence</option>
   <option value="datascience.json">Data Science</option>
@@ -220,6 +298,9 @@
   <option value="blockchain.json">Blockchain</option>
   <option value="uiux.json">UI/UX Design</option>
 </select>
+
+<button id="certificationsBtn" type="button">Certifications</button>
+<div id="certificationsMenu" aria-label="Certification links"></div>
 
 <div id="loading">Loading roadmap...</div>
 
@@ -255,6 +336,81 @@ const closeBtn = document.getElementById("closeBtn");
 const loading = document.getElementById("loading");
 const domainSelector = document.getElementById("domainSelector");
 const roadmapTitle = document.getElementById("roadmapTitle");
+const certificationsBtn = document.getElementById("certificationsBtn");
+const certificationsMenu = document.getElementById("certificationsMenu");
+
+const CERTIFICATION_LINKS = {
+  "webdev.json": [
+    { label: "Meta Full-Stack Developer (Coursera)", url: "https://www.coursera.org/specializations/meta-full-stack-developer" }
+  ],
+  "ai.json": [
+    { label: "AI for Everyone (Coursera)", url: "https://www.coursera.org/learn/ai-for-everyone" }
+  ],
+  "datascience.json": [
+    { label: "Machine Learning (Coursera)", url: "https://www.coursera.org/learn/machine-learning" },
+    { label: "IBM Data Analyst (Coursera)", url: "https://www.coursera.org/professional-certificates/ibm-data-analyst" }
+  ],
+  "mobile.json": [
+    { label: "Intro to Android Mobile App Development (Coursera)", url: "https://www.coursera.org/learn/introduction-to-android-mobile-application-development" }
+  ],
+  "devops.json": [
+    { label: "AI Cloud Computing & DevOps Course (IITM Pravartak)", url: "https://sl-courses.iitmpravartak.org.in/ai-cloud-computing-devops-course?utm_source=google&utm_medium=cpc&utm_term=devops%20certification%20course&utm_content=23316700695-196316117984-786546224845&utm_device=c&utm_campaign=Search-TechCluster-CCloudDevops-PG-IITM-IN-Main-AllDevice-IITMdomain-adgroup-IITM-CloudDevops&gad_source=1&gad_campaignid=23316700695&gbraid=0AAAAADt9AXPGSLdwBhxIJlSLQdpkLc9j-&gclid=CjwKCAiAu67KBhAkEiwAY0jAlY24HYmCw-m9IpC4GXQ_SMaeeHPRa9TYop_LgRpX8VWDYTuL9u8hYBoCU4QQAvD_BwE" }
+  ],
+  "cybersecurity.json": [
+    { label: "Cyber Security Courses (Simplilearn)", url: "https://www.simplilearn.com/search-new?new_item_type=course%2Cbundle&tag=cyber%20security" }
+  ],
+  "gamedev.json": [
+    { label: "Game Development Courses (Udemy)", url: "https://www.udemy.com/courses/development/game-development/?utm_campaign=Search_Keyword_Beta_Prof_la.ES_cc.ROW-Spanish&utm_source=google&utm_medium=paid-search&portfolio=ROW-Spanish&utm_audience=mx&utm_tactic=nb&utm_term=curso%20de%20dise%C3%B1o%20de%20juegos&utm_content=g&funnel=&test=&gad_source=1&gad_campaignid=21487757259&gbraid=0AAAAADROdO1H1vnEOH_PkoGE96SOUrqJT&gclid=CjwKCAiAu67KBhAkEiwAY0jAlbH945eUePu2of0TexhUBDMgqMEgG1cYn1KzkU4BcqVfDM58Mlgc_xoC9C0QAvD_BwE" }
+  ],
+  "blockchain.json": [
+    { label: "Blockchain Certifications (AI Certs)", url: "https://www.aicerts.ai/search/?q=blockchain&practice_area=" }
+  ],
+  "uiux.json": [
+    { label: "UI/UX Courses (IITM Pravartak)", url: "https://digitalskills.iitmpravartak.org.in/courses.php?utm_source=chatgpt.com" }
+  ]
+};
+
+function hideCertificationsMenu() {
+  if (certificationsMenu) certificationsMenu.classList.remove("show");
+}
+
+function renderCertificationsMenu(file) {
+  const links = CERTIFICATION_LINKS[file] || [];
+  if (!certificationsBtn || !certificationsMenu) return;
+
+  certificationsMenu.innerHTML = "";
+  if (!links.length) {
+    certificationsBtn.style.display = "none";
+    hideCertificationsMenu();
+    return;
+  }
+
+  certificationsBtn.style.display = "";
+  links.forEach((l) => {
+    const a = document.createElement("a");
+    a.className = "cert-link";
+    a.href = l.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = l.label;
+    certificationsMenu.appendChild(a);
+  });
+}
+
+if (certificationsBtn && certificationsMenu) {
+  certificationsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    certificationsMenu.classList.toggle("show");
+  });
+
+  certificationsMenu.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+  document.addEventListener("click", () => {
+    hideCertificationsMenu();
+  });
+}
 
 // Setup zoom behavior
 const zoom = d3.zoom().on("zoom", (event) => {
@@ -337,6 +493,64 @@ function showResources(node) {
   }
 }
 
+function wrapNodeLabel(label, maxCharsPerLine = 18, maxLines = 3) {
+  const text = String(label || "").trim();
+  if (!text) return "";
+
+  const words = text.split(/\s+/g);
+  const lines = [];
+  let current = "";
+
+  const pushCurrent = () => {
+    if (current) lines.push(current);
+    current = "";
+  };
+
+  const pushWord = (word) => {
+    if (!word) return;
+    if (!current) {
+      current = word;
+      return;
+    }
+    if ((current + " " + word).length <= maxCharsPerLine) {
+      current = current + " " + word;
+      return;
+    }
+    pushCurrent();
+    current = word;
+  };
+
+  for (const rawWord of words) {
+    const word = String(rawWord || "");
+    if (word.length <= maxCharsPerLine) {
+      pushWord(word);
+      continue;
+    }
+
+    if (current) pushCurrent();
+
+    for (let i = 0; i < word.length; i += maxCharsPerLine) {
+      lines.push(word.slice(i, i + maxCharsPerLine));
+      if (lines.length >= maxLines) break;
+    }
+
+    current = "";
+    if (lines.length >= maxLines) break;
+  }
+
+  if (current && lines.length < maxLines) lines.push(current);
+
+  if (lines.length > maxLines) {
+    return lines.slice(0, maxLines).join("\n").replace(/\s+$/g, "") + "…";
+  }
+
+  if (lines.length === maxLines && words.join(" ").length > lines.join(" ").length) {
+    lines[maxLines - 1] = lines[maxLines - 1].replace(/\s+$/g, "") + "…";
+  }
+
+  return lines.join("\n");
+}
+
 // Render the roadmap
 function renderRoadmap(roadmap) {
   // Store the current roadmap data
@@ -361,14 +575,18 @@ function renderRoadmap(roadmap) {
   // Add nodes to the graph
   roadmap.nodes.forEach(node => {
     console.log("Adding node to graph:", node.id, node.label);
-    
+    const wrappedLabel = wrapNodeLabel(node.label, 18, 3);
+    const lineCount = Math.max(1, wrappedLabel.split("\n").length);
+    const nodeWidth = 190;
+    const nodeHeight = 22 + lineCount * 16;
+
     g.setNode(node.id, {
-      label: node.label,
+      label: wrappedLabel,
       rx: 5, 
       ry: 5,
       class: "node",
-      width: 150,
-      height: 40
+      width: nodeWidth,
+      height: nodeHeight
     });
   });
 
@@ -396,57 +614,17 @@ function renderRoadmap(roadmap) {
     d3.zoomIdentity.translate(xCenterOffset, yCenterOffset)
   );
 
-  // Add custom data attributes to nodes after rendering
-  inner.selectAll(".node").each(function() {
-    const nodeElement = d3.select(this);
-    
-    // Get the text content which should be the node label
-    const nodeLabel = nodeElement.select("text").text().trim();
-    
-    // Find the corresponding node in the roadmap data
-    const matchingNode = roadmap.nodes.find(n => n.label === nodeLabel);
-    
-    if (matchingNode) {
-      // Store node data directly as a custom attribute
-      nodeElement
-        .attr("data-node-id", matchingNode.id)
-        .attr("data-node-index", roadmap.nodes.indexOf(matchingNode));
-    }
-  });
-
   // Add click handlers to nodes
-  inner.selectAll(".node").on("click", function(event) {
+  inner.selectAll(".node").on("click", function(event, nodeId) {
     event.stopPropagation();
-    
-    // Get the node data directly from our custom attribute
-    const nodeElement = d3.select(this);
-    const nodeId = nodeElement.attr("data-node-id");
-    const nodeIndex = nodeElement.attr("data-node-index");
-    
-    if (nodeId) {
-      // Find the node in the roadmap data
-      const node = roadmap.nodes.find(n => n.id === nodeId);
-      
-      if (node) {
-        showResources(node);
-      }
-    } else if (nodeIndex && !isNaN(parseInt(nodeIndex))) {
-      // Fallback to index-based lookup
-      const index = parseInt(nodeIndex);
-      const node = roadmap.nodes[index];
-      
-      if (node) {
-        showResources(node);
-      }
-    } else {
-      // Last resort: Match by label
-      const nodeLabel = nodeElement.select("text").text().trim();
-      const node = roadmap.nodes.find(n => n.label === nodeLabel);
-      
-      if (node) {
-        showResources(node);
-      }
-    }
+
+    const rawId =
+      (typeof nodeId === "string" && nodeId) ||
+      d3.select(this).attr("id") ||
+      "";
+    const id = String(rawId).replace(/^node-/, "");
+    const node = id ? roadmap.nodes.find(n => n.id === id) : null;
+    if (node) showResources(node);
   });
   
   // Click on SVG background closes sidebar
@@ -1069,6 +1247,9 @@ function loadRoadmap(file) {
   
   // Update selector to match current roadmap
   domainSelector.value = file;
+
+  renderCertificationsMenu(file);
+  hideCertificationsMenu();
   
   // For this demo, we'll use our example data
   if (exampleData[file]) {

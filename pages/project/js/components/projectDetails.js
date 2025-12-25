@@ -6,6 +6,7 @@ class ProjectDetails {
     this.detailsContainer = document.getElementById('project-details-view');
     this.detailsTemplate = document.getElementById('project-details-template');
     this.currentProjectId = null;
+    this._codeBlockSeq = 0;
     
     this.initEventListeners();
   }
@@ -19,9 +20,200 @@ class ProjectDetails {
       if (e.target.closest('.back-btn')) {
         this.closeProjectDetails();
       }
+
+      const collapseBtn = e.target.closest('.code-collapse-btn');
+      if (collapseBtn) {
+        const codeBlock = collapseBtn.closest('.code-block');
+        const pre = codeBlock ? codeBlock.querySelector('pre.step-code') : null;
+        if (!codeBlock || !pre) return;
+
+        const nextCollapsed = !codeBlock.classList.contains('is-collapsed');
+        codeBlock.classList.toggle('is-collapsed', nextCollapsed);
+        collapseBtn.innerHTML = nextCollapsed
+          ? '<i class="fas fa-chevron-down"></i><span>Show code</span>'
+          : '<i class="fas fa-chevron-up"></i><span>Hide code</span>';
+        return;
+      }
+
+      const modeBtn = e.target.closest('.code-mode-btn');
+      if (modeBtn) {
+        const codeBlock = modeBtn.closest('.code-block');
+        const pre = codeBlock ? codeBlock.querySelector('pre.step-code') : null;
+        if (!codeBlock || !pre) return;
+
+        const currentMode = pre.dataset.mode || 'full';
+        const nextMode = currentMode === 'full' ? 'pseudo' : 'full';
+        pre.dataset.mode = nextMode;
+        pre.textContent = nextMode === 'full' ? (pre._fullCode || '') : (pre._pseudoCode || '');
+        modeBtn.innerHTML = nextMode === 'full'
+          ? '<i class="fas fa-code"></i><span>Full code</span>'
+          : '<i class="fas fa-list"></i><span>Pseudocode</span>';
+        return;
+      }
+
+      const downloadBtn = e.target.closest('.code-download-btn');
+      if (downloadBtn) {
+        const codeBlock = downloadBtn.closest('.code-block');
+        const pre = codeBlock ? codeBlock.querySelector('pre.step-code') : null;
+        if (!codeBlock || !pre) return;
+
+        const mode = pre.dataset.mode || 'full';
+        const content = pre.textContent || '';
+        const projectTitle = pre.dataset.projectTitle || 'project';
+        const stepIndex = pre.dataset.stepIndex || 'step';
+        const ext = mode === 'pseudo' ? 'txt' : this._guessCodeExtension(pre._fullCode || content);
+        const filename = `${this._slugify(projectTitle)}-${stepIndex}-${mode}.${ext}`;
+
+        this._downloadText(content, filename);
+        return;
+      }
     });
   }
-  
+
+  _downloadText(text, filename) {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+
+    window.setTimeout(() => {
+      URL.revokeObjectURL(url);
+      a.remove();
+    }, 0);
+  }
+
+  _slugify(value) {
+    return String(value || '')
+      .toLowerCase()
+      .trim()
+      .replace(/['"]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'project';
+  }
+
+  _guessCodeExtension(code) {
+    const text = String(code || '').trim();
+    if (!text) return 'txt';
+    if (text.startsWith('<!DOCTYPE') || text.startsWith('<html') || text.startsWith('<div') || text.startsWith('<!--')) return 'html';
+    if (text.includes('{') && text.includes('}') && /(^|\n)\s*[.#]?[a-zA-Z0-9_-]+\s*[{,]/.test(text)) return 'css';
+    if (/(^|\n)\s*(mkdir|cd|npm|yarn|pnpm|python|node|git)\b/.test(text) || text.includes('#!/')) return 'sh';
+    if (/\b(function|const|let|var|import|export|document\.|window\.)\b/.test(text)) return 'js';
+    if (/\b(def |import |print\(|if __name__ ==)\b/.test(text)) return 'py';
+    return 'txt';
+  }
+
+  _looksLikePseudocode(code) {
+    const text = String(code || '');
+    const firstLine = text.split('\n')[0] || '';
+    return /\bpseudocode\b/i.test(firstLine) || /\bfor each\b/i.test(text) || /\binit\b/i.test(firstLine) && text.includes('(') && !text.includes('{');
+  }
+
+  _generatePseudocode(fullCode, context) {
+    const code = String(fullCode || '').trim();
+    if (!code) return '';
+    if (this._looksLikePseudocode(code)) return code;
+
+    const lang = this._guessCodeExtension(code);
+    const projectTitle = context && context.projectTitle ? String(context.projectTitle) : 'Project';
+    const stepTitle = context && context.stepTitle ? String(context.stepTitle) : 'Step';
+
+    if (lang === 'html') {
+      const ids = Array.from(new Set((code.match(/id="([^"]+)"/g) || []).map(s => s.slice(4, -1)))).slice(0, 10);
+      const classes = Array.from(new Set((code.match(/class="([^"]+)"/g) || []).flatMap(s => s.slice(7, -1).split(/\s+/)))).slice(0, 12);
+      const hasForm = /<form\b/i.test(code);
+      const hasInput = /<input\b/i.test(code) || /<textarea\b/i.test(code) || /<select\b/i.test(code);
+      const hasButtons = /<button\b/i.test(code);
+      const lines = [
+        `PSEUDOCODE: ${projectTitle} — ${stepTitle}`,
+        'Define page structure and main containers',
+        hasForm ? 'Add a form for user input/submit' : null,
+        hasInput ? 'Add inputs with labels/placeholders' : null,
+        hasButtons ? 'Add buttons for primary actions' : null,
+        ids.length ? `Use IDs for scripting targets: ${ids.join(', ')}` : null,
+        classes.length ? `Use classes for styling: ${classes.join(', ')}` : null,
+      ].filter(Boolean);
+      return lines.join('\n');
+    }
+
+    if (lang === 'css') {
+      const selectorLines = code
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l && !l.startsWith('/*') && !l.startsWith('*') && !l.startsWith('//'))
+        .filter(l => l.includes('{'))
+        .map(l => l.split('{')[0].trim())
+        .filter(Boolean);
+      const selectors = Array.from(new Set(selectorLines)).slice(0, 12);
+      const lines = [
+        `PSEUDOCODE: ${projectTitle} — ${stepTitle}`,
+        'Define base styles (typography, spacing, colors)',
+        selectors.length ? `Style key selectors: ${selectors.join(', ')}` : 'Style key components and states',
+        'Add responsive adjustments if needed',
+      ];
+      return lines.join('\n');
+    }
+
+    if (lang === 'sh') {
+      const cmds = code
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l && !l.startsWith('#'))
+        .slice(0, 12);
+      const lines = [
+        `PSEUDOCODE: ${projectTitle} — ${stepTitle}`,
+        'Run setup commands to create files/folders',
+        ...cmds.map(c => `- ${c}`),
+      ];
+      return lines.join('\n');
+    }
+
+    if (lang === 'py') {
+      const defs = Array.from(new Set((code.match(/^\s*def\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/gm) || []).map(s => s.replace(/^\s*def\s+/, '').split('(')[0]))).slice(0, 10);
+      const usesIO = /\b(input\(|print\(|open\(|requests\.)\b/.test(code);
+      const lines = [
+        `PSEUDOCODE: ${projectTitle} — ${stepTitle}`,
+        defs.length ? `Define functions: ${defs.join(', ')}` : 'Define helper functions',
+        usesIO ? 'Read inputs / call APIs / write outputs' : 'Process data with core logic',
+        'Validate inputs and handle errors',
+        'Run main flow',
+      ];
+      return lines.join('\n');
+    }
+
+    const functionNames = Array.from(new Set([
+      ...((code.match(/\bfunction\s+([a-zA-Z_$][\w$]*)\s*\(/g) || []).map(m => m.replace(/\bfunction\s+/, '').split('(')[0])),
+      ...((code.match(/\bconst\s+([a-zA-Z_$][\w$]*)\s*=\s*(async\s*)?\(/g) || []).map(m => m.replace(/\bconst\s+/, '').split('=')[0].trim())),
+      ...((code.match(/\blet\s+([a-zA-Z_$][\w$]*)\s*=\s*(async\s*)?\(/g) || []).map(m => m.replace(/\blet\s+/, '').split('=')[0].trim())),
+    ])).slice(0, 12);
+
+    const events = Array.from(new Set((code.match(/addEventListener\(\s*['"]([^'"]+)['"]/g) || []).map(m => m.split(/['"]/)[1]))).slice(0, 10);
+    const selectors = Array.from(new Set([
+      ...((code.match(/getElementById\(\s*['"]([^'"]+)['"]\s*\)/g) || []).map(m => m.split(/['"]/)[1])),
+      ...((code.match(/querySelector(All)?\(\s*['"]([^'"]+)['"]\s*\)/g) || []).map(m => m.split(/['"]/)[1])),
+    ])).slice(0, 10);
+
+    const mentionsStorage = /\blocalStorage\b|\bsessionStorage\b/.test(code);
+    const mentionsFetch = /\bfetch\(|\bXMLHttpRequest\b/.test(code);
+
+    const lines = [
+      `PSEUDOCODE: ${projectTitle} — ${stepTitle}`,
+      selectors.length ? `Select elements: ${selectors.join(', ')}` : 'Select required DOM elements',
+      'Define state variables for the feature',
+      events.length ? `Attach listeners for: ${events.join(', ')}` : 'Attach event listeners',
+      functionNames.length ? `Implement core functions: ${functionNames.join(', ')}` : 'Implement core functions',
+      mentionsFetch ? 'Call APIs, handle loading/errors, update UI' : null,
+      mentionsStorage ? 'Persist state to storage and restore on load' : null,
+      'Render UI updates after each state change',
+      'Validate input and handle edge cases',
+    ].filter(Boolean);
+    return lines.join('\n');
+  }
+
   /**
    * Show project details for a specific project
    * @param {string} projectId - The ID of the project to show
@@ -95,10 +287,47 @@ class ProjectDetails {
         stepElem.appendChild(stepContent);
         
         if (step.code) {
+          const codeBlock = document.createElement('div');
+          codeBlock.className = 'code-block';
+
+          const toolbar = document.createElement('div');
+          toolbar.className = 'code-toolbar';
+
+          const collapseBtn = document.createElement('button');
+          collapseBtn.type = 'button';
+          collapseBtn.className = 'code-collapse-btn';
+          collapseBtn.innerHTML = '<i class="fas fa-chevron-up"></i><span>Hide code</span>';
+
+          const modeBtn = document.createElement('button');
+          modeBtn.type = 'button';
+          modeBtn.className = 'code-mode-btn';
+          modeBtn.innerHTML = '<i class="fas fa-code"></i><span>Full code</span>';
+
+          const downloadBtn = document.createElement('button');
+          downloadBtn.type = 'button';
+          downloadBtn.className = 'code-download-btn';
+          downloadBtn.innerHTML = '<i class="fas fa-download"></i><span>Download</span>';
+
+          toolbar.appendChild(collapseBtn);
+          toolbar.appendChild(modeBtn);
+          toolbar.appendChild(downloadBtn);
+
           const stepCode = document.createElement('pre');
           stepCode.className = 'step-code';
+          stepCode.dataset.mode = 'full';
+          stepCode.dataset.projectTitle = project.title || 'project';
+          stepCode.dataset.stepIndex = `step-${index + 1}`;
           stepCode.textContent = step.code;
-          stepElem.appendChild(stepCode);
+          stepCode._fullCode = String(step.code);
+          stepCode._pseudoCode = this._generatePseudocode(step.code, {
+            projectTitle: project.title,
+            stepTitle: step.title,
+            stepIndex: index + 1
+          });
+
+          codeBlock.appendChild(toolbar);
+          codeBlock.appendChild(stepCode);
+          stepElem.appendChild(codeBlock);
         }
         
         stepsContainer.appendChild(stepElem);
