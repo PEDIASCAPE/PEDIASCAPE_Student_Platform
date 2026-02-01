@@ -10,6 +10,9 @@ PEDIASCAPE is organized into focused modules so students can move from learning 
 - **Projects**: A project-guidance hub that helps students practice by building real projects. Provides project ideas, steps, and resources to support hands-on learning.
 - **Career Guidance**: Helps students explore and choose career paths with domain-specific guidance and learning direction.
 - **PSAI (AI Assistant)**: Answers questions, supports learning, and can assist with generating roadmaps and guidance using integrated AI services.
+  
+
+DEPLOYED LINK - https://pediascape-flax.vercel.app/
 
 ## Developers Section
 ## ✨ Features
